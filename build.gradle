@@ -1,0 +1,116 @@
+/**
+ * Copyright 2017 The Nakama Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+  id 'com.ullink.msbuild' version '2.15'
+  id 'com.ullink.nuget' version '2.14'
+  id 'com.ullink.nunit' version '1.9'
+}
+
+version = '0.1.0'
+
+assemblyInfoPatcher {
+  version = "${project.version}.0"
+}
+
+clean {
+  delete 'Nakama/Api.pb.cs'
+  delete fileTree(dir: projectDir, include: 'nunit-agent*.log')
+}
+
+task protocExec(type: Exec) {
+  executable 'protoc'
+  args '-I', '.',
+       '-I', "$projectDir/server/server",
+       "--csharp_out=$projectDir/Nakama/",
+       "--csharp_opt=file_extension=.pb.cs",
+       "$projectDir/server/server/api.proto"
+}
+
+msbuild {
+  solutionFile = 'Nakama.sln'
+  projectName  = 'Nakama'
+
+  destinationDir  = "$buildDir/msbuild/bin"
+  intermediateDir = "$buildDir/msbuild/obj"
+  generateDoc = true
+
+  // NOTE workaround for issue #55 - see gradle-msbuild-plugin
+  doFirst {
+    copy {
+      from 'packages/NUnit.3.5.0/lib/net20'
+      from 'packages/WebSocketSharp.1.0.3-rc11/lib'
+      from 'packages/protobuf3-for-unity-v3.0.0_ga_noJIT'
+      into destinationDir
+    }
+  }
+}
+msbuild.dependsOn nugetRestore, protocExec
+
+nuget {
+  version = '3.4.3'
+}
+
+nunit {
+  nunitVersion = '3.2.1'
+  testAssemblies = [msbuild.projects['Nakama.Tests'].properties.TargetPath]
+}
+nunit.dependsOn msbuild
+
+def editor = '/Applications/Unity/Unity.app/Contents/MacOS/Unity'
+switch (OperatingSystem.current().getName()) {
+case "windows":
+  editor = /C:\Program Files\Unity\Editor\Unity.exe/
+  break
+case "linux":
+  editor = '/opt/Unity/Editor/Unity'
+  break
+}
+
+task genDocs(type: Exec) {
+  executable 'doxygen'
+  args 'Doxyfile'
+}
+
+task unityRelease(type: Exec) {
+  def releaseDir = "$buildDir/release/Nakama"
+
+  doFirst {
+    copy {
+      from "$projectDir/Nakama"
+      into "$releaseDir/Assets/Nakama"
+      include '**/*.cs'
+    }
+
+    copy {
+      from "$buildDir/msbuild/bin"
+      into "$releaseDir/Assets/Plugins"
+      include 'Google.Protobuf.dll'
+      include 'websocket-sharp.dll'
+    }
+  }
+
+  executable editor
+  args '-batchmode',
+       '-nographics',
+       '-logFile',
+       '-projectPath', "$releaseDir",
+       '-exportPackage', 'Assets', 'Nakama.unitypackage',
+       '-quit'
+}
+unityRelease.dependsOn msbuild, genDocs

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{36E87F50-1D34-4898-9BDA-F2E80CD6B25E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nakama</RootNamespace>
+    <AssemblyName>NakamaUnity</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>build\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>build\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="websocket-sharp">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>..\packages\protobuf3-for-unity-v3.0.0_ga_noJIT\Google.Protobuf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api.pb.cs" />
+    <Compile Include="NFriendAddMessage.cs" />
+    <Compile Include="NFriendBlockMessage.cs" />
+    <Compile Include="NFriendRemoveMessage.cs" />
+    <Compile Include="INAuthenticateMessage.cs" />
+    <Compile Include="INClient.cs" />
+    <Compile Include="INCursor.cs" />
+    <Compile Include="INError.cs" />
+    <Compile Include="INFriend.cs" />
+    <Compile Include="INLogger.cs" />
+    <Compile Include="INMessage.cs" />
+    <Compile Include="INResultSet.cs" />
+    <Compile Include="INSelf.cs" />
+    <Compile Include="INSession.cs" />
+    <Compile Include="INSyncState.cs" />
+    <Compile Include="INUser.cs" />
+    <Compile Include="NAuthenticateMessage.cs" />
+    <Compile Include="NClient.cs" />
+    <Compile Include="NConsoleLogger.cs" />
+    <Compile Include="NError.cs" />
+    <Compile Include="NMessageEventArgs.cs" />
+    <Compile Include="NResultSet.cs" />
+    <Compile Include="NSelf.cs" />
+    <Compile Include="NSession.cs" />
+    <Compile Include="NUser.cs" />
+    <Compile Include="NSelfFetchMessage.cs" />
+    <Compile Include="NSelfLinkMessage.cs" />
+    <Compile Include="NSelfUnlinkMessage.cs" />
+    <Compile Include="NSelfUpdateMessage.cs" />
+    <Compile Include="NUsersFetchMessage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
