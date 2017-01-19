@@ -7,7 +7,7 @@ Nakama is an open-source distributed server for social and realtime games. For m
 
 The [client guide](https://heroiclabs.com/docs/clients/unity/) is available on the server documentation. The [client reference documentation](http://heroiclabs.github.io/nakama-unity/) is deployed on gh-pages.
 
-If you encounter any issues with the server you can generate diagnostics for us with `nakama doctor`. Send these to support@heroiclabs.com or [open an issue](https://github.com/heroiclabs/nakama/issues). Any issues with the client it can be useful to enable trace to display logs and [open an issue](https://github.com/heroiclabs/nakama-unity/issues).
+If you encounter any issues with the server you can generate diagnostics for us with `nakama doctor`. Send these to support@heroiclabs.com or [open an issue](https://github.com/heroiclabs/nakama/issues). If you experience any issues with the client, it can be useful to enable trace (`.Trace(true)`) to produce logs and [open an issue](https://github.com/heroiclabs/nakama-unity/issues).
 
 ### Start client
 
@@ -37,6 +37,7 @@ To build the codebase you will need to install these dependencies:
 * __unity__ The Unity editor/compiler toolchain.
 * __gradle__ A JVM-based build tool.
 * __protobuf__ A toolchain used to create custom protocols.
+* __doxygen__ A tool for generating documentation from annotated source.
 
 You can then install code dependencies:
 
