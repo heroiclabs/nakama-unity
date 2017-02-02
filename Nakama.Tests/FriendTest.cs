@@ -22,166 +22,166 @@ using NUnit.Framework.Internal;
 
 namespace Nakama.Tests
 {
-//    [TestFixture]
-//    public class FriendTest
-//    {
-//        private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
-//        private static readonly string DefaultServerKey = "defaultkey";
-//        private static readonly string DeviceId = random.GetString();
-//
-//        private static string FriendUserId = "";
-//        private static string FriendHandle = "";
-//        private INClient client;
-//
-//        [OneTimeSetUp]
-//        public void GetFriendId()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            INError error = null;
-//
-//            var client2 = new NClient.Builder(DefaultServerKey).Build();
-//            client2.OnDisconnect += (sender, _) =>
-//            {
-//                var message = NAuthenticateMessage.Device(DeviceId);
-//                client2.Register(message, (INSession session) =>
-//                {
-//                    evt.Set();
-//                }, (INError err) =>
-//                {
-//                    error = err;
-//                    evt.Set();
-//                });
-//            };
-//
-//            var friendAuthMessage = NAuthenticateMessage.Device(random.GetString());
-//            client2.Register(friendAuthMessage, (INSession friendSession) =>
-//            {
-//                client2.Connect(friendSession);
-//                var friendSelfMessage = NSelfFetchMessage.Default();
-//                client2.Send(friendSelfMessage, (INSelf result) =>
-//                {
-//                    FriendUserId = new Guid(result.Id).ToString();
-//                    FriendHandle = result.Handle;
-//                    client2.Logout();
-//                }, (INError err) => {
-//                    error = err;
-//                });
-//            },(INError err) => {
-//                error = err;
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(5000, false);
-//            Assert.IsNull(error);
-//        }
-//
-//        [TearDown]
-//        public void TearDown()
-//        {
-//            client.Disconnect();
-//        }
-//
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            INError error = null;
-//
-//            client = new NClient.Builder(DefaultServerKey).Build();
-//            var message = NAuthenticateMessage.Device(DeviceId);
-//            client.Login(message, (INSession friendSession) =>
-//            {
-//                client.Connect(friendSession);
-//                evt.Set();
-//            },(INError err) => {
-//                error = err;
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(1000, false);
-//            Assert.IsNull(error);
-//        }
-//
-//        [Test, Order(1)]
-//        public void AddFriend()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            var committed = false;
-//
-//            var message = NFriendAddMessage.Default(FriendUserId);
-//            client.Send(message, (bool completed) => {
-//                committed = completed;
-//                evt.Set();
-//            }, _ => {
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(1000, false);
-//            Assert.IsTrue(committed);
-//        }
-//
-//        [Test, Order(2)]
-//        public void ListFriends()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            INResultSet<INFriend> friends = null;
-//            INError error = null;
-//
-//            var message = NFriendsListMessage.Default();
-//            client.Send(message, (INResultSet<INFriend> results) =>
-//            {
-//                friends = results;
-//                evt.Set();
-//            }, (INError err) =>
-//            {
-//                error = err;
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(2000, false);
-//            Assert.IsNull(error);
-//            Assert.NotNull(friends);
-//            Assert.NotNull(friends.Results);
-//            Assert.IsTrue(friends.Results.Count == 1);
-//            Assert.NotNull(friends.Results[0]);
-//            Assert.IsTrue(friends.Results[0].Handle == FriendHandle);
-//        }
-//
-//        [Test, Order(3)]
-//        public void RemoveFriend()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            var committed = false;
-//
-//            var message = NFriendRemoveMessage.Default(FriendUserId);
-//            client.Send(message, (bool completed) => {
-//                committed = completed;
-//                evt.Set();
-//            }, _ => {
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(1000, false);
-//            Assert.IsTrue(committed);
-//        }
-//
-//        [Test, Order(4)]
-//        public void BlockFriend()
-//        {
-//            ManualResetEvent evt = new ManualResetEvent(false);
-//            var committed = false;
-//
-//            var message = NFriendBlockMessage.Default(FriendUserId);
-//            client.Send(message, (bool completed) => {
-//                committed = completed;
-//                evt.Set();
-//            }, _ => {
-//                evt.Set();
-//            });
-//
-//            evt.WaitOne(1000, false);
-//            Assert.IsTrue(committed);
-//        }
-//
-//    }
+    [TestFixture]
+    public class FriendTest
+    {
+        private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
+        private static readonly string DefaultServerKey = "defaultkey";
+        private static readonly string DeviceId = random.GetString();
+
+        private static string FriendUserId = "";
+        private static string FriendHandle = "";
+        private INClient client;
+
+        [OneTimeSetUp]
+        public void GetFriendId()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INError error = null;
+
+            var client2 = new NClient.Builder(DefaultServerKey).Build();
+            client2.OnDisconnect += (sender, _) =>
+            {
+                var message = NAuthenticateMessage.Device(DeviceId);
+                client2.Register(message, (INSession session) =>
+                {
+                    evt.Set();
+                }, (INError err) =>
+                {
+                    error = err;
+                    evt.Set();
+                });
+            };
+
+            var friendAuthMessage = NAuthenticateMessage.Device(random.GetString());
+            client2.Register(friendAuthMessage, (INSession friendSession) =>
+            {
+                client2.Connect(friendSession);
+                var friendSelfMessage = NSelfFetchMessage.Default();
+                client2.Send(friendSelfMessage, (INSelf result) =>
+                {
+                    FriendUserId = new Guid(result.Id).ToString();
+                    FriendHandle = result.Handle;
+                    client2.Logout();
+                }, (INError err) => {
+                    error = err;
+                });
+            },(INError err) => {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(5000, false);
+            Assert.IsNull(error);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            client.Disconnect();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INError error = null;
+
+            client = new NClient.Builder(DefaultServerKey).Build();
+            var message = NAuthenticateMessage.Device(DeviceId);
+            client.Login(message, (INSession friendSession) =>
+            {
+                client.Connect(friendSession);
+                evt.Set();
+            },(INError err) => {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsNull(error);
+        }
+
+        [Test, Order(1)]
+        public void AddFriend()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = NFriendAddMessage.Default(FriendUserId);
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
+
+        [Test, Order(2)]
+        public void ListFriends()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INFriend> friends = null;
+            INError error = null;
+
+            var message = NFriendsListMessage.Default();
+            client.Send(message, (INResultSet<INFriend> results) =>
+            {
+                friends = results;
+                evt.Set();
+            }, (INError err) =>
+            {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(2000, false);
+            Assert.IsNull(error);
+            Assert.NotNull(friends);
+            Assert.NotNull(friends.Results);
+            Assert.IsTrue(friends.Results.Count == 1);
+            Assert.NotNull(friends.Results[0]);
+            Assert.IsTrue(friends.Results[0].Handle == FriendHandle);
+        }
+
+        [Test, Order(3)]
+        public void RemoveFriend()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = NFriendRemoveMessage.Default(FriendUserId);
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
+
+        [Test, Order(4)]
+        public void BlockFriend()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = NFriendBlockMessage.Default(FriendUserId);
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
+
+    }
 }
