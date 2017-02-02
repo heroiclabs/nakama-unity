@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Google.Protobuf;
 using WebSocketSharp;
 
@@ -42,8 +43,10 @@ namespace Nakama
 
         public string ServerKey { get; private set; }
 
-        public long ServerTime {
-            get {
+        public long ServerTime
+        {
+            get
+            {
                 if (serverTime < 1)
                 {
                     // Time has not been set via socket yet.
@@ -52,7 +55,8 @@ namespace Nakama
                 }
                 return serverTime;
             }
-            private set {
+            private set
+            {
                 // Dont let server time go backwards.
                 if ((value - serverTime) > 0)
                 {
@@ -153,7 +157,6 @@ namespace Nakama
                 var stream = new MemoryStream();
                 payload.WriteTo(stream);
                 socket.Send(stream.ToArray());
-                socket.Close(CloseStatusCode.Normal);
             }
         }
 
@@ -166,7 +169,6 @@ namespace Nakama
                 payload.WriteTo(stream);
                 socket.SendAsync(stream.ToArray(), (bool completed) =>
                 {
-                    socket.Close(CloseStatusCode.Normal);
                     callback(completed);
                 });
             }
@@ -186,8 +188,9 @@ namespace Nakama
             message.SetCollationId(collationId);
 
             // Track callbacks for message
-            var pair = new KeyValuePair<Action<object>, Action<INError>>((data) => {
-                callback((T) data);
+            var pair = new KeyValuePair<Action<object>, Action<INError>>((data) =>
+            {
+                callback((T)data);
             }, errback);
             collationIds.Add(collationId, pair);
 
@@ -217,14 +220,14 @@ namespace Nakama
                                   Action<INError> errback)
         {
             var scheme = (SSL) ? "https" : "http";
-            var uri = new UriBuilder(scheme, Host, unchecked((int) Port), path).Uri;
+            var uri = new UriBuilder(scheme, Host, unchecked((int)Port), path).Uri;
             Logger.TraceFormatIf(Trace, "Url={0}, Payload={1}", uri, payload);
 
             // Add a collation ID for logs
             payload.CollationId = Guid.NewGuid().ToString();
 
             // Init base HTTP request
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Method = WebRequestMethods.Http.Post;
             request.ContentType = "application/octet-stream;";
             request.Accept = "application/octet-stream;";
@@ -238,8 +241,8 @@ namespace Nakama
             request.Headers.Add(HttpRequestHeader.AcceptLanguage, lang);
 
             // Optimise request
-            request.Timeout = unchecked((int) ConnectTimeout);
-            request.ReadWriteTimeout = unchecked((int) Timeout);
+            request.Timeout = unchecked((int)ConnectTimeout);
+            request.ReadWriteTimeout = unchecked((int)Timeout);
             request.KeepAlive = true;
             request.Proxy = null;
 
@@ -275,7 +278,7 @@ namespace Nakama
         {
             // Init base WebSocket connection
             var scheme = (SSL) ? "wss" : "ws";
-            var bUri = new UriBuilder(scheme, Host, unchecked((int) Port), "api");
+            var bUri = new UriBuilder(scheme, Host, unchecked((int)Port), "api");
             bUri.Query = String.Format("serverkey={0}&token={1}&lang={2}", ServerKey, session.Token, Lang);
             WebSocket socket = new WebSocket(bUri.Uri.ToString());
 
@@ -291,6 +294,7 @@ namespace Nakama
                 collationIds.Clear();
                 // Release socket handle
                 socket = null;
+                Logger.TraceIf(Trace, "Socket Closed");
                 OnDisconnect.Emit(this, EventArgs.Empty);
             };
             socket.OnMessage += (sender, evt) =>
@@ -325,6 +329,7 @@ namespace Nakama
             var collationId = message.CollationId;
             var pair = collationIds[collationId];
             collationIds.Remove(collationId);
+
             switch (message.PayloadCase)
             {
                 case Envelope.PayloadOneofCase.None:
@@ -347,6 +352,22 @@ namespace Nakama
                         users.Add(new NUser(user));
                     }
                     pair.Key(new NResultSet<INUser>(users, null));
+                    break;
+                case Envelope.PayloadOneofCase.Friends:
+                    var friends = new List<INFriend>();
+                    foreach (var friend in message.Friends.Friends)
+                    {
+                        friends.Add(new NFriend(friend));
+                    }
+                    pair.Key(new NResultSet<INFriend>(friends, null));
+                    break;
+                case Envelope.PayloadOneofCase.StorageData:
+                    var storageData = new List<INStorageData>();
+                    foreach (var data in message.StorageData.Data)
+                    {
+                        storageData.Add(new NStorageData(data));
+                    }
+                    pair.Key(new NResultSet<INStorageData>(storageData, null));
                     break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
@@ -384,7 +405,7 @@ namespace Nakama
                 {
                     try
                     {
-                        var response = (HttpWebResponse) ((HttpWebRequest) iar.AsyncState).EndGetResponse(iar);
+                        var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
                         successAction(response);
                     }
                     catch (WebException e)
@@ -400,7 +421,7 @@ namespace Nakama
             };
             dispatchAction.BeginInvoke((iar) =>
             {
-                var action = (Action) iar.AsyncState;
+                var action = (Action)iar.AsyncState;
                 action.EndInvoke(iar);
             }, dispatchAction);
         }

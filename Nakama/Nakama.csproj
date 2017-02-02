@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
+    <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />
     <Compile Include="NFriendBlockMessage.cs" />
+    <Compile Include="NFriendsListMessage.cs" />
     <Compile Include="NFriendRemoveMessage.cs" />
     <Compile Include="INAuthenticateMessage.cs" />
     <Compile Include="INClient.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="INResultSet.cs" />
     <Compile Include="INSelf.cs" />
     <Compile Include="INSession.cs" />
+    <Compile Include="INStorageData.cs" />
     <Compile Include="INSyncState.cs" />
     <Compile Include="INUser.cs" />
     <Compile Include="NAuthenticateMessage.cs" />
@@ -67,6 +70,10 @@
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
     <Compile Include="NSession.cs" />
+    <Compile Include="NStorageData.cs" />
+    <Compile Include="NStorageFetchMessage.cs" />
+    <Compile Include="NStorageWriteMessage.cs" />
+    <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NSelfFetchMessage.cs" />
     <Compile Include="NSelfLinkMessage.cs" />

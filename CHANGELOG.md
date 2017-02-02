@@ -5,6 +5,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+- Add Storage and Friends and corresponding test cases.
+- Fix various small test cases caused by regression on the server.
+- Logout messages no longer close the connection. Connection is closed by the server.
+
 ## [0.1.0] - 2017-01-14
 ### Added
 - Initial public release.

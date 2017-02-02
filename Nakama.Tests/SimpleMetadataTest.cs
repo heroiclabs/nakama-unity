@@ -18,7 +18,6 @@
  using System.IO;
  using System.Net;
  using System.Text;
- using System.Threading;
  using NUnit.Framework;
 
 namespace Nakama
@@ -90,7 +89,7 @@ namespace Nakama
             var request = setupRequest();
             request.Method = WebRequestMethods.Http.Post;
             var response = extractBadResponse(request);
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode, response.StatusDescription);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode, response.StatusDescription);
         }
 
         [Test]
