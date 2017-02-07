@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NStorageWriteMessage : INMessage<bool>
+    public class NStorageWriteMessage : INMessage<INResultSet<INStorageKey>>
     {
         private Envelope payload;
         public IMessage Payload

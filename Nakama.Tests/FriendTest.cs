@@ -60,6 +60,9 @@ namespace Nakama.Tests
                 var friendSelfMessage = NSelfFetchMessage.Default();
                 client2.Send(friendSelfMessage, (INSelf result) =>
                 {
+                    Array.Reverse(result.Id, 0, 4);
+                    Array.Reverse(result.Id, 4, 2);
+                    Array.Reverse(result.Id, 6, 2);
                     FriendUserId = new Guid(result.Id).ToString();
                     FriendHandle = result.Handle;
                     client2.Logout();
@@ -148,24 +151,6 @@ namespace Nakama.Tests
         }
 
         [Test, Order(3)]
-        public void RemoveFriend()
-        {
-            ManualResetEvent evt = new ManualResetEvent(false);
-            var committed = false;
-
-            var message = NFriendRemoveMessage.Default(FriendUserId);
-            client.Send(message, (bool completed) => {
-                committed = completed;
-                evt.Set();
-            }, _ => {
-                evt.Set();
-            });
-
-            evt.WaitOne(1000, false);
-            Assert.IsTrue(committed);
-        }
-
-        [Test, Order(4)]
         public void BlockFriend()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -183,5 +168,22 @@ namespace Nakama.Tests
             Assert.IsTrue(committed);
         }
 
+        [Test, Order(4)]
+        public void RemoveFriend()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = NFriendRemoveMessage.Default(FriendUserId);
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
     }
 }

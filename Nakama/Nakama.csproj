@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
+    <Compile Include="INStorageKey.cs" />
     <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />
     <Compile Include="NFriendBlockMessage.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="NSession.cs" />
     <Compile Include="NStorageData.cs" />
     <Compile Include="NStorageFetchMessage.cs" />
+    <Compile Include="NStorageKey.cs" />
     <Compile Include="NStorageWriteMessage.cs" />
     <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NUser.cs" />

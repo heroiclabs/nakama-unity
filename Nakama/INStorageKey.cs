@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,14 @@
 
 namespace Nakama
 {
-    public interface INStorageData : INStorageKey
+    public interface INStorageKey
     {
-        byte[] UserId { get; }
+        string Bucket { get; }
 
-        byte[] Value { get; }
+        string Collection { get; }
 
-        long PermissionRead { get; }
+        string Record { get; }
 
-        long PermissionWrite { get; }
-
-        long CreatedAt { get; }
-
-        long UpdatedAt { get; }
-
-        long ExpiresAt { get; }
+        byte[] Version { get; }
     }
 }

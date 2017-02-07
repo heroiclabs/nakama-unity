@@ -361,6 +361,14 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INFriend>(friends, null));
                     break;
+                case Envelope.PayloadOneofCase.StorageKey:
+                    var keys = new List<INStorageKey>();
+                    foreach (var key in message.StorageKey.Keys)
+                    {
+                        keys.Add(new NStorageKey(key));
+                    }
+                    pair.Key(new NResultSet<INStorageKey>(keys, null));
+                    break;
                 case Envelope.PayloadOneofCase.StorageData:
                     var storageData = new List<INStorageData>();
                     foreach (var data in message.StorageData.Data)

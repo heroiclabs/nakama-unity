@@ -96,54 +96,69 @@ namespace Nakama.Tests
         public void WriteStorageInvalidIfMatch()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
-            var committed = false;
+            INResultSet<INStorageKey> res = null;
 
             var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue, InvalidVersion).Build();
-            client.Send(message, (bool completed) => {
-                committed = completed;
+            client.Send(message, (INResultSet<INStorageKey> results) =>
+            {
+                res = results;
                 evt.Set();
             }, _ => {
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsTrue(committed);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.AreEqual(res.Results[0].Bucket, Bucket);
+            Assert.AreEqual(res.Results[0].Collection, Collection);
+            Assert.AreEqual(res.Results[0].Record, Record);
         }
 
         [Test, Order(2)]
         public void WriteStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
-            var committed = false;
+            INResultSet<INStorageKey> res = null;
 
             var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue).Build();
-            client.Send(message, (bool completed) => {
-                committed = completed;
+            client.Send(message, (INResultSet<INStorageKey> results) =>
+            {
+                res = results;
                 evt.Set();
             }, _ => {
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsTrue(committed);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.AreEqual(res.Results[0].Bucket, Bucket);
+            Assert.AreEqual(res.Results[0].Collection, Collection);
+            Assert.AreEqual(res.Results[0].Record, Record);
         }
 
         [Test, Order(3)]
         public void WriteStorageIfNoneMatch()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
-            var committed = false;
+            INResultSet<INStorageKey> res = null;
 
             var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue, IfNoneMatchVersion).Build();
-            client.Send(message, (bool completed) => {
-                committed = completed;
+            client.Send(message, (INResultSet<INStorageKey> results) =>
+            {
+                res = results;
                 evt.Set();
             }, _ => {
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsTrue(committed);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.AreEqual(res.Results[0].Bucket, Bucket);
+            Assert.AreEqual(res.Results[0].Collection, Collection);
+            Assert.AreEqual(res.Results[0].Record, Record);
         }
 
         [Test, Order(4)]
@@ -168,12 +183,12 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.NotNull(storageData);
             Assert.NotNull(storageData.Results);
-            Assert.Equals(storageData.Results.Count, 1);
+            Assert.AreEqual(storageData.Results.Count, 1);
             Assert.NotNull(storageData.Results[0]);
-            Assert.Equals(storageData.Results[0].Bucket, Bucket);
-            Assert.Equals(storageData.Results[0].Collection, Collection);
-            Assert.Equals(storageData.Results[0].Record, Record);
-            Assert.Equals(storageData.Results[0].Value, StorageValue);
+            Assert.AreEqual(storageData.Results[0].Bucket, Bucket);
+            Assert.AreEqual(storageData.Results[0].Collection, Collection);
+            Assert.AreEqual(storageData.Results[0].Record, Record);
+            Assert.AreEqual(storageData.Results[0].Value, StorageValue);
         }
 
         [Test, Order(5)]
