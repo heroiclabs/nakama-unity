@@ -153,7 +153,7 @@ namespace Nakama
         {
             if (socket != null)
             {
-                var payload = new Envelope {Logout = new TLogout()};
+                var payload = new Envelope {Logout = new Logout()};
                 var stream = new MemoryStream();
                 payload.WriteTo(stream);
                 socket.Send(stream.ToArray());
@@ -164,7 +164,7 @@ namespace Nakama
         {
             if (socket != null)
             {
-                var payload = new Envelope {Logout = new TLogout()};
+                var payload = new Envelope {Logout = new Logout()};
                 var stream = new MemoryStream();
                 payload.WriteTo(stream);
                 socket.SendAsync(stream.ToArray(), (bool completed) =>

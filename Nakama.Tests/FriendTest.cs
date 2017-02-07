@@ -29,7 +29,7 @@ namespace Nakama.Tests
         private static readonly string DefaultServerKey = "defaultkey";
         private static readonly string DeviceId = random.GetString();
 
-        private static string FriendUserId = "";
+        private static byte[] FriendUserId;
         private static string FriendHandle = "";
         private INClient client;
 
@@ -60,10 +60,7 @@ namespace Nakama.Tests
                 var friendSelfMessage = NSelfFetchMessage.Default();
                 client2.Send(friendSelfMessage, (INSelf result) =>
                 {
-                    Array.Reverse(result.Id, 0, 4);
-                    Array.Reverse(result.Id, 4, 2);
-                    Array.Reverse(result.Id, 6, 2);
-                    FriendUserId = new Guid(result.Id).ToString();
+                    FriendUserId = result.Id;
                     FriendHandle = result.Handle;
                     client2.Logout();
                 }, (INError err) => {
