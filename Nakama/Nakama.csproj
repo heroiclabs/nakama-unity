@@ -76,6 +76,7 @@
     <Compile Include="NGroupJoinMessage.cs" />
     <Compile Include="NGroupKickUserMessage.cs" />
     <Compile Include="NGroupLeaveMessage.cs" />
+    <Compile Include="NGroupsListMessage.cs" />
     <Compile Include="NGroupPromoteUserMessage.cs" />
     <Compile Include="NGroupRemoveMessage.cs" />
     <Compile Include="NGroupsFetchMessage.cs" />

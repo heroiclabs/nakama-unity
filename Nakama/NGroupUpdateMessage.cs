@@ -64,37 +64,37 @@ namespace Nakama
 
             public Builder Name(string name)
             {
-                message.payload.GroupCreate.Name = name;
+                message.payload.GroupUpdate.Name = name;
                 return this;
             }
 
             public Builder Description(string description)
             {
-                message.payload.GroupCreate.Description = description;
+                message.payload.GroupUpdate.Description = description;
                 return this;
             }
 
             public Builder AvatarUrl(string avatarUrl)
             {
-                message.payload.GroupCreate.AvatarUrl = avatarUrl;
+                message.payload.GroupUpdate.AvatarUrl = avatarUrl;
                 return this;
             }
 
             public Builder Lang(string lang)
             {
-                message.payload.GroupCreate.Lang = lang;
+                message.payload.GroupUpdate.Lang = lang;
                 return this;
             }
 
             public Builder Metadata(byte[] metadata)
             {
-                message.payload.GroupCreate.Metadata = ByteString.CopyFrom(metadata);
+                message.payload.GroupUpdate.Metadata = ByteString.CopyFrom(metadata);
                 return this;
             }
 
             public Builder Private(bool privateGroup)
             {
-                message.payload.GroupCreate.Private = privateGroup;
+                message.payload.GroupUpdate.Private = privateGroup;
                 return this;
             }
 
