@@ -18,7 +18,7 @@ using System;
 
 namespace Nakama
 {
-    public class NFriend : INFriend
+    public class NGroupUser : INGroupUser
     {
         public string AvatarUrl { get; private set; }
         public long CreatedAt { get; private set; }
@@ -31,9 +31,9 @@ namespace Nakama
         public byte[] Metadata { get; private set; }
         public string Timezone { get; private set; }
         public long UpdatedAt { get; private set; }
-        public FriendState State { get; private set; }
+        public UserType Type { get; private set; }
 
-        internal NFriend(Friend message)
+        internal NGroupUser (GroupUser message)
         {
             AvatarUrl = message.User.AvatarUrl;
             CreatedAt = message.User.CreatedAt;
@@ -50,26 +50,23 @@ namespace Nakama
             switch (message.Type)
             {
                 case 0:
-                    State = FriendState.Friend;
+                    Type = UserType.Admin;
                     break;
                 case 1:
-                    State = FriendState.Invite;
+                    Type = UserType.Member;
                     break;
                 case 2:
-                    State = FriendState.Invited;
-                    break;
-                case 3:
-                    State = FriendState.Blocked;
+                    Type = UserType.Join;
                     break;
             }
         }
 
         public override string ToString()
         {
-            var f = "NFriend(AvatarUrl={0},CreatedAt={1},Fullname={2},Handle={3},Id={4},Lang={5}," +
-                    "LastOnlineAt={6},Location={7},Metadata={8},Timezone={9},UpdatedAt={10},State={11})";
+            var f = "NGroupUser(AvatarUrl={0},CreatedAt={1},Fullname={2},Handle={3},Id={4},Lang={5}," +
+                    "LastOnlineAt={6},Location={7},Metadata={8},Timezone={9},UpdatedAt={10},Type={11})";
             return String.Format(f, AvatarUrl, CreatedAt, Fullname, Handle, Id, Lang, LastOnlineAt,
-                Location, Metadata, Timezone, UpdatedAt, State);
+                Location, Metadata, Timezone, UpdatedAt, Type);
         }
 
     }

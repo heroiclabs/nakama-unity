@@ -377,6 +377,25 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INStorageData>(storageData, null));
                     break;
+                case Envelope.PayloadOneofCase.Group:
+                    pair.Key(new NGroup(message.Group.Group));
+                    break;
+                case Envelope.PayloadOneofCase.Groups:
+                    var groups = new List<INGroup>();
+                    foreach (var group in message.Groups.Groups)
+                    {
+                        groups.Add(new NGroup(group));
+                    }
+                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.GroupUsers:
+                    var groupUsers = new List<INGroupUser>();
+                    foreach (var groupUser in message.GroupUsers.Users)
+                    {
+                        groupUsers.Add(new NGroupUser(groupUser));
+                    }
+                    pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
+                    break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
                     break;

@@ -18,6 +18,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 - Fix various small test cases caused by regression on the server.
 
+### Fixed
+
+- Fix various small test cases caused by regression on the server.
+
 ## [0.1.0] - 2017-01-14
 ### Added
 - Initial public release.

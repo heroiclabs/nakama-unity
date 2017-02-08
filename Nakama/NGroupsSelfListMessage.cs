@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NSelfFetchMessage : INMessage<INSelf>
+    public class NGroupsSelfListMessage : INMessage<INSelf>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -28,9 +28,9 @@ namespace Nakama
             }
         }
 
-        private NSelfFetchMessage()
+        private NGroupsSelfListMessage()
         {
-            payload = new Envelope {SelfFetch = new TSelfFetch()};
+            payload = new Envelope {GroupsSelfList = new TGroupsSelfList()};
         }
 
         public void SetCollationId(string id)
@@ -40,12 +40,12 @@ namespace Nakama
 
         public override string ToString()
         {
-            return "NSelfFetchMessage()";
+            return "NGroupsSelfListMessage()";
         }
 
-        public static NSelfFetchMessage Default()
+        public static NGroupsSelfListMessage Default()
         {
-            return new NSelfFetchMessage();
+            return new NGroupsSelfListMessage();
         }
     }
 }

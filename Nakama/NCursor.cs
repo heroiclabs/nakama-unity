@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace Nakama
 {
-    public interface INCursor
+    public class NCursor : INCursor
     {
-        byte[] Value { get; }
+        public byte[] Value { get; private set; }
+
+        internal NCursor(byte[] cursor)
+        {
+            Value = cursor;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("NCursor(Value={0}", Value);
+        }
     }
 }

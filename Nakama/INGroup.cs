@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,18 @@
 
 namespace Nakama
 {
-    public interface INCursor
+    public interface INGroup
     {
-        byte[] Value { get; }
+        byte[] Id { get; }
+        bool Private { get; }
+        byte[] CreatorId { get; }
+        string Name { get; }
+        string Description { get; }
+        string AvatarUrl { get; }
+        string Lang { get; }
+        byte[] Metadata { get; }
+        long Count { get; }
+        long CreatedAt { get; }
+        long UpdatedAt { get; }
     }
 }

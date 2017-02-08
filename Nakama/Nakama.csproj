@@ -44,7 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
+    <Compile Include="INGroupUser.cs" />
     <Compile Include="INStorageKey.cs" />
+    <Compile Include="INGroup.cs" />
+    <Compile Include="NCursor.cs" />
     <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />
     <Compile Include="NFriendBlockMessage.cs" />
@@ -67,6 +70,19 @@
     <Compile Include="NClient.cs" />
     <Compile Include="NConsoleLogger.cs" />
     <Compile Include="NError.cs" />
+    <Compile Include="NGroup.cs" />
+    <Compile Include="NGroupAddUserMessage.cs" />
+    <Compile Include="NGroupCreateMessage.cs" />
+    <Compile Include="NGroupJoinMessage.cs" />
+    <Compile Include="NGroupKickUserMessage.cs" />
+    <Compile Include="NGroupLeaveMessage.cs" />
+    <Compile Include="NGroupPromoteUserMessage.cs" />
+    <Compile Include="NGroupRemoveMessage.cs" />
+    <Compile Include="NGroupsFetchMessage.cs" />
+    <Compile Include="NGroupsSelfListMessage.cs" />
+    <Compile Include="NGroupUpdateMessage.cs" />
+    <Compile Include="NGroupUser.cs" />
+    <Compile Include="NGroupUsersListMessage.cs" />
     <Compile Include="NMessageEventArgs.cs" />
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
