@@ -89,9 +89,9 @@ namespace Nakama.Tests
 
             client = new NClient.Builder(DefaultServerKey).Build();
             var message = NAuthenticateMessage.Device(DeviceId);
-            client.Login(message, (INSession friendSession) =>
+            client.Login(message, (INSession Session) =>
             {
-                client.Connect(friendSession);
+                client.Connect(Session);
                 evt.Set();
             },(INError err) => {
                 error = err;
