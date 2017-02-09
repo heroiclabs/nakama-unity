@@ -315,6 +315,25 @@ namespace Nakama.Tests
         }
 
         [Test, Order(10)]
+        public void GroupAddUser()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INError error = null;
+
+            var message = NGroupAddUserMessage.Default(FriendGroup.Id, MyUserId);
+            client.Send(message, (bool completed) => {
+                evt.Set();
+            }, (INError err) =>
+            {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsNotNull(error);
+        }
+
+        [Test, Order(11)]
         public void GroupKick()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -333,7 +352,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(error); // this is expected to fail as you aren't admin
         }
 
-        [Test, Order(11)]
+        [Test, Order(12)]
         public void GroupLeave()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
