@@ -7,16 +7,12 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Add Storage and Friends and corresponding test cases.
+- Add Storage, Friends, Groups and corresponding test cases.
 
 ### Changed
 
 - Logout messages no longer close the connection. Connection is closed by the server.
 - Update TFriendAdd, TFriendRemove, TFriendBlock to accept UserID as bytes.
-
-### Fixed
-
-- Fix various small test cases caused by regression on the server.
 
 ### Fixed
 

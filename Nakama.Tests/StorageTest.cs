@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
+using System;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace Nakama.Tests
 {
     [TestFixture]
     public class StorageTest
     {
+        private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
+        private static readonly string DeviceId = random.GetString();
         private static readonly string DefaultServerKey = "defaultkey";
-        private static readonly string DeviceId = TestContext.CurrentContext.Random.GetString();
 
         private static readonly string Bucket = "testBucket";
         private static readonly string Collection = "testCollection";

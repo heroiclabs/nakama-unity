@@ -67,7 +67,7 @@ namespace Nakama.Tests
                 client2.Connect(friendSession);
 
                 var builder = new NGroupCreateMessage.Builder(GroupName).Description(GroupDescription).Lang("fa").Private(PrivateGroup);
-                client.Send(builder.Build(), (INGroup group) =>
+                client2.Send(builder.Build(), (INGroup group) =>
                 {
                     FriendGroup = group;
                     client2.Logout();
@@ -79,7 +79,7 @@ namespace Nakama.Tests
                 evt.Set();
             });
 
-            evt.WaitOne(1000, false);
+            evt.WaitOne(5000, false);
             Assert.IsNull(error);
         }
 
@@ -106,7 +106,7 @@ namespace Nakama.Tests
                 evt.Set();
             });
 
-            evt.WaitOne(1000, false);
+            evt.WaitOne(2000, false);
             Assert.IsNull(error);
         }
 
@@ -130,7 +130,7 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsNull(error);
             Assert.IsNotNull(myGroup);
-            Assert.AreEqual(GroupDescription, myGroup.Name);
+            Assert.AreEqual(GroupName, myGroup.Name);
             Assert.AreEqual(GroupDescription, myGroup.Description);
             Assert.AreEqual(PrivateGroup, myGroup.Private);
         }
@@ -153,13 +153,11 @@ namespace Nakama.Tests
                 evt.Set();
             });
 
-            evt.WaitOne(1000, false);
+            evt.WaitOne(5000, false);
             Assert.IsNull(error);
             Assert.NotNull(groups);
             Assert.NotNull(groups.Results);
-            Assert.IsTrue(groups.Results.Count == 1);
-            Assert.NotNull(groups.Results[0]);
-            Assert.AreEqual(groups.Results[0].Id, myGroup.Id);
+            Assert.Greater(groups.Results.Count, 1);
         }
 
         [Test, Order(3)]
@@ -203,10 +201,10 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.NotNull(groups);
             Assert.NotNull(groups.Results);
-            Assert.IsTrue(groups.Results.Count == 1);
+            Assert.AreEqual(1, groups.Results.Count);
             Assert.NotNull(groups.Results[0]);
             Assert.AreEqual(groups.Results[0].Id, myGroup.Id);
-            Assert.AreEqual(groups.Results[0].AvatarUrl, GroupDescription);
+            Assert.AreEqual(groups.Results[0].AvatarUrl, GroupDescription); // set earlier on in GroupUpdate test
         }
 
         [Test, Order(5)]
@@ -235,7 +233,7 @@ namespace Nakama.Tests
             INError error = null;
             INResultSet<INGroup> groups = null;
 
-            var message = new NGroupsFetchMessage.Builder(myGroup.Id).Build();
+            var message = new NGroupsFetchMessage.Builder(FriendGroup.Id).Build();
             client.Send(message, (INResultSet<INGroup> results) =>
             {
                 groups = results;
@@ -250,9 +248,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.NotNull(groups);
             Assert.NotNull(groups.Results);
-            Assert.IsTrue(groups.Results.Count == 1);
-            Assert.NotNull(groups.Results[0]);
-            Assert.AreEqual(groups.Results[0].Id, myGroup.Id);
+            Assert.AreEqual(1, groups.Results.Count);
             Assert.AreEqual(groups.Results[0].Lang, "fa"); // make sure that only group left is friend's group with FA lang
         }
 
@@ -272,7 +268,7 @@ namespace Nakama.Tests
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNull(error);
+            Assert.IsNull(error); // at this point, the invitation is sent to join the group.
         }
 
         [Test, Order(8)]
@@ -296,10 +292,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.NotNull(groupUsers);
             Assert.NotNull(groupUsers.Results);
-            Assert.IsTrue(groupUsers.Results.Count == 2);
-            Assert.NotNull(groupUsers.Results[0]);
-            Assert.AreEqual(groupUsers.Results[0].Id, FriendUserId);
-            Assert.AreEqual(groupUsers.Results[1].Id, MyUserId);
+            Assert.AreEqual(2, groupUsers.Results.Count);
         }
 
         [Test, Order(9)]
@@ -318,7 +311,7 @@ namespace Nakama.Tests
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNotNull(error);  // this is expected to fail as you aren't admin
+            Assert.AreEqual("you can't promote yourself", error.Message.ToLower());  // this is expected to fail as you aren't admin
         }
 
         [Test, Order(10)]
