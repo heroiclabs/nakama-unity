@@ -34,8 +34,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-//            client = NClient.Default(DefaultServerKey);
-            client = new NClient.Builder(DefaultServerKey).Trace(true).Build();
+            client = new NClient.Builder(DefaultServerKey).Build();
             string id = TestContext.CurrentContext.Random.GetString();
             var message = NAuthenticateMessage.Device(id);
             client.Register(message, (INSession authenticated) =>
@@ -59,7 +58,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void FetchUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -100,7 +98,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void UpdateUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -127,7 +124,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void LinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -153,7 +149,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void UnlinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);

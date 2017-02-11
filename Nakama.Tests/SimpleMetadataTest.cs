@@ -69,10 +69,10 @@ namespace Nakama
             var result = reader.ReadToEnd();
             response.Close();
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.StatusDescription);
-            Assert.That(result, Contains.Substring("Name"));
-            Assert.That(result, Contains.Substring("Port"));
-            Assert.That(result, Contains.Substring("OpsPort"));
-            Assert.That(result, Contains.Substring("Dsns"));
+            Assert.That(result, Contains.Substring("name"));
+            Assert.That(result, Contains.Substring("port"));
+            Assert.That(result, Contains.Substring("ops_port"));
+            Assert.That(result, Contains.Substring("dsns"));
         }
 
         [Test]

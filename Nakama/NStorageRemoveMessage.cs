@@ -22,10 +22,8 @@ namespace Nakama
     public class NStorageRemoveMessage : INMessage<bool>
     {
         private Envelope payload;
-        public IMessage Payload
-        {
-            get
-            {
+        public IMessage Payload {
+            get {
                 return payload;
             }
         }

@@ -72,35 +72,39 @@ nunit {
 }
 nunit.dependsOn msbuild
 
-def editor = '/Applications/Unity/Unity.app/Contents/MacOS/Unity'
-switch (OperatingSystem.current().getName()) {
-case "windows":
-case "Windows 10":
-  editor = /C:\Program Files\Unity\Editor\Unity.exe/
-  break
-case "linux":
-  editor = '/opt/Unity/Editor/Unity'
-  break
-}
-
 task genDocs(type: Exec) {
   executable 'doxygen'
   args 'Doxyfile'
 }
 
-task unityRelease(type: Exec) {
-  def releaseDir = "$buildDir/release/Nakama"
+task unityPackage(type: Exec) {
+  def editor = '/Applications/Unity/Unity.app/Contents/MacOS/Unity'
+  def ostype = OperatingSystem.current()
+  if (ostype.isWindows()) {
+    editor = /C:\Program Files\Unity\Editor\Unity.exe/
+  } else if (ostype.isLinux()) {
+    editor = '/opt/Unity/Editor/Unity'
+  }
+
+  // See if Unity is on the system PATH
+//  def executable = (ostype.isWindows()) ? 'Unity.exe' : 'Unity'
+//  def editorProc = Runtime.getRuntime().exec("$executable -nographics").waitFor()
+//  if (editorProc.exitValue == 0) {
+//    editor = executable
+//  }
+
+  def unityprojectDir = "$buildDir/release/${project.version}/Nakama"
 
   doFirst {
     copy {
       from "$projectDir/Nakama"
-      into "$releaseDir/Assets/Nakama"
+      into "$unityprojectDir/Assets/Nakama/Assets/Nakama"
       include '**/*.cs'
     }
 
     copy {
       from "$buildDir/msbuild/bin"
-      into "$releaseDir/Assets/Plugins"
+      into "$unityprojectDir/Assets/Nakama/Assets/Plugins"
       include 'Google.Protobuf.dll'
       include 'websocket-sharp.dll'
     }
@@ -110,8 +114,8 @@ task unityRelease(type: Exec) {
   args '-batchmode',
        '-nographics',
        '-logFile',
-       '-projectPath', "$releaseDir",
-       '-exportPackage', 'Assets', 'Nakama.unitypackage',
+       '-projectPath', "$unityprojectDir",
+       '-exportPackage', 'Nakama/Assets', 'Nakama.unitypackage',
        '-quit'
 }
-unityRelease.dependsOn msbuild, genDocs
+unityPackage.dependsOn msbuild

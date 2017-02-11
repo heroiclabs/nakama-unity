@@ -102,7 +102,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
 
-            var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue, InvalidVersion).Build();
+            var message = new NStorageWriteMessage.Builder()
+                    .Write(Bucket, Collection, Record, StorageValue, InvalidVersion)
+                    .Build();
             client.Send(message, (INResultSet<INStorageKey> results) =>
             {
                 res = results;
@@ -125,7 +127,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
 
-            var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue).Build();
+            var message = new NStorageWriteMessage.Builder()
+                    .Write(Bucket, Collection, Record, StorageValue)
+                    .Build();
             client.Send(message, (INResultSet<INStorageKey> results) =>
             {
                 res = results;
@@ -148,7 +152,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
 
-            var message = new NStorageWriteMessage.Builder().Write(Bucket, Collection, Record, StorageValue, IfNoneMatchVersion).Build();
+            var message = new NStorageWriteMessage.Builder()
+                    .Write(Bucket, Collection, Record, StorageValue, IfNoneMatchVersion)
+                    .Build();
             client.Send(message, (INResultSet<INStorageKey> results) =>
             {
                 res = results;
@@ -172,7 +178,9 @@ namespace Nakama.Tests
             INResultSet<INStorageData> storageData = null;
             INError error = null;
 
-            var message = new NStorageFetchMessage.Builder().Fetch(Bucket, Collection, Record, UserId).Build();
+            var message = new NStorageFetchMessage.Builder()
+                    .Fetch(Bucket, Collection, Record, UserId)
+                    .Build();
             client.Send(message, (INResultSet<INStorageData> results) =>
             {
                 storageData = results;
@@ -201,7 +209,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             var committed = false;
 
-            var message = new NStorageRemoveMessage.Builder().Remove(Bucket, Collection, Record, InvalidVersion).Build();
+            var message = new NStorageRemoveMessage.Builder()
+                    .Remove(Bucket, Collection, Record, InvalidVersion)
+                    .Build();
             client.Send(message, (bool completed) => {
                 committed = completed;
                 evt.Set();
@@ -219,7 +229,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             var committed = false;
 
-            var message = new NStorageRemoveMessage.Builder().Remove(Bucket, Collection, Record).Build();
+            var message = new NStorageRemoveMessage.Builder()
+                    .Remove(Bucket, Collection, Record)
+                    .Build();
             client.Send(message, (bool completed) => {
                 committed = completed;
                 evt.Set();

@@ -22,10 +22,8 @@ namespace Nakama
     public class NStorageFetchMessage : INMessage<INResultSet<INStorageData>>
     {
         private Envelope payload;
-        public IMessage Payload
-        {
-            get
-            {
+        public IMessage Payload {
+            get {
                 return payload;
             }
         }

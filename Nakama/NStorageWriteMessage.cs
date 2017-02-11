@@ -22,10 +22,8 @@ namespace Nakama
     public class NStorageWriteMessage : INMessage<INResultSet<INStorageKey>>
     {
         private Envelope payload;
-        public IMessage Payload
-        {
-            get
-            {
+        public IMessage Payload {
+            get {
                 return payload;
             }
         }

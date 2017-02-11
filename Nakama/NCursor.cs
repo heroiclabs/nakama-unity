@@ -29,7 +29,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NCursor(Value={0}", Value);
+            return String.Format("NCursor(Value={0})", Value);
         }
     }
 }

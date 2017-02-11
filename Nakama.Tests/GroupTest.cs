@@ -66,8 +66,12 @@ namespace Nakama.Tests
                 FriendUserId = ((NSession) friendSession).Id;
                 client2.Connect(friendSession);
 
-                var builder = new NGroupCreateMessage.Builder(GroupName).Description(GroupDescription).Lang("fa").Private(PrivateGroup);
-                client2.Send(builder.Build(), (INGroup group) =>
+                var message = new NGroupCreateMessage.Builder(GroupName)
+                        .Description(GroupDescription)
+                        .Lang("fa")
+                        .Private(PrivateGroup)
+                        .Build();
+                client2.Send(message, (INGroup group) =>
                 {
                     FriendGroup = group;
                     client2.Logout();
@@ -116,8 +120,12 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            var builder = new NGroupCreateMessage.Builder(GroupName).Description(GroupDescription).Lang("en").Private(PrivateGroup);
-            client.Send(builder.Build(), (INGroup group) =>
+            var message = new NGroupCreateMessage.Builder(GroupName)
+                    .Description(GroupDescription)
+                    .Lang("en")
+                    .Private(PrivateGroup)
+                    .Build();
+            client.Send(message, (INGroup group) =>
             {
                 myGroup = group;
                 evt.Set();
@@ -142,7 +150,10 @@ namespace Nakama.Tests
             INError error = null;
             INResultSet<INGroup> groups = null;
 
-            var message = new NGroupListsMessage.Builder().OrderByAsc(true).FilterByLang("en").Build();
+            var message = new NGroupsListMessage.Builder()
+                    .OrderByAsc(true)
+                    .FilterByLang("en")
+                    .Build();
             client.Send(message, (INResultSet<INGroup> results) =>
             {
                 groups = results;
@@ -166,7 +177,9 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            var message = new NGroupUpdateMessage.Builder(myGroup.Id).AvatarUrl(GroupDescription).Build();
+            var message = new NGroupUpdateMessage.Builder(myGroup.Id)
+                    .AvatarUrl(GroupDescription)
+                    .Build();
             client.Send(message, (bool completed) => {
                 evt.Set();
             }, (INError err) =>
@@ -204,7 +217,8 @@ namespace Nakama.Tests
             Assert.AreEqual(1, groups.Results.Count);
             Assert.NotNull(groups.Results[0]);
             Assert.AreEqual(groups.Results[0].Id, myGroup.Id);
-            Assert.AreEqual(groups.Results[0].AvatarUrl, GroupDescription); // set earlier on in GroupUpdate test
+            // Defined earlier on in GroupUpdate test
+            Assert.AreEqual(groups.Results[0].AvatarUrl, GroupDescription);
         }
 
         [Test, Order(5)]
@@ -249,7 +263,8 @@ namespace Nakama.Tests
             Assert.NotNull(groups);
             Assert.NotNull(groups.Results);
             Assert.AreEqual(1, groups.Results.Count);
-            Assert.AreEqual(groups.Results[0].Lang, "fa"); // make sure that only group left is friend's group with FA lang
+            // Ensure only one group exists with the "fa" language.
+            Assert.AreEqual(groups.Results[0].Lang, "fa");
         }
 
         [Test, Order(7)]
@@ -268,7 +283,8 @@ namespace Nakama.Tests
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNull(error); // at this point, the invitation is sent to join the group.
+            // The invitation will be sent to join the group.
+            Assert.IsNull(error);
         }
 
         [Test, Order(8)]
@@ -311,7 +327,8 @@ namespace Nakama.Tests
             });
 
             evt.WaitOne(1000, false);
-            Assert.AreEqual("you can't promote yourself", error.Message.ToLower());  // this is expected to fail as you aren't admin
+            // This is intended to fail because user isn't admin.
+            Assert.AreEqual("you can't promote yourself", error.Message.ToLower());
         }
 
         [Test, Order(10)]
@@ -349,7 +366,8 @@ namespace Nakama.Tests
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNotNull(error); // this is expected to fail as you aren't admin
+            // This is intended to fail because user isn't admin.
+            Assert.IsNotNull(error);
         }
 
         [Test, Order(12)]

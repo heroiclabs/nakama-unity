@@ -20,7 +20,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NGroupListsMessage : INMessage<INResultSet<INGroup>>
+    public class NGroupsListMessage : INMessage<INResultSet<INGroup>>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -29,7 +29,7 @@ namespace Nakama
             }
         }
 
-        private NGroupListsMessage()
+        private NGroupsListMessage()
         {
             payload = new Envelope {GroupsList = new TGroupsList()};
         }
@@ -41,18 +41,18 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NGroupListsMessage(PageLimit={0},OrderByAsc={1},Cursor={2},Lang={3},CreatedAt={4},Count={5},FilterCase={6})";
+            var f = "NGroupsListMessage(PageLimit={0},OrderByAsc={1},Cursor={2},Lang={3},CreatedAt={4},Count={5},FilterCase={6})";
             var p = payload.GroupsList;
             return String.Format(f, p.PageLimit, p.OrderByAsc, p.Cursor, p.Lang, p.CreatedAt, p.Count, p.FilterCase);
         }
 
         public class Builder
         {
-            private NGroupListsMessage message;
+            private NGroupsListMessage message;
 
             public Builder()
             {
-                message = new NGroupListsMessage();
+                message = new NGroupsListMessage();
             }
 
             public Builder PageLimit(long pageLimit)
@@ -94,11 +94,11 @@ namespace Nakama
                 return this;
             }
 
-            public NGroupListsMessage Build()
+            public NGroupsListMessage Build()
             {
                 // Clone object so builder now operates on new copy.
                 var original = message;
-                message = new NGroupListsMessage();
+                message = new NGroupsListMessage();
                 message.payload.GroupsList = new TGroupsList(original.payload.GroupsList);
                 return original;
             }
