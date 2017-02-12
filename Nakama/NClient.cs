@@ -41,9 +41,13 @@ namespace Nakama
 
         public event EventHandler<NErrorEventArgs> OnError;
 
-        public event EventHandler OnMatchMessage;
+        public event EventHandler<NMatchDataEventArgs> OnMatchData;
 
-        public event EventHandler OnTopicMessage;
+        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+
+        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+
+        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
 
         public uint Port { get; private set; }
 
@@ -349,6 +353,18 @@ namespace Nakama
                         {
                             OnError(this, new NErrorEventArgs(error));
                         }
+                    }
+                    break;
+                case Envelope.PayloadOneofCase.MatchData:
+                    if (OnMatchData != null)
+                    {
+                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
+                    }
+                    break;
+                case Envelope.PayloadOneofCase.MatchPresence:
+                    if (OnMatchPresence != null)
+                    {
+                        // TODO
                     }
                     break;
                 case Envelope.PayloadOneofCase.Self:

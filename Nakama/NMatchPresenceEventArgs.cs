@@ -18,21 +18,13 @@ using System;
 
 namespace Nakama
 {
-    internal class NUserPresence : INUserPresence
+    public class NMatchPresenceEventArgs : EventArgs
     {
-        public byte[] UserId { get; private set; }
-        public byte[] SessionId { get; private set; }
+        public INMatchPresence MatchPresence { get; private set; }
 
-        internal NUserPresence(UserPresence message)
+        internal NMatchPresenceEventArgs(INMatchPresence matchPresence)
         {
-            UserId = message.UserId.ToByteArray();
-            SessionId = message.SessionId.ToByteArray();
-        }
-
-        public override string ToString()
-        {
-            var f = "NUserPresence(UserId={0},SessionId={1})";
-            return String.Format(f, UserId, SessionId);
+            MatchPresence = matchPresence;
         }
     }
 }

@@ -59,6 +59,7 @@
     <Compile Include="INError.cs" />
     <Compile Include="INFriend.cs" />
     <Compile Include="INLogger.cs" />
+    <Compile Include="INMatchData.cs" />
     <Compile Include="INMessage.cs" />
     <Compile Include="INResultSet.cs" />
     <Compile Include="INSelf.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="INStorageData.cs" />
     <Compile Include="INSyncState.cs" />
     <Compile Include="INUser.cs" />
+    <Compile Include="INUserPresence.cs" />
     <Compile Include="NAuthenticateMessage.cs" />
     <Compile Include="NClient.cs" />
     <Compile Include="NConsoleLogger.cs" />
@@ -85,8 +87,15 @@
     <Compile Include="NGroupUpdateMessage.cs" />
     <Compile Include="NGroupUser.cs" />
     <Compile Include="NGroupUsersListMessage.cs" />
+    <Compile Include="NMatchData.cs" />
+    <Compile Include="NMatchDataEventArgs.cs" />
+    <Compile Include="NMatchPresenceEventArgs.cs" />
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
+    <Compile Include="NSelfFetchMessage.cs" />
+    <Compile Include="NSelfLinkMessage.cs" />
+    <Compile Include="NSelfUnlinkMessage.cs" />
+    <Compile Include="NSelfUpdateMessage.cs" />
     <Compile Include="NSession.cs" />
     <Compile Include="NStorageData.cs" />
     <Compile Include="NStorageFetchMessage.cs" />
@@ -94,10 +103,7 @@
     <Compile Include="NStorageWriteMessage.cs" />
     <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NUser.cs" />
-    <Compile Include="NSelfFetchMessage.cs" />
-    <Compile Include="NSelfLinkMessage.cs" />
-    <Compile Include="NSelfUnlinkMessage.cs" />
-    <Compile Include="NSelfUpdateMessage.cs" />
+    <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />
   </ItemGroup>
   <ItemGroup>

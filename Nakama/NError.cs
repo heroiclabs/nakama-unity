@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NError : INError
+    internal class NError : INError
     {
         public string Message { get; private set; }
 

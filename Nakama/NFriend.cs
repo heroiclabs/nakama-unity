@@ -18,7 +18,7 @@ using System;
 
 namespace Nakama
 {
-    public class NFriend : INFriend
+    internal class NFriend : INFriend
     {
         public string AvatarUrl { get; private set; }
         public long CreatedAt { get; private set; }

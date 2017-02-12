@@ -18,7 +18,7 @@ using System;
 
 namespace Nakama
 {
-    public class NCursor : INCursor
+    internal class NCursor : INCursor
     {
         public byte[] Value { get; private set; }
 
