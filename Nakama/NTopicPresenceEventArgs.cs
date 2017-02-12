@@ -18,7 +18,13 @@ using System;
 
 namespace Nakama
 {
-    public class NMessageEventArgs : EventArgs
+    public class NTopicPresenceEventArgs : EventArgs
     {
+        public INTopicPresence TopicPresence { get; private set; }
+
+        internal NTopicPresenceEventArgs(INTopicPresence topicPresence)
+        {
+            TopicPresence = topicPresence;
+        }
     }
 }

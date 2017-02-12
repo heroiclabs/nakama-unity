@@ -28,9 +28,9 @@ namespace Nakama
             }
         }
 
-        private NFriendRemoveMessage(string id)
+        private NFriendRemoveMessage(byte[] id)
         {
-            payload = new Envelope {FriendRemove = new TFriendRemove {UserId = id}};
+            payload = new Envelope {FriendRemove = new TFriendRemove {UserId = ByteString.CopyFrom(id)}};
         }
 
         public void SetCollationId(string id)
@@ -43,7 +43,7 @@ namespace Nakama
             return String.Format("NFriendRemoveMessage(UserId={0})", payload.FriendRemove.UserId);
         }
 
-        public static NFriendRemoveMessage Default(string id)
+        public static NFriendRemoveMessage Default(byte[] id)
         {
             return new NFriendRemoveMessage(id);
         }

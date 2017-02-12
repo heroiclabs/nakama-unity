@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
@@ -35,8 +34,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-//            client = NClient.Default(DefaultServerKey);
-            client = new NClient.Builder(DefaultServerKey).Trace(true).Build();
+            client = new NClient.Builder(DefaultServerKey).Build();
             string id = TestContext.CurrentContext.Random.GetString();
             var message = NAuthenticateMessage.Device(id);
             client.Register(message, (INSession authenticated) =>
@@ -60,7 +58,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void FetchUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -85,8 +82,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INUser> users = null;
 
-            var id = (session as NSession).Id;
-            var message = NUsersFetchMessage.Default(id);
+            var message = NUsersFetchMessage.Default(session.Id);
             client.Send(message, (INResultSet<INUser> results) => {
                 users = results;
                 evt.Set();
@@ -101,7 +97,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void UpdateUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -128,7 +123,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void LinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -154,7 +148,6 @@ namespace Nakama.Tests
         }
 
         [Test]
-        [Ignore("")]
         public void UnlinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);

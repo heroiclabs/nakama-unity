@@ -18,6 +18,6 @@ namespace Nakama
 {
     public interface INCursor
     {
-        string Value { get; }
+        byte[] Value { get; }
     }
 }

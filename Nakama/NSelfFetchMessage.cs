@@ -45,26 +45,7 @@ namespace Nakama
 
         public static NSelfFetchMessage Default()
         {
-            return new NSelfFetchMessage.Builder().Build();
-        }
-
-        public class Builder
-        {
-            private NSelfFetchMessage message;
-
-            public Builder()
-            {
-                message = new NSelfFetchMessage();
-            }
-
-            public NSelfFetchMessage Build()
-            {
-                // Clone object so builder now operates on new copy.
-                var original = message;
-                message = new NSelfFetchMessage();
-                message.payload.SelfFetch = new TSelfFetch(original.payload.SelfFetch);
-                return original;
-            }
+            return new NSelfFetchMessage();
         }
     }
 }

@@ -20,6 +20,8 @@ namespace Nakama
     {
         long CreatedAt { get; }
 
+        byte[] Id { get; }
+
         string Token { get; }
     }
 }

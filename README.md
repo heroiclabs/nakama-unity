@@ -1,7 +1,7 @@
 Nakama Unity
 ============
 
-> Unity client for Nakama.
+> Unity client for Nakama server.
 
 Nakama is an open-source distributed server for social and realtime games. For more information have a look at the [server documentation](https://heroiclabs.com/docs/); and for a quick list of build targets run `gradle tasks`.
 
@@ -51,12 +51,10 @@ For development use the compile and test run cycle:
 $> gradle nunit
 ```
 
-If needed you can build and run tests which use the UnityTestTools integration with the Unity editor. These can be run headless with `gradle unityTest`.
-
 To package a release use:
 
 ```
-$> gradle unityRelease
+$> gradle unityPackage
 ```
 
 #### Credits

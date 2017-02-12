@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Google.Protobuf;
 using WebSocketSharp;
 
@@ -38,11 +39,22 @@ namespace Nakama
 
         public event EventHandler OnDisconnect;
 
+        public event EventHandler<NErrorEventArgs> OnError;
+
+        public event EventHandler<NMatchDataEventArgs> OnMatchData;
+
+        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+
+        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+
+        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+
         public uint Port { get; private set; }
 
         public string ServerKey { get; private set; }
 
-        public long ServerTime {
+        public long ServerTime
+        {
             get {
                 if (serverTime < 1)
                 {
@@ -66,8 +78,6 @@ namespace Nakama
         public uint Timeout { get; private set; }
 
         public bool Trace { get; private set; }
-
-        public event EventHandler<NMessageEventArgs> OnMessage;
 
         private IDictionary<string, KeyValuePair<Action<object>, Action<INError>>> collationIds =
                 new Dictionary<string, KeyValuePair<Action<object>, Action<INError>>>();
@@ -149,11 +159,10 @@ namespace Nakama
         {
             if (socket != null)
             {
-                var payload = new Envelope {Logout = new TLogout()};
+                var payload = new Envelope {Logout = new Logout()};
                 var stream = new MemoryStream();
                 payload.WriteTo(stream);
                 socket.Send(stream.ToArray());
-                socket.Close(CloseStatusCode.Normal);
             }
         }
 
@@ -161,12 +170,11 @@ namespace Nakama
         {
             if (socket != null)
             {
-                var payload = new Envelope {Logout = new TLogout()};
+                var payload = new Envelope {Logout = new Logout()};
                 var stream = new MemoryStream();
                 payload.WriteTo(stream);
                 socket.SendAsync(stream.ToArray(), (bool completed) =>
                 {
-                    socket.Close(CloseStatusCode.Normal);
                     callback(completed);
                 });
             }
@@ -186,8 +194,9 @@ namespace Nakama
             message.SetCollationId(collationId);
 
             // Track callbacks for message
-            var pair = new KeyValuePair<Action<object>, Action<INError>>((data) => {
-                callback((T) data);
+            var pair = new KeyValuePair<Action<object>, Action<INError>>((data) =>
+            {
+                callback((T)data);
             }, errback);
             collationIds.Add(collationId, pair);
 
@@ -217,14 +226,14 @@ namespace Nakama
                                   Action<INError> errback)
         {
             var scheme = (SSL) ? "https" : "http";
-            var uri = new UriBuilder(scheme, Host, unchecked((int) Port), path).Uri;
+            var uri = new UriBuilder(scheme, Host, unchecked((int)Port), path).Uri;
             Logger.TraceFormatIf(Trace, "Url={0}, Payload={1}", uri, payload);
 
             // Add a collation ID for logs
             payload.CollationId = Guid.NewGuid().ToString();
 
             // Init base HTTP request
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Method = WebRequestMethods.Http.Post;
             request.ContentType = "application/octet-stream;";
             request.Accept = "application/octet-stream;";
@@ -238,8 +247,8 @@ namespace Nakama
             request.Headers.Add(HttpRequestHeader.AcceptLanguage, lang);
 
             // Optimise request
-            request.Timeout = unchecked((int) ConnectTimeout);
-            request.ReadWriteTimeout = unchecked((int) Timeout);
+            request.Timeout = unchecked((int)ConnectTimeout);
+            request.ReadWriteTimeout = unchecked((int)Timeout);
             request.KeepAlive = true;
             request.Proxy = null;
 
@@ -275,7 +284,7 @@ namespace Nakama
         {
             // Init base WebSocket connection
             var scheme = (SSL) ? "wss" : "ws";
-            var bUri = new UriBuilder(scheme, Host, unchecked((int) Port), "api");
+            var bUri = new UriBuilder(scheme, Host, unchecked((int)Port), "api");
             bUri.Query = String.Format("serverkey={0}&token={1}&lang={2}", ServerKey, session.Token, Lang);
             WebSocket socket = new WebSocket(bUri.Uri.ToString());
 
@@ -291,6 +300,7 @@ namespace Nakama
                 collationIds.Clear();
                 // Release socket handle
                 socket = null;
+                Logger.TraceIf(Trace, "Socket Closed");
                 OnDisconnect.Emit(this, EventArgs.Empty);
             };
             socket.OnMessage += (sender, evt) =>
@@ -325,20 +335,109 @@ namespace Nakama
             var collationId = message.CollationId;
             var pair = collationIds[collationId];
             collationIds.Remove(collationId);
+
             switch (message.PayloadCase)
             {
                 case Envelope.PayloadOneofCase.None:
                     pair.Key(true);
                     break;
                 case Envelope.PayloadOneofCase.Error:
+                    var error = new NError(message.Error.Reason);
                     if (collationId != null)
                     {
-                        pair.Value(new NError(message.Error.Reason));
+                        pair.Value(error);
                     }
-                    // TODO(novabyte) Proxy inbound errors to OnMessage
+                    else
+                    {
+                        if (OnError != null)
+                        {
+                            OnError(this, new NErrorEventArgs(error));
+                        }
+                    }
+                    break;
+                case Envelope.PayloadOneofCase.Friends:
+                    var friends = new List<INFriend>();
+                    foreach (var friend in message.Friends.Friends)
+                    {
+                        friends.Add(new NFriend(friend));
+                    }
+                    pair.Key(new NResultSet<INFriend>(friends, null));
+                    break;
+                case Envelope.PayloadOneofCase.Group:
+                    pair.Key(new NGroup(message.Group.Group));
+                    break;
+                case Envelope.PayloadOneofCase.GroupUsers:
+                    var groupUsers = new List<INGroupUser>();
+                    foreach (var groupUser in message.GroupUsers.Users)
+                    {
+                        groupUsers.Add(new NGroupUser(groupUser));
+                    }
+                    pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
+                    break;
+                case Envelope.PayloadOneofCase.Groups:
+                    var groups = new List<INGroup>();
+                    foreach (var group in message.Groups.Groups)
+                    {
+                        groups.Add(new NGroup(group));
+                    }
+                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.MatchData:
+                    if (OnMatchData != null)
+                    {
+                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
+                    }
+                    break;
+                case Envelope.PayloadOneofCase.MatchPresence:
+                    if (OnMatchPresence != null)
+                    {
+                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
+                    }
                     break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));
+                    break;
+                case Envelope.PayloadOneofCase.StorageKey:
+                    var keys = new List<INStorageKey>();
+                    foreach (var key in message.StorageKey.Keys)
+                    {
+                        keys.Add(new NStorageKey(key));
+                    }
+                    pair.Key(new NResultSet<INStorageKey>(keys, null));
+                    break;
+                case Envelope.PayloadOneofCase.StorageData:
+                    var storageData = new List<INStorageData>();
+                    foreach (var data in message.StorageData.Data)
+                    {
+                        storageData.Add(new NStorageData(data));
+                    }
+                    pair.Key(new NResultSet<INStorageData>(storageData, null));
+                    break;
+                case Envelope.PayloadOneofCase.Topic:
+                    pair.Key(new NTopic(message.Topic));
+                    break;
+                case Envelope.PayloadOneofCase.TopicMessage:
+                    if (OnTopicMessage != null)
+                    {
+                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
+                    }
+                    break;
+                case Envelope.PayloadOneofCase.TopicMessageAck:
+                    pair.Key(new NTopicMessageAck(message.TopicMessageAck));
+                    break;
+                case Envelope.PayloadOneofCase.TopicMessages:
+                    var topicMessages = new List<INTopicMessage>();
+                    foreach (var topicMessage in message.TopicMessages.Messages)
+                    {
+                        topicMessages.Add(new NTopicMessage(topicMessage));
+                    }
+                    pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.TopicPresence:
+                    if (OnTopicPresence != null)
+                    {
+                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
+                    }
                     break;
                 case Envelope.PayloadOneofCase.Users:
                     var users = new List<INUser>();
@@ -384,7 +483,7 @@ namespace Nakama
                 {
                     try
                     {
-                        var response = (HttpWebResponse) ((HttpWebRequest) iar.AsyncState).EndGetResponse(iar);
+                        var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
                         successAction(response);
                     }
                     catch (WebException e)
@@ -400,7 +499,7 @@ namespace Nakama
             };
             dispatchAction.BeginInvoke((iar) =>
             {
-                var action = (Action) iar.AsyncState;
+                var action = (Action)iar.AsyncState;
                 action.EndInvoke(iar);
             }, dispatchAction);
         }
