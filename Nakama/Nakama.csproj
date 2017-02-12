@@ -67,7 +67,7 @@
     <Compile Include="INSession.cs" />
     <Compile Include="INStorageData.cs" />
     <Compile Include="INSyncState.cs" />
-    <Compile Include="INTopic.cs" />
+    <Compile Include="INTopicId.cs" />
     <Compile Include="INTopicMessage.cs" />
     <Compile Include="INTopicMessageAck.cs" />
     <Compile Include="INTopicPresence.cs" />
@@ -108,7 +108,7 @@
     <Compile Include="NStorageKey.cs" />
     <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NStorageWriteMessage.cs" />
-    <Compile Include="NTopic.cs" />
+    <Compile Include="NTopicId.cs" />
     <Compile Include="NTopicLeaveMessage.cs" />
     <Compile Include="NTopicMessage.cs" />
     <Compile Include="NTopicMessageAck.cs" />

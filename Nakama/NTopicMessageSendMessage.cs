@@ -28,10 +28,10 @@ namespace Nakama
             }
         }
 
-        private NTopicMessageSendMessage(INTopic topic, byte[] data)
+        private NTopicMessageSendMessage(INTopicId topic, byte[] data)
         {
             payload = new Envelope {TopicMessageSend = new TTopicMessageSend()};
-            payload.TopicMessageSend.Topic = new Topic();
+            payload.TopicMessageSend.Topic = new TopicId();
             switch (topic.Type)
             {
                 case TopicType.DirectMessage:
@@ -58,7 +58,7 @@ namespace Nakama
             return String.Format(f, payload.TopicMessageSend.Topic, payload.TopicMessageSend.Data);
         }
 
-        public static NTopicMessageSendMessage Default(INTopic topic, byte[] data)
+        public static NTopicMessageSendMessage Default(INTopicId topic, byte[] data)
         {
             return new NTopicMessageSendMessage(topic, data);
         }

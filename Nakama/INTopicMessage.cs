@@ -20,7 +20,7 @@ namespace Nakama
 
     public interface INTopicMessage
     {
-        INTopic Topic { get; }
+        INTopicId Topic { get; }
         byte[] UserId { get; }
         byte[] MessageId { get; }
         long CreatedAt { get; }

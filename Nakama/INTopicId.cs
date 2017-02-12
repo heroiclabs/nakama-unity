@@ -18,7 +18,7 @@ namespace Nakama
 {
     public enum TopicType : uint { DirectMessage = 0, Room, Group }
 
-    public interface INTopic
+    public interface INTopicId
     {
         byte[] Id { get; }
         TopicType Type { get; }

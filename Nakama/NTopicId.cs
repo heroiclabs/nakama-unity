@@ -18,25 +18,25 @@ using System;
 
 namespace Nakama
 {
-    public class NTopic : INTopic
+    public class NTopicId : INTopicId
     {
         public byte[] Id { get; private set; }
 
         public TopicType Type { get; private set; }
 
-        internal NTopic(Topic message)
+        internal NTopicId(TopicId message)
         {
             switch (message.IdCase)
             {
-                case Topic.IdOneofCase.Dm:
+                case TopicId.IdOneofCase.Dm:
                     Id = message.Dm.ToByteArray();
                     Type = TopicType.DirectMessage;
                     break;
-                case Topic.IdOneofCase.Room:
+                case TopicId.IdOneofCase.Room:
                     Id = message.Room.ToByteArray();
                     Type = TopicType.Room;
                     break;
-                case Topic.IdOneofCase.GroupId:
+                case TopicId.IdOneofCase.GroupId:
                     Id = message.GroupId.ToByteArray();
                     Type = TopicType.Group;
                     break;
@@ -48,7 +48,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NTopic(Id={0},Type={1})";
+            var f = "NTopicId(Id={0},Type={1})";
             return String.Format(f, Id, Type);
         }
     }

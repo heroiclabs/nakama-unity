@@ -22,7 +22,7 @@ namespace Nakama
 {
     public class NTopicPresence : INTopicPresence
     {
-        public INTopic Topic { get; private set; }
+        public INTopicId Topic { get; private set; }
 
         public IList<INUserPresence> Join { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Nakama
 
         internal NTopicPresence(TopicPresence message)
         {
-            Topic = new NTopic(message.Topic);
+            Topic = new NTopicId(message.Topic);
             Join = new List<INUserPresence>();
             Leave = new List<INUserPresence>();
 

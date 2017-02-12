@@ -20,7 +20,7 @@ namespace Nakama
 {
     public class NTopicMessage : INTopicMessage
     {
-        public INTopic Topic { get; private set; }
+        public INTopicId Topic { get; private set; }
 
         public byte[] UserId { get; private set; }
 
@@ -38,7 +38,7 @@ namespace Nakama
 
         internal NTopicMessage(TopicMessage message)
         {
-            Topic = new NTopic(message.Topic);
+            Topic = new NTopicId(message.Topic);
             UserId = message.UserId.ToByteArray();
             MessageId = message.MessageId.ToByteArray();
             CreatedAt = message.CreatedAt;

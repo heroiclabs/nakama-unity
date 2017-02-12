@@ -28,10 +28,10 @@ namespace Nakama
             }
         }
 
-        private NTopicLeaveMessage(INTopic topic)
+        private NTopicLeaveMessage(INTopicId topic)
         {
             payload = new Envelope {TopicLeave = new TTopicLeave()};
-            payload.TopicLeave.Topic = new Topic();
+            payload.TopicLeave.Topic = new TopicId();
             switch (topic.Type)
             {
                 case TopicType.DirectMessage:
@@ -56,7 +56,7 @@ namespace Nakama
             return String.Format("NTopicLeaveMessage(Topic={0})", payload.TopicLeave.Topic);
         }
 
-        public static NTopicLeaveMessage Default(INTopic topic)
+        public static NTopicLeaveMessage Default(INTopicId topic)
         {
             return new NTopicLeaveMessage(topic);
         }

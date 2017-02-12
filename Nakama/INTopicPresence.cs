@@ -21,7 +21,7 @@ namespace Nakama
 {
     public interface INTopicPresence
     {
-        INTopic Topic { get; }
+        INTopicId Topic { get; }
 
         IList<INUserPresence> Join { get; }
 
