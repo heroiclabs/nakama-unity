@@ -109,6 +109,7 @@
     <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NStorageWriteMessage.cs" />
     <Compile Include="NTopic.cs" />
+    <Compile Include="NTopicLeaveMessage.cs" />
     <Compile Include="NTopicMessage.cs" />
     <Compile Include="NTopicMessageAck.cs" />
     <Compile Include="NTopicMessageSendMessage.cs" />
