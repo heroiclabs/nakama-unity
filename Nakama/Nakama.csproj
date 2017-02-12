@@ -70,6 +70,7 @@
     <Compile Include="NClient.cs" />
     <Compile Include="NConsoleLogger.cs" />
     <Compile Include="NError.cs" />
+    <Compile Include="NErrorEventArgs.cs" />
     <Compile Include="NGroup.cs" />
     <Compile Include="NGroupAddUserMessage.cs" />
     <Compile Include="NGroupCreateMessage.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="NGroupUpdateMessage.cs" />
     <Compile Include="NGroupUser.cs" />
     <Compile Include="NGroupUsersListMessage.cs" />
-    <Compile Include="NMessageEventArgs.cs" />
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
     <Compile Include="NSession.cs" />

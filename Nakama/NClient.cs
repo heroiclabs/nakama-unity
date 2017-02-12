@@ -39,14 +39,19 @@ namespace Nakama
 
         public event EventHandler OnDisconnect;
 
+        public event EventHandler<NErrorEventArgs> OnError;
+
+        public event EventHandler OnMatchMessage;
+
+        public event EventHandler OnTopicMessage;
+
         public uint Port { get; private set; }
 
         public string ServerKey { get; private set; }
 
         public long ServerTime
         {
-            get
-            {
+            get {
                 if (serverTime < 1)
                 {
                     // Time has not been set via socket yet.
@@ -55,8 +60,7 @@ namespace Nakama
                 }
                 return serverTime;
             }
-            private set
-            {
+            private set {
                 // Dont let server time go backwards.
                 if ((value - serverTime) > 0)
                 {
@@ -70,8 +74,6 @@ namespace Nakama
         public uint Timeout { get; private set; }
 
         public bool Trace { get; private set; }
-
-        public event EventHandler<NMessageEventArgs> OnMessage;
 
         private IDictionary<string, KeyValuePair<Action<object>, Action<INError>>> collationIds =
                 new Dictionary<string, KeyValuePair<Action<object>, Action<INError>>>();
@@ -336,11 +338,18 @@ namespace Nakama
                     pair.Key(true);
                     break;
                 case Envelope.PayloadOneofCase.Error:
+                    var error = new NError(message.Error.Reason);
                     if (collationId != null)
                     {
-                        pair.Value(new NError(message.Error.Reason));
+                        pair.Value(error);
                     }
-                    // TODO(novabyte) Proxy inbound errors to OnMessage
+                    else
+                    {
+                        if (OnError != null)
+                        {
+                            OnError(this, new NErrorEventArgs(error));
+                        }
+                    }
                     break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));

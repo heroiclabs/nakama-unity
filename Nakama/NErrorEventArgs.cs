@@ -18,7 +18,13 @@ using System;
 
 namespace Nakama
 {
-    public class NMessageEventArgs : EventArgs
+    public class NErrorEventArgs : EventArgs
     {
+        public INError Error { get; private set; }
+
+        internal NErrorEventArgs(NError error)
+        {
+            Error = error;
+        }
     }
 }

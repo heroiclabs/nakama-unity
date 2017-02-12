@@ -82,8 +82,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INUser> users = null;
 
-            var id = (session as NSession).Id;
-            var message = NUsersFetchMessage.Default(id);
+            var message = NUsersFetchMessage.Default(session.Id);
             client.Send(message, (INResultSet<INUser> results) => {
                 users = results;
                 evt.Set();
