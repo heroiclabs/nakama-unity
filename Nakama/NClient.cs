@@ -430,6 +430,12 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
                     break;
+                case Envelope.PayloadOneofCase.TopicPresence:
+                    if (OnTopicPresence != null)
+                    {
+                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
+                    }
+                    break;
                 case Envelope.PayloadOneofCase.Users:
                     var users = new List<INUser>();
                     foreach (var user in message.Users.Users)

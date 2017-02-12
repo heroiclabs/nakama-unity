@@ -34,7 +34,7 @@ namespace Nakama
             Data = message.Data.ToByteArray();
             Id = message.MatchId.ToByteArray();
             OpCode = message.OpCode;
-            UserPresence = new NUserPresence(message.UserPresence);
+            UserPresence = new NUserPresence(message.User);
         }
 
         public override string ToString()

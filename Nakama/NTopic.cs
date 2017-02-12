@@ -21,6 +21,7 @@ namespace Nakama
     public class NTopic : INTopic
     {
         public byte[] Id { get; private set; }
+
         public TopicType Type { get; private set; }
 
         internal NTopic(Topic message)
@@ -28,16 +29,16 @@ namespace Nakama
             switch (message.IdCase)
             {
                 case Topic.IdOneofCase.Dm:
-                    Id = message.Id.ToByteArray();
-                    TopicType = TopicType.DirectMessage;
+                    Id = message.Dm.ToByteArray();
+                    Type = TopicType.DirectMessage;
                     break;
                 case Topic.IdOneofCase.Room:
-                    Id = message.Id.ToByteArray();
-                    TopicType = TopicType.Room;
+                    Id = message.Room.ToByteArray();
+                    Type = TopicType.Room;
                     break;
-                case Topic.IdOneofCase.Group:
-                    Id = message.Id.ToByteArray();
-                    TopicType = TopicType.Group;
+                case Topic.IdOneofCase.GroupId:
+                    Id = message.GroupId.ToByteArray();
+                    Type = TopicType.Group;
                     break;
                 default:
                     // TODO log a warning?

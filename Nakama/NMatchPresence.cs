@@ -21,11 +21,11 @@ namespace Nakama
 {
     internal class NMatchPresence : INMatchPresence
     {
-        byte[] Id { get; }
+        public byte[] Id { get; private set; }
 
-        IList<INUserPresence> Join { get; }
+        public IList<INUserPresence> Join { get; private set; }
 
-        IList<INUserPresence> Leave { get; }
+        public IList<INUserPresence> Leave { get; private set; }
 
         internal NMatchPresence(MatchPresence message)
         {

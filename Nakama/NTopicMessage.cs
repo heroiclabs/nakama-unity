@@ -21,17 +21,24 @@ namespace Nakama
     public class NTopicMessage : INTopicMessage
     {
         public INTopic Topic { get; private set; }
+
         public byte[] UserId { get; private set; }
+
         public byte[] MessageId { get; private set; }
+
         public long CreatedAt { get; private set; }
+
         public long ExpiresAt { get; private set; }
+
         public string Handle { get; private set; }
+
         public TopicMessageType Type { get; private set; }
+
         public byte[] Data { get; private set; }
 
         internal NTopicMessage(TopicMessage message)
         {
-            Topic = NTopic(message.Topic);
+            Topic = new NTopic(message.Topic);
             UserId = message.UserId.ToByteArray();
             MessageId = message.MessageId.ToByteArray();
             CreatedAt = message.CreatedAt;

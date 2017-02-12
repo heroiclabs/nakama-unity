@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -42,7 +41,7 @@ namespace Nakama
                     payload.TopicMessageSend.Topic.Room = ByteString.CopyFrom(topic.Id);
                     break;
                 case TopicType.Group:
-                    payload.TopicMessageSend.Topic.Group = ByteString.CopyFrom(topic.Id);
+                    payload.TopicMessageSend.Topic.GroupId = ByteString.CopyFrom(topic.Id);
                     break;
             }
             payload.TopicMessageSend.Data = ByteString.CopyFrom(data);

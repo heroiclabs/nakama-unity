@@ -28,7 +28,7 @@ namespace Nakama.Tests
         private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
         private static readonly string DefaultServerKey = "defaultkey";
 
-        private static string[] BlankCases = new string[] {
+        public static string[] BlankCases = new string[] {
             "",
             " ",
             "\t",

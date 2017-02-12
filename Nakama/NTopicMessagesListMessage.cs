@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -41,9 +40,9 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NTopicMessagesListMessage(Id={0},IdOneofCase={1},Cursor={2},Forward={3},Limit={4})";
+            var f = "NTopicMessagesListMessage(Id={0},IdCase={1},Cursor={2},Forward={3},Limit={4})";
             var p = payload.TopicMessagesList;
-            return String.Format(f, p.Id, p.IdOneofCase, p.Cursor, p.Forward, p.Limit);
+            return String.Format(f, p.UserId, p.IdCase, p.Cursor, p.Forward, p.Limit);
         }
 
         public class Builder
@@ -76,21 +75,21 @@ namespace Nakama
             public Builder TopicDirectMessage(byte[] userId)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.UserId = userId;
+                message.payload.TopicMessagesList.UserId = ByteString.CopyFrom(userId);
                 return this;
             }
 
             public Builder TopicRoom(byte[] room)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.Room = room;
+                message.payload.TopicMessagesList.Room = ByteString.CopyFrom(room);
                 return this;
             }
 
             public Builder TopicGroup(byte[] groupId)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.GroupId = groupId;
+                message.payload.TopicMessagesList.GroupId = ByteString.CopyFrom(groupId);
                 return this;
             }
 
