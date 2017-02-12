@@ -421,7 +421,10 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
                     break;
-                case Enbelope.PayloadOneofCase.TopicMessages:
+                case Envelope.PayloadOneofCase.TopicMessageAck:
+                    pair.Key(new NTopicMessageAck(message.TopicMessageAck));
+                    break;
+                case Envelope.PayloadOneofCase.TopicMessages:
                     var topicMessages = new List<INTopicMessage>();
                     foreach (var topicMessage in message.TopicMessages.Messages)
                     {
