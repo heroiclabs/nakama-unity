@@ -405,6 +405,14 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
                     break;
+                case Enbelope.PayloadOneofCase.TopicMessages:
+                    var topicMessages = new List<INTopicMessage>();
+                    foreach (var topicMessage in message.TopicMessages.Messages)
+                    {
+                        topicMessages.Add(new NTopicMessage(topicMessage));
+                    }
+                    pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
+                    break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
                     break;
