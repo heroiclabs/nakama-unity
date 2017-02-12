@@ -42,7 +42,20 @@ namespace Nakama
         {
             var f = "NTopicMessagesListMessage(Id={0},IdCase={1},Cursor={2},Forward={3},Limit={4})";
             var p = payload.TopicMessagesList;
-            return String.Format(f, p.UserId, p.IdCase, p.Cursor, p.Forward, p.Limit);
+            byte[] id = null;
+            switch (p.IdCase)
+            {
+                case TTopicMessagesList.IdOneofCase.UserId:
+                    id = p.UserId.ToByteArray();
+                    break;
+                case TTopicMessagesList.IdOneofCase.Room:
+                    id = p.Room.ToByteArray();
+                    break;
+                case TTopicMessagesList.IdOneofCase.GroupId:
+                    id = p.GroupId.ToByteArray();
+                    break;
+            }
+            return String.Format(f, id, p.IdCase, p.Cursor, p.Forward, p.Limit);
         }
 
         public class Builder

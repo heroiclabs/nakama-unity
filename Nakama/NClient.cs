@@ -413,6 +413,9 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INStorageData>(storageData, null));
                     break;
+                case Envelope.PayloadOneofCase.Topic:
+                    pair.Key(new NTopic(message.Topic));
+                    break;
                 case Envelope.PayloadOneofCase.TopicMessage:
                     if (OnTopicMessage != null)
                     {
