@@ -355,6 +355,33 @@ namespace Nakama
                         }
                     }
                     break;
+                case Envelope.PayloadOneofCase.Friends:
+                    var friends = new List<INFriend>();
+                    foreach (var friend in message.Friends.Friends)
+                    {
+                        friends.Add(new NFriend(friend));
+                    }
+                    pair.Key(new NResultSet<INFriend>(friends, null));
+                    break;
+                case Envelope.PayloadOneofCase.Group:
+                    pair.Key(new NGroup(message.Group.Group));
+                    break;
+                case Envelope.PayloadOneofCase.GroupUsers:
+                    var groupUsers = new List<INGroupUser>();
+                    foreach (var groupUser in message.GroupUsers.Users)
+                    {
+                        groupUsers.Add(new NGroupUser(groupUser));
+                    }
+                    pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
+                    break;
+                case Envelope.PayloadOneofCase.Groups:
+                    var groups = new List<INGroup>();
+                    foreach (var group in message.Groups.Groups)
+                    {
+                        groups.Add(new NGroup(group));
+                    }
+                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
+                    break;
                 case Envelope.PayloadOneofCase.MatchData:
                     if (OnMatchData != null)
                     {
@@ -364,27 +391,11 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.MatchPresence:
                     if (OnMatchPresence != null)
                     {
-                        // TODO
+                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
                     }
                     break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));
-                    break;
-                case Envelope.PayloadOneofCase.Users:
-                    var users = new List<INUser>();
-                    foreach (var user in message.Users.Users)
-                    {
-                        users.Add(new NUser(user));
-                    }
-                    pair.Key(new NResultSet<INUser>(users, null));
-                    break;
-                case Envelope.PayloadOneofCase.Friends:
-                    var friends = new List<INFriend>();
-                    foreach (var friend in message.Friends.Friends)
-                    {
-                        friends.Add(new NFriend(friend));
-                    }
-                    pair.Key(new NResultSet<INFriend>(friends, null));
                     break;
                 case Envelope.PayloadOneofCase.StorageKey:
                     var keys = new List<INStorageKey>();
@@ -402,24 +413,11 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INStorageData>(storageData, null));
                     break;
-                case Envelope.PayloadOneofCase.Group:
-                    pair.Key(new NGroup(message.Group.Group));
-                    break;
-                case Envelope.PayloadOneofCase.Groups:
-                    var groups = new List<INGroup>();
-                    foreach (var group in message.Groups.Groups)
+                case Envelope.PayloadOneofCase.TopicMessage:
+                    if (OnTopicMessage != null)
                     {
-                        groups.Add(new NGroup(group));
+                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
                     }
-                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
-                    break;
-                case Envelope.PayloadOneofCase.GroupUsers:
-                    var groupUsers = new List<INGroupUser>();
-                    foreach (var groupUser in message.GroupUsers.Users)
-                    {
-                        groupUsers.Add(new NGroupUser(groupUser));
-                    }
-                    pair.Key(new NResultSet<INGroupUser>(groupUsers, null));
                     break;
                 case Envelope.PayloadOneofCase.TopicMessageAck:
                     pair.Key(new NTopicMessageAck(message.TopicMessageAck));
@@ -431,6 +429,14 @@ namespace Nakama
                         topicMessages.Add(new NTopicMessage(topicMessage));
                     }
                     pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.Users:
+                    var users = new List<INUser>();
+                    foreach (var user in message.Users.Users)
+                    {
+                        users.Add(new NUser(user));
+                    }
+                    pair.Key(new NResultSet<INUser>(users, null));
                     break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);

@@ -98,13 +98,13 @@ task unityPackage(type: Exec) {
   doFirst {
     copy {
       from "$projectDir/Nakama"
-      into "$unityprojectDir/Assets/Nakama/Assets/Nakama"
+      into "$unityprojectDir/Assets/Nakama"
       include '**/*.cs'
     }
 
     copy {
       from "$buildDir/msbuild/bin"
-      into "$unityprojectDir/Assets/Nakama/Assets/Plugins"
+      into "$unityprojectDir/Assets/Plugins"
       include 'Google.Protobuf.dll'
       include 'websocket-sharp.dll'
     }
@@ -115,7 +115,7 @@ task unityPackage(type: Exec) {
        '-nographics',
        '-logFile',
        '-projectPath', "$unityprojectDir",
-       '-exportPackage', 'Nakama/Assets', 'Nakama.unitypackage',
+       '-exportPackage', 'Assets', 'Nakama.unitypackage',
        '-quit'
 }
 unityPackage.dependsOn msbuild

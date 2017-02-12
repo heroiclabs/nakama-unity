@@ -15,32 +15,32 @@
  */
 
 using System;
-using Google.Protobuf;
+using System.Collections.Generic;
 
 namespace Nakama
 {
-    internal class NMatchData : INMatchData
+    internal class NMatchPresence : INMatchPresence
     {
-        public byte[] Data { get; private set; }
+        byte[] Id { get; }
 
-        public byte[] Id { get; private set; }
+        IList<INUserPresence> Join { get; }
 
-        public long OpCode { get; private set; }
+        IList<INUserPresence> Leave { get; }
 
-        public INUserPresence UserPresence { get; private set; }
-
-        internal NMatchData(MatchData message)
+        internal NMatchPresence(MatchPresence message)
         {
-            Data = message.Data.ToByteArray();
             Id = message.MatchId.ToByteArray();
-            OpCode = message.OpCode;
-            UserPresence = new NUserPresence(message.UserPresence);
-        }
+            Join = new List<INUserPresence>();
+            Leave = new List<INUserPresence>();
 
-        public override string ToString()
-        {
-            var f = "NMatchData(Data={0},Id={1},OpCode={2},UserPresence={3})";
-            return String.Format(f, Data, Id, OpCode, UserPresence);
+            foreach (var item in message.Joins)
+            {
+                Join.Add(new NUserPresence(item));
+            }
+            foreach (var item in message.Leaves)
+            {
+                Leave.Add(new NUserPresence(item));
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Nakama
         public long ExpiresAt { get; private set; }
         public string Handle { get; private set; }
 
-        internal NTopicMessageAck(TopicMessageAck message)
+        internal NTopicMessageAck(TTopicMessageAck message)
         {
             MessageId = message.MessageId.ToByteArray();
             CreatedAt = message.CreatedAt;
