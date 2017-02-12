@@ -81,7 +81,7 @@ $(function() {
 </blockquote>
 <p><a class="el" href="namespace_nakama.html">Nakama</a> is an open-source distributed server for social and realtime games. For more information have a look at the <a href="https://heroiclabs.com/docs/">server documentation</a>; and for a quick list of build targets run <code>gradle tasks</code>.</p>
 <p>The <a href="https://heroiclabs.com/docs/clients/unity/">client guide</a> is available on the server documentation. The <a href="http://heroiclabs.github.io/nakama-unity/">client reference documentation</a> is deployed on gh-pages.</p>
-<p>If you encounter any issues with the server you can generate diagnostics for us with <code>nakama doctor</code>. Send these to <a href="#" onclick="location.href='mai'+'lto:'+'sup'+'po'+'rt@'+'he'+'roi'+'cl'+'abs'+'.c'+'om'; return false;">suppo<span style="display: none;">.nosp@m.</span>rt@h<span style="display: none;">.nosp@m.</span>eroic<span style="display: none;">.nosp@m.</span>labs<span style="display: none;">.nosp@m.</span>.com</a> or <a href="https://github.com/heroiclabs/nakama/issues">open an issue</a>. Any issues with the client it can be useful to enable trace to display logs and <a href="https://github.com/heroiclabs/nakama-unity/issues">open an issue</a>.</p>
+<p>If you encounter any issues with the server you can generate diagnostics for us with <code>nakama doctor</code>. Send these to <a href="#" onclick="location.href='mai'+'lto:'+'sup'+'po'+'rt@'+'he'+'roi'+'cl'+'abs'+'.c'+'om'; return false;">suppo<span style="display: none;">.nosp@m.</span>rt@h<span style="display: none;">.nosp@m.</span>eroic<span style="display: none;">.nosp@m.</span>labs<span style="display: none;">.nosp@m.</span>.com</a> or <a href="https://github.com/heroiclabs/nakama/issues">open an issue</a>. If you experience any issues with the client, it can be useful to enable trace (<code>.Trace(true)</code>) to produce logs and <a href="https://github.com/heroiclabs/nakama-unity/issues">open an issue</a>.</p>
 <h3> Start client</h3>
 <p>Have a look at the <a href="https://heroiclabs.com/docs/clients/unity/">quickstart guide</a> for a full introduction on how to get started with the client in development and/or production.</p>
 <p>To create a client and connect to the <a class="el" href="namespace_nakama.html">Nakama</a> server with the default settings:</p>
@@ -91,6 +91,7 @@ $(function() {
 <li><b>unity</b> The Unity editor/compiler toolchain.</li>
 <li><b>gradle</b> A JVM-based build tool.</li>
 <li><b>protobuf</b> A toolchain used to create custom protocols.</li>
+<li><b>doxygen</b> A tool for generating documentation from annotated source.</li>
 </ul>
 <p>You can then install code dependencies:</p>
 <div class="fragment"><div class="line">$&gt; gradle nugetRestore</div></div><!-- fragment --><p>For development use the compile and test run cycle:</p>

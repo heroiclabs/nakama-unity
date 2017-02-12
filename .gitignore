@@ -2,6 +2,7 @@
 
 Nakama/*.pb.cs
 Nakama.UnityTests/Library/
+.vscode
 
 ### Csharp ###
 ## Ignore Visual Studio temporary files, build results, and
