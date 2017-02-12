@@ -52,8 +52,7 @@ namespace Nakama
             var f = "NGroup(Id={0},Private={1},CreatorId={2},Name={3},Description={4},AvatarUrl={5}," +
                     "Lang={6},Metadata={7},Count={8},CreatedAt={9},UpdatedAt={10})";
             return String.Format(f, Id, Private, CreatorId, Name, Description, AvatarUrl,
-                    Lang, Metadata, Count,CreatedAt, UpdatedAt);
+                    Lang, Metadata, Count, CreatedAt, UpdatedAt);
         }
-
     }
 }
