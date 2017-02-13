@@ -4,6 +4,9 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Incoming realtime messages do not need collation.
+- Correctly expose event handlers in `INClient`.
 
 ## [0.2.0] - 2017-02-12
 ### Added
