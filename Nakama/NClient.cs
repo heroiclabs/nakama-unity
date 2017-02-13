@@ -330,6 +330,30 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.Heartbeat:
                     ServerTime = message.Heartbeat.Timestamp;
                     return;
+                case Envelope.PayloadOneofCase.MatchData:
+                    if (OnMatchData != null)
+                    {
+                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
+                    }
+                    return;
+                case Envelope.PayloadOneofCase.MatchPresence:
+                    if (OnMatchPresence != null)
+                    {
+                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
+                    }
+                    return;
+                case Envelope.PayloadOneofCase.TopicMessage:
+                    if (OnTopicMessage != null)
+                    {
+                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
+                    }
+                    return;
+                case Envelope.PayloadOneofCase.TopicPresence:
+                    if (OnTopicPresence != null)
+                    {
+                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
+                    }
+                    return;
             }
 
             var collationId = message.CollationId;
@@ -382,18 +406,6 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
                     break;
-                case Envelope.PayloadOneofCase.MatchData:
-                    if (OnMatchData != null)
-                    {
-                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
-                    }
-                    break;
-                case Envelope.PayloadOneofCase.MatchPresence:
-                    if (OnMatchPresence != null)
-                    {
-                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
-                    }
-                    break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));
                     break;
@@ -416,12 +428,6 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.Topic:
                     pair.Key(new NTopic(message.Topic));
                     break;
-                case Envelope.PayloadOneofCase.TopicMessage:
-                    if (OnTopicMessage != null)
-                    {
-                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
-                    }
-                    break;
                 case Envelope.PayloadOneofCase.TopicMessageAck:
                     pair.Key(new NTopicMessageAck(message.TopicMessageAck));
                     break;
@@ -432,12 +438,6 @@ namespace Nakama
                         topicMessages.Add(new NTopicMessage(topicMessage));
                     }
                     pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
-                    break;
-                case Envelope.PayloadOneofCase.TopicPresence:
-                    if (OnTopicPresence != null)
-                    {
-                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
-                    }
                     break;
                 case Envelope.PayloadOneofCase.Users:
                     var users = new List<INUser>();

@@ -30,6 +30,16 @@ namespace Nakama
 
         event EventHandler OnDisconnect;
 
+        event EventHandler<NErrorEventArgs> OnError;
+
+        event EventHandler<NMatchDataEventArgs> OnMatchData;
+
+        event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+
+        event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+
+        event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+
         uint Port { get; }
 
         string ServerKey { get; }
