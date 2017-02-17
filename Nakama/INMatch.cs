@@ -18,14 +18,9 @@ using System;
 
 namespace Nakama
 {
-    public interface INMatchData
+    public interface INMatch
     {
-        byte[] Data { get; }
-
         byte[] Id { get; }
-
-        long OpCode { get; }
-
-        INUserPresence Presence { get; }
+        INUserPresence Self { get; }
     }
 }

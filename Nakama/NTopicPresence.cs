@@ -43,5 +43,11 @@ namespace Nakama
                 Leave.Add(new NUserPresence(item));
             }
         }
+
+        public override string ToString()
+        {
+            var f = "NTopicPresence(Topic={0},Join={1},Leave={2})";
+            return String.Format(f, Topic, Join, Leave);
+        }
     }
 }

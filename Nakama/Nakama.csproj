@@ -59,8 +59,10 @@
     <Compile Include="INError.cs" />
     <Compile Include="INFriend.cs" />
     <Compile Include="INLogger.cs" />
+    <Compile Include="INMatch.cs" />
     <Compile Include="INMatchData.cs" />
     <Compile Include="INMatchPresence.cs" />
+    <Compile Include="INMatchPresences.cs" />
     <Compile Include="INMessage.cs" />
     <Compile Include="INResultSet.cs" />
     <Compile Include="INSelf.cs" />
@@ -93,10 +95,16 @@
     <Compile Include="NGroupUpdateMessage.cs" />
     <Compile Include="NGroupUser.cs" />
     <Compile Include="NGroupUsersListMessage.cs" />
+    <Compile Include="NMatch.cs" />
+    <Compile Include="NMatchCreateMessage.cs" />
     <Compile Include="NMatchData.cs" />
     <Compile Include="NMatchDataEventArgs.cs" />
+    <Compile Include="NMatchDataSendMessage.cs" />
+    <Compile Include="NMatchJoinMessage.cs" />
+    <Compile Include="NMatchLeaveMessage.cs" />
     <Compile Include="NMatchPresence.cs" />
     <Compile Include="NMatchPresenceEventArgs.cs" />
+    <Compile Include="NMatchPresences.cs" />
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
     <Compile Include="NSelfFetchMessage.cs" />
