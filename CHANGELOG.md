@@ -3,13 +3,13 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.3.0] - 2017-02-18
 ### Added
-- Add full realtime match entities and handling.
+- Add new impl of realtime match entities.
 
 ### Fixed
 - Incoming realtime messages do not need collation.
-- Correctly expose event handlers in `INClient`.
+- Add event handlers to `INClient` interface.
 
 ## [0.2.0] - 2017-02-12
 ### Added
