@@ -15,17 +15,25 @@
  */
 
 using System;
+using Google.Protobuf;
 
 namespace Nakama
 {
-    public interface INMatchData
+    internal class NMatch : INMatch
     {
-        byte[] Data { get; }
+        public byte[] Id { get; private set; }
+        public INUserPresence Self { get; private set; }
 
-        byte[] Id { get; }
+        internal NMatch(TMatch message)
+        {
+            Id = message.Id.ToByteArray();
+            Self = new NUserPresence(message.Self);
+        }
 
-        long OpCode { get; }
-
-        INUserPresence Presence { get; }
+        public override string ToString()
+        {
+            var f = "NMatch(Id={0},Self={1})";
+            return String.Format(f, Id, Self);
+        }
     }
 }

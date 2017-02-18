@@ -15,17 +15,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace Nakama
 {
-    public interface INMatchData
+    public interface INMatchPresences
     {
-        byte[] Data { get; }
-
-        byte[] Id { get; }
-
-        long OpCode { get; }
-
-        INUserPresence Presence { get; }
+        IList<INUserPresence> Presence { get; }
+        INUserPresence Self { get; }
     }
 }

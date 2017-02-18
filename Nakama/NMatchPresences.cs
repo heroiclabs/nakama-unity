@@ -19,34 +19,28 @@ using System.Collections.Generic;
 
 namespace Nakama
 {
-    internal class NMatchPresence : INMatchPresence
+    internal class NMatchPresences : INMatchPresences
     {
-        public byte[] Id { get; private set; }
+        public IList<INUserPresence> Presence { get; private set; }
 
-        public IList<INUserPresence> Join { get; private set; }
+        public INUserPresence Self { get; private set; }
 
-        public IList<INUserPresence> Leave { get; private set; }
-
-        internal NMatchPresence(MatchPresence message)
+        internal NMatchPresences(TMatchPresences message)
         {
-            Id = message.MatchId.ToByteArray();
-            Join = new List<INUserPresence>();
-            Leave = new List<INUserPresence>();
+            Presence = new List<INUserPresence>();
 
-            foreach (var item in message.Joins)
+            foreach (var item in message.Presences)
             {
-                Join.Add(new NUserPresence(item));
+                Presence.Add(new NUserPresence(item));
             }
-            foreach (var item in message.Leaves)
-            {
-                Leave.Add(new NUserPresence(item));
-            }
+
+            Self = new NUserPresence(message.Self);
         }
 
         public override string ToString()
         {
-            var f = "NMatchPresence(Id={0},Join={1},Leave={2})";
-            return String.Format(f, Id, Join, Leave);
+            var f = "NMatchPresences(Presence={0},Self={1})";
+            return String.Format(f, Presence, Self);
         }
     }
 }

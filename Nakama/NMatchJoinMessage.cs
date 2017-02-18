@@ -19,28 +19,35 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    internal class NMatchData : INMatchData
+    public class NMatchJoinMessage : INMessage<INMatchPresences>
     {
-        public byte[] Data { get; private set; }
+        private Envelope payload;
+        public IMessage Payload {
+            get {
+                return payload;
+            }
+        }
 
-        public byte[] Id { get; private set; }
-
-        public long OpCode { get; private set; }
-
-        public INUserPresence Presence { get; private set; }
-
-        internal NMatchData(MatchData message)
+        private NMatchJoinMessage(byte[] matchId)
         {
-            Data = message.Data.ToByteArray();
-            Id = message.MatchId.ToByteArray();
-            OpCode = message.OpCode;
-            Presence = new NUserPresence(message.Presence);
+            payload = new Envelope {MatchJoin = new TMatchJoin()};
+            payload.MatchJoin.MatchId = ByteString.CopyFrom(matchId);
+        }
+
+        public void SetCollationId(string id)
+        {
+            payload.CollationId = id;
         }
 
         public override string ToString()
         {
-            var f = "NMatchData(Data={0},Id={1},OpCode={2},Presence={3})";
-            return String.Format(f, Data, Id, OpCode, Presence);
+            var f = "NMatchJoinMessage(MatchId={0})";
+            return String.Format(f, payload.MatchJoin.MatchId);
+        }
+
+        public static NMatchJoinMessage Default(byte[] matchId)
+        {
+            return new NMatchJoinMessage(matchId);
         }
     }
 }
