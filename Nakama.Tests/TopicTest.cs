@@ -32,11 +32,10 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId1;
         private static byte[] userId2;
 
         [SetUp]
-        public void ConnectClients()
+        public void SetUp()
         {
             INError error = null;
             client1 = new NClient.Builder(DefaultServerKey).Build();
@@ -45,7 +44,6 @@ namespace Nakama.Tests
             ManualResetEvent c1Evt = new ManualResetEvent(false);
             client1.Register(NAuthenticateMessage.Device(random.GetString()), (INSession session) =>
             {
-                userId1 = session.Id;
                 client1.Connect(session);
                 c1Evt.Set();
             }, (INError err) =>
@@ -84,7 +82,8 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build(), (INTopic topic) =>
+            var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
+            client1.Send(message, (INTopic topic) =>
             {
                 evt.Set();
             }, (INError err) =>
@@ -103,7 +102,8 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build(), (INTopic topic) =>
+            var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
+            client1.Send(message, (INTopic topic) =>
             {
                 client1.Send(NTopicLeaveMessage.Default(topic.Topic), (bool complete) =>
                 {
@@ -129,7 +129,8 @@ namespace Nakama.Tests
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
             byte[] room = Encoding.UTF8.GetBytes("test-room");
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic) =>
+            var message = new NTopicJoinMessage.Builder().TopicRoom(room).Build();
+            client1.Send(message, (INTopic topic) =>
             {
                 evt1.Set();
             }, (INError err) =>

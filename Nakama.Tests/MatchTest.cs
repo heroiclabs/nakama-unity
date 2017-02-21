@@ -32,11 +32,10 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId1;
         private static byte[] userId2;
 
         [SetUp]
-        public void ConnectClients()
+        public void SetUp()
         {
             INError error = null;
             client1 = new NClient.Builder(DefaultServerKey).Build();
@@ -45,7 +44,6 @@ namespace Nakama.Tests
             ManualResetEvent c1Evt = new ManualResetEvent(false);
             client1.Register(NAuthenticateMessage.Device(random.GetString()), (INSession session) =>
             {
-                userId1 = session.Id;
                 client1.Connect(session);
                 c1Evt.Set();
             }, (INError err) =>
