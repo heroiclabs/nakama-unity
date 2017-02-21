@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -22,18 +23,24 @@ namespace Nakama
     internal class NMatch : INMatch
     {
         public byte[] Id { get; private set; }
+        public IList<INUserPresence> Presence { get; private set; }
         public INUserPresence Self { get; private set; }
 
         internal NMatch(TMatch message)
         {
-            Id = message.Id.ToByteArray();
+            Id = message.MatchId.ToByteArray();
+            Presence = new List<INUserPresence>();
+            foreach (var item in message.Presences)
+            {
+                Presence.Add(new NUserPresence(item));
+            }
             Self = new NUserPresence(message.Self);
         }
 
         public override string ToString()
         {
-            var f = "NMatch(Id={0},Self={1})";
-            return String.Format(f, Id, Self);
+            var f = "NMatch(Id={0},Presence={1},Self={2})";
+            return String.Format(f, Id, Presence, Self);
         }
     }
 }

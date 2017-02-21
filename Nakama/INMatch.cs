@@ -15,12 +15,14 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace Nakama
 {
     public interface INMatch
     {
         byte[] Id { get; }
+        IList<INUserPresence> Presence { get; }
         INUserPresence Self { get; }
     }
 }

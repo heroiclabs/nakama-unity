@@ -409,9 +409,6 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.Match:
                     pair.Key(new NMatch(message.Match));
                     break;
-                case Envelope.PayloadOneofCase.MatchPresences:
-                    pair.Key(new NMatchPresences(message.MatchPresences));
-                    break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));
                     break;

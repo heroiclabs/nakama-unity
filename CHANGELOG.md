@@ -9,6 +9,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Added
 - Add new impl of realtime match entities.
 
+### Changed
+- Merge match entities into single `INMatch`.
+
 ### Fixed
 - Incoming realtime messages do not need collation.
 - Add event handlers to `INClient` interface.
