@@ -29,7 +29,7 @@ namespace Nakama
         event EventHandler OnOpen;
     }
 
-    internal class WebSocketMessageEventArgs : EventArgs
+    public class WebSocketMessageEventArgs : EventArgs
     {
         public byte[] Data { get ; private set; }
 
@@ -39,7 +39,7 @@ namespace Nakama
         }
     }
 
-    internal class WebSocketCloseEventArgs : EventArgs
+    public class WebSocketCloseEventArgs : EventArgs
     {
         public ushort Code { get; private set; }
         public string Reason{ get; private set; }
@@ -51,7 +51,7 @@ namespace Nakama
         }
     }
 
-    internal class WebSocketErrorEventArgs : EventArgs
+    public class WebSocketErrorEventArgs : EventArgs
     {
         public Exception Error { get ; private set; }
 

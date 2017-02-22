@@ -90,6 +90,11 @@ namespace Nakama
         {
             ConnectTimeout = 3000;
             Host = "127.0.0.1";
+            Port = 7350;
+            ServerKey = serverKey;
+            SSL = false;
+            Timeout = 5000;
+            Trace = false;
             Lang = "en";
 #if UNITY
             // NOTE Not compiled by default; avoids dependency on UnityEngine
@@ -97,17 +102,21 @@ namespace Nakama
 #else
             Logger = new NConsoleLogger();
 #endif
-            Port = 7350;
-            ServerKey = serverKey;
-            SSL = false;
-            Timeout = 5000;
-            Trace = false;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+            transport = new NTransportJavascript
+            {
+                Logger = Logger,
+                Trace = Trace
+            };
+            NTransportJavascript.sl = Logger;
+#else
             transport = new NTransportSharp
             {
                 Logger = Logger,
                 Trace = Trace
             };
+#endif
 
             transport.OnClose += (sender, _) =>
             {
@@ -224,8 +233,6 @@ namespace Nakama
             var scheme = (SSL) ? "https" : "http";
             var uri = new UriBuilder(scheme, Host, unchecked((int)Port), path).Uri;
             Logger.TraceFormatIf(Trace, "Url={0}, Payload={1}", uri, payload);
-
-            var request = (HttpWebRequest)WebRequest.Create(uri);
 
             byte[] buffer = Encoding.UTF8.GetBytes(ServerKey + ":");
             var authHeader = String.Concat("Basic ", Convert.ToBase64String(buffer));
@@ -431,6 +438,7 @@ namespace Nakama
             {
                 client.Logger = logger;
                 client.transport.Logger = logger;
+                NTransportJavascript.sl = logger; //TODO remove this
                 return this;
             }
 
