@@ -84,7 +84,7 @@ namespace Nakama
 
         private long serverTime = 0;
 
-        private WebSocket socket;
+        private INTransport transport;
 
         private NClient(string serverKey)
         {
@@ -102,28 +102,48 @@ namespace Nakama
             SSL = false;
             Timeout = 5000;
             Trace = false;
+
+            transport = new NTransportSharp
+            {
+                Logger = Logger,
+                Trace = Trace
+            };
+
+            transport.OnClose += (sender, _) =>
+            {
+                collationIds.Clear();
+                OnDisconnect.Emit(this, EventArgs.Empty);
+            };
+            transport.OnMessage += (sender, m) =>
+            {
+                var message = Envelope.Parser.ParseFrom(m.Data);
+                Logger.TraceFormatIf(Trace, "SocketDecoded: {0}", message);
+                onMessage(message);
+            };
+        }
+
+        public void Register(INAuthenticateMessage message,
+            Action<INSession> callback,
+            Action<INError> errback)
+        {
+            authenticate("/user/register", message.Payload, Lang, callback, errback);
+        }
+
+        public void Login(INAuthenticateMessage message,
+            Action<INSession> callback,
+            Action<INError> errback)
+        {
+            authenticate("/user/login", message.Payload, Lang, callback, errback);
         }
 
         public void Connect(INSession session)
         {
-            if (socket == null)
-            {
-                socket = createSocket(session);
-            }
-            socket.Connect();
+            transport.Connect(getWebsocketUri(session));
         }
 
         public void Connect(INSession session, Action<bool> callback)
         {
-            if (socket == null)
-            {
-                socket = createSocket(session);
-                socket.OnOpen += (sender, _) =>
-                {
-                    callback(true);
-                };
-            }
-            socket.ConnectAsync();
+            transport.ConnectAsync(getWebsocketUri(session), callback);
         }
 
         public static NClient Default(string serverKey)
@@ -133,58 +153,31 @@ namespace Nakama
 
         public void Disconnect()
         {
-            if (socket != null)
-            {
-                socket.Close(CloseStatusCode.Normal);
-            }
+            transport.Close();
         }
 
-        public void Disconnect(Action callback, Action<INError> errback)
+        public void Disconnect(Action callback)
         {
-            if (socket != null)
-            {
-                socket.CloseAsync(CloseStatusCode.Normal);
-            }
-            callback();
-        }
-
-        public void Login(INAuthenticateMessage message,
-                          Action<INSession> callback,
-                          Action<INError> errback)
-        {
-            authenticate("/user/login", message.Payload, Lang, callback, errback);
+            transport.CloseAsync(callback);
         }
 
         public void Logout()
         {
-            if (socket != null)
-            {
-                var payload = new Envelope {Logout = new Logout()};
-                var stream = new MemoryStream();
-                payload.WriteTo(stream);
-                socket.Send(stream.ToArray());
-            }
+            var payload = new Envelope {Logout = new Logout()};
+            var stream = new MemoryStream();
+            payload.WriteTo(stream);
+            transport.Send(stream.ToArray());
         }
 
         public void Logout(Action<bool> callback)
         {
-            if (socket != null)
+            var payload = new Envelope {Logout = new Logout()};
+            var stream = new MemoryStream();
+            payload.WriteTo(stream);
+            transport.SendAsync(stream.ToArray(), (bool completed) =>
             {
-                var payload = new Envelope {Logout = new Logout()};
-                var stream = new MemoryStream();
-                payload.WriteTo(stream);
-                socket.SendAsync(stream.ToArray(), (bool completed) =>
-                {
-                    callback(completed);
-                });
-            }
-        }
-
-        public void Register(INAuthenticateMessage message,
-                             Action<INSession> callback,
-                             Action<INError> errback)
-        {
-            authenticate("/user/register", message.Payload, Lang, callback, errback);
+                callback(completed);
+            });
         }
 
         public void Send<T>(INMessage<T> message, Action<T> callback, Action<INError> errback)
@@ -203,7 +196,7 @@ namespace Nakama
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
             Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
-            socket.SendAsync(stream.ToArray(), (bool completed) =>
+            transport.SendAsync(stream.ToArray(), (bool completed) =>
             {
                 if (!completed)
                 {
@@ -221,105 +214,56 @@ namespace Nakama
 
         private void authenticate(string path,
                                   AuthenticateRequest payload,
-                                  string lang,
+                                  string langHeader,
                                   Action<INSession> callback,
                                   Action<INError> errback)
         {
+            // Add a collation ID for logs
+            payload.CollationId = Guid.NewGuid().ToString();
+
             var scheme = (SSL) ? "https" : "http";
             var uri = new UriBuilder(scheme, Host, unchecked((int)Port), path).Uri;
             Logger.TraceFormatIf(Trace, "Url={0}, Payload={1}", uri, payload);
 
-            // Add a collation ID for logs
-            payload.CollationId = Guid.NewGuid().ToString();
-
-            // Init base HTTP request
             var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Method = WebRequestMethods.Http.Post;
-            request.ContentType = "application/octet-stream;";
-            request.Accept = "application/octet-stream;";
 
-            // Add Headers
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            request.UserAgent = String.Format("nakama-unitysdk/{0}", version);
             byte[] buffer = Encoding.UTF8.GetBytes(ServerKey + ":");
-            var header = String.Concat("Basic ", Convert.ToBase64String(buffer));
-            request.Headers.Add(HttpRequestHeader.Authorization, header);
-            request.Headers.Add(HttpRequestHeader.AcceptLanguage, lang);
-
-            // Optimise request
-            request.Timeout = unchecked((int)ConnectTimeout);
-            request.ReadWriteTimeout = unchecked((int)Timeout);
-            request.KeepAlive = true;
-            request.Proxy = null;
+            var authHeader = String.Concat("Basic ", Convert.ToBase64String(buffer));
 
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            // FIXME(novabyte) Does HttpWebRequest ignore timeouts in async mode?
-            dispatchRequestAsync(request, payload, (response) =>
+            transport.Post(uri.ToString(), payload, authHeader, langHeader, Timeout, ConnectTimeout, (data) =>
             {
-                if (Trace)
-                {
-                    Logger.TraceFormat("RawHttpResponse={0}", customToString(response));
-                }
-                var stream = response.GetResponseStream();
-                AuthenticateResponse authResponse = AuthenticateResponse.Parser.ParseFrom(stream);
-                stream.Close();
+                AuthenticateResponse authResponse = AuthenticateResponse.Parser.ParseFrom(data);
                 Logger.TraceFormatIf(Trace, "DecodedResponse={0}", authResponse);
-                if (response.StatusCode == HttpStatusCode.OK)
+
+                switch (authResponse.PayloadCase)
                 {
-                    callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
+                    case AuthenticateResponse.PayloadOneofCase.Session:
+                        callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
+                        break;
+                    case AuthenticateResponse.PayloadOneofCase.Error:
+                        errback(new NError(authResponse.Error));
+                        break;
+                    case AuthenticateResponse.PayloadOneofCase.None:
+                        Logger.Error("Received invalid response from server");
+                        break;
+                    default:
+                        Logger.Error("Received invalid response from server");
+                        break;
                 }
-                else
-                {
-                    errback(new NError(authResponse.Error));
-                }
-                response.Close();
             }, (e) =>
             {
                 errback(new NError(e.Message));
             });
         }
 
-        private WebSocket createSocket(INSession session)
+        private string getWebsocketUri(INSession session)
         {
             // Init base WebSocket connection
             var scheme = (SSL) ? "wss" : "ws";
             var bUri = new UriBuilder(scheme, Host, unchecked((int)Port), "api");
             bUri.Query = String.Format("serverkey={0}&token={1}&lang={2}", ServerKey, session.Token, Lang);
-            WebSocket socket = new WebSocket(bUri.Uri.ToString());
-
-            if (Trace)
-            {
-                // TODO(novabyte) Do we log too much information?
-                // TODO(novabyte) How to redirect log output for Unity?
-                socket.Log.Level = LogLevel.Debug;
-            }
-
-            socket.OnClose += (sender, _) =>
-            {
-                collationIds.Clear();
-                // Release socket handle
-                socket = null;
-                Logger.TraceIf(Trace, "Socket Closed");
-                OnDisconnect.Emit(this, EventArgs.Empty);
-            };
-            socket.OnMessage += (sender, evt) =>
-            {
-                if (evt.IsPing)
-                {
-                    Logger.TraceIf(Trace, "SocketReceive: WebSocket ping.");
-                    return;
-                }
-                else if (evt.IsText)
-                {
-                    Logger.TraceIf(Trace, "SocketReceive: Invalid content (text/plain).");
-                    return;
-                }
-                var message = Envelope.Parser.ParseFrom(evt.RawData);
-                Logger.TraceFormatIf(Trace, "SocketDecoded: {0}", message);
-                onMessage(message);
-            };
-            return socket;
+            return bUri.Uri.ToString();
         }
 
         private void onMessage(Envelope message)
@@ -456,63 +400,6 @@ namespace Nakama
             }
         }
 
-        private static void dispatchRequestAsync(WebRequest request,
-                                                 AuthenticateRequest payload,
-                                                 Action<HttpWebResponse> successAction,
-                                                 Action<WebException> errorAction)
-        {
-            // Wrap HttpWebRequest dispatch to avoid sync connection setup
-            Action dispatchAction = () =>
-            {
-                try
-                {
-                    // Pack payload
-                    var memStream = new MemoryStream();
-                    payload.WriteTo(memStream);
-                    var data = memStream.ToArray();
-                    request.ContentLength = data.Length;
-                    Stream dataStream = request.GetRequestStream();
-                    dataStream.Write(data, 0, data.Length);
-                    dataStream.Close();
-                }
-                catch (WebException e)
-                {
-                    // Handle ConnectFailure socket errors
-                    errorAction(e);
-                    return;
-                }
-
-                request.BeginGetResponse((iar) =>
-                {
-                    try
-                    {
-                        var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
-                        successAction(response);
-                    }
-                    catch (WebException e)
-                    {
-                        if (e.Response is HttpWebResponse)
-                        {
-                            successAction(e.Response as HttpWebResponse);
-                            return;
-                        }
-                        errorAction(e);
-                    }
-                }, request);
-            };
-            dispatchAction.BeginInvoke((iar) =>
-            {
-                var action = (Action)iar.AsyncState;
-                action.EndInvoke(iar);
-            }, dispatchAction);
-        }
-
-        private static string customToString(HttpWebResponse response)
-        {
-            var f = "{{ \"uri\": \"{0}\", \"method\": \"{1}\", \"status\": {{ \"code\": {2}, \"description\": \"{3}\" }} }}";
-            return String.Format(f, response.ResponseUri, response.Method, (int)response.StatusCode, response.StatusDescription);
-        }
-
         public class Builder
         {
             private NClient client;
@@ -543,6 +430,7 @@ namespace Nakama
             public Builder Logger(INLogger logger)
             {
                 client.Logger = logger;
+                client.transport.Logger = logger;
                 return this;
             }
 
@@ -567,6 +455,7 @@ namespace Nakama
             public Builder Trace(bool enable)
             {
                 client.Trace = enable;
+                client.transport.Trace = enable;
                 return this;
             }
 
@@ -583,6 +472,9 @@ namespace Nakama
                 client.SSL = original.SSL;
                 client.Timeout = original.Timeout;
                 client.Trace = original.Trace;
+
+                client.transport = original.transport; //TODO(mo) is this needed?
+
                 return original;
             }
         }
