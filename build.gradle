@@ -93,20 +93,31 @@ task unityPackage(type: Exec) {
 //    editor = executable
 //  }
 
-  def unityprojectDir = "$buildDir/release/${project.version}/Nakama"
+  def unityprojectDir = "$buildDir/release/${project.version}"
 
   doFirst {
     copy {
       from "$projectDir/Nakama"
-      into "$unityprojectDir/Assets/Nakama"
+      into "$unityprojectDir/Assets/Nakama/Plugins/Nakama"
       include '**/*.cs'
     }
 
     copy {
       from "$buildDir/msbuild/bin"
-      into "$unityprojectDir/Assets/Plugins"
+      into "$unityprojectDir/Assets/Nakama/Plugins"
       include 'Google.Protobuf.dll'
       include 'websocket-sharp.dll'
+    }
+
+    copy {
+      from "$projectDir/docs"
+      into "$unityprojectDir/Assets/Nakama/Documentation"
+      include 'guide.pdf'
+    }
+
+    copy {
+      from "$projectDir/example"
+      into "$unityprojectDir/Assets/Nakama/Example"
     }
   }
 
@@ -115,7 +126,7 @@ task unityPackage(type: Exec) {
        '-nographics',
        '-logFile',
        '-projectPath', "$unityprojectDir",
-       '-exportPackage', 'Assets', 'Nakama.unitypackage',
+       '-exportPackage', 'Assets/Nakama', 'Nakama.unitypackage',
        '-quit'
 }
 unityPackage.dependsOn msbuild

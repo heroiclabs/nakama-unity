@@ -11,6 +11,8 @@ If you encounter any issues with the server you can generate diagnostics for us 
 
 ### Start client
 
+You can download the client directly from the [Asset Store](https://www.assetstore.unity3d.com/en/#!/content/81338).
+
 Have a look at the [quickstart guide](https://heroiclabs.com/docs/clients/unity/) for a full introduction on how to get started with the client in development and/or production.
 
 To create a client and connect to the Nakama server with the default settings:
