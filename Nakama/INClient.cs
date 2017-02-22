@@ -58,7 +58,7 @@ namespace Nakama
 
         void Disconnect();
 
-        void Disconnect(Action callback, Action<INError> errback);
+        void Disconnect(Action callback);
 
         void Login(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback);
 

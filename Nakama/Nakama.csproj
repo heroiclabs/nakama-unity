@@ -47,6 +47,7 @@
     <Compile Include="INGroupUser.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
+    <Compile Include="INTransport.cs" />
     <Compile Include="NCursor.cs" />
     <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="NTopicMessagesListMessage.cs" />
     <Compile Include="NTopicPresence.cs" />
     <Compile Include="NTopicPresenceEventArgs.cs" />
+    <Compile Include="NTransport.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />
