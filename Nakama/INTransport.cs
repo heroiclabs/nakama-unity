@@ -41,10 +41,10 @@ namespace Nakama
 
     public class WebSocketCloseEventArgs : EventArgs
     {
-        public ushort Code { get; private set; }
+        public int Code { get; private set; }
         public string Reason{ get; private set; }
 
-        internal WebSocketCloseEventArgs(ushort code, string reason)
+        internal WebSocketCloseEventArgs(int code, string reason)
         {
             Code = code;
             Reason = reason;
@@ -59,23 +59,6 @@ namespace Nakama
         {
             Error = error;
         }
-    }
-
-    public enum WebSocketCloseStatusCode : ushort
-    {
-        Normal = 1000,
-        Away = 1001,
-        ProtocolError = 1002,
-        UnsupportedData = 1003,
-        Undefined = 1004,
-        NoStatus = 1005,
-        Abnormal = 1006,
-        InvalidData = 1007,
-        PolicyViolation = 1008,
-        TooBig = 1009,
-        MandatoryExtension = 1010,
-        ServerError = 1011,
-        TlsHandshakeFailure = 1015,
     }
 
 }

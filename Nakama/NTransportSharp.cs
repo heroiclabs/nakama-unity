@@ -165,6 +165,21 @@ namespace Nakama
 
                 OnMessage.Emit(this, new WebSocketMessageEventArgs(evt.RawData));
             };
+            socket.OnError += (sender, evt) =>
+            {
+                if (OnError != null)
+                {
+                    OnError.Emit(sender, new WebSocketErrorEventArgs(evt.Exception));
+                }
+            };
+            socket.OnOpen += (sender, evt) =>
+            {
+                if (OnOpen != null)
+                {
+                    OnOpen.Emit(sender, evt);
+                }
+            };
+
         }
 
         public void Connect(string uri)

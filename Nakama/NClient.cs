@@ -104,20 +104,13 @@ namespace Nakama
 #endif
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-            transport = new NTransportJavascript
-            {
-                Logger = Logger,
-                Trace = Trace
-            };
-            NTransportJavascript.sl = Logger;
+            transport = new NTransportJavascript();
 #else
-            transport = new NTransportSharp
-            {
-                Logger = Logger,
-                Trace = Trace
-            };
+            transport = new NTransportSharp();
 #endif
 
+            transport.Logger = Logger;
+            transport.Trace = Trace;
             transport.OnClose += (sender, _) =>
             {
                 collationIds.Clear();
@@ -438,7 +431,6 @@ namespace Nakama
             {
                 client.Logger = logger;
                 client.transport.Logger = logger;
-                NTransportJavascript.sl = logger; //TODO remove this
                 return this;
             }
 
