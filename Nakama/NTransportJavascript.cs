@@ -147,10 +147,12 @@ namespace Nakama
         }
 
         [MonoPInvokeCallback(typeof(Action<string, int>))]
-        public static void OnSocketClose(string socketId, int closeStatus)
+        public static void OnSocketClose(string socketId, string closeStatus)
         {
             _logger.DebugFormat("WebGL onsocketclose callback - socket {0} - status: {1}", socketId, closeStatus);
-            SocketCloseHandlers[socketId].Emit(null, new WebSocketCloseEventArgs(closeStatus, CloseErrorMessages[closeStatus]));
+
+            var closeStatusCode = Convert.ToInt32(closeStatus);
+            SocketCloseHandlers[socketId].Emit(null, new WebSocketCloseEventArgs(closeStatus, CloseErrorMessages[closeStatusCode]));
             var callback = SocketCloseCallbacks[socketId];
             if (callback != null)
             {
@@ -168,6 +170,9 @@ namespace Nakama
             {
                 _socketNativeRef = CreateSocket(_socketId, uri);
             }
+
+            // block until socket state changes
+            while (SocketState(_socketNativeRef) == 0) {}
         }
 
         public void ConnectAsync(string uri, Action<bool> callback)
