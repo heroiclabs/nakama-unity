@@ -33,6 +33,7 @@ namespace Nakama
         };
 
         private static readonly IDictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>> AuthHandlers = new Dictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>>();
+
         private static readonly IDictionary<string, EventHandler<WebSocketCloseEventArgs>> SocketCloseHandlers = new Dictionary<string, EventHandler<WebSocketCloseEventArgs>>();
         private static readonly IDictionary<string, EventHandler<WebSocketErrorEventArgs>> SocketErrorHandlers = new Dictionary<string, EventHandler<WebSocketErrorEventArgs>>();
         private static readonly IDictionary<string, EventHandler<WebSocketMessageEventArgs>> SocketMessageHandlers = new Dictionary<string, EventHandler<WebSocketMessageEventArgs>>();
@@ -111,13 +112,13 @@ namespace Nakama
         // ----
 
         [DllImport("__Internal")]
-        private static extern int CreateSocket(string uri);
+        private static extern int CreateSocket(string socketId, string uri);
         [DllImport("__Internal")]
-        private static extern void ConnectSocket(string socketId);
+        private static extern void CloseSocket(int socketRef);
         [DllImport("__Internal")]
-        private static extern void CloseSocket(string socketId);
+        private static extern void SendData(int socketRef, string data);
         [DllImport("__Internal")]
-        private static extern void SendData(string socketId, string data);
+        private static extern int SocketState(int socketRef);
 
         [MonoPInvokeCallback(typeof(Action<string>))]
         public static void OnSocketOpen(string socketId)
@@ -155,48 +156,51 @@ namespace Nakama
             {
                 callback();
             }
+
+            SocketCloseHandlers.Remove(socketId);
+            SocketCloseCallbacks.Remove(socketId);
         }
 
         public void Connect(string uri)
         {
+            // connection happen on socket creation
             if (_socketNativeRef == -1)
             {
-                _socketNativeRef = CreateSocket(uri);
+                _socketNativeRef = CreateSocket(_socketId, uri);
             }
-            ConnectSocket(_socketId);
         }
 
         public void ConnectAsync(string uri, Action<bool> callback)
         {
+            // connection happen on socket creation
             if (_socketNativeRef == -1)
             {
-                _socketNativeRef = CreateSocket(uri);
+                SocketOpenCallbacks.Add(_socketId, callback);
+                _socketNativeRef = CreateSocket(_socketId, uri);
             }
-            SocketOpenCallbacks.Add(_socketId, callback);
-            ConnectSocket(_socketId);
         }
 
         public void Close()
         {
-            CloseSocket(_socketId);
+            CloseSocket(_socketNativeRef);
         }
 
         public void CloseAsync(Action callback)
         {
             SocketCloseCallbacks.Add(_socketId, callback);
-            CloseSocket(_socketId);
+            CloseSocket(_socketNativeRef);
         }
 
         public void Send(byte[] data)
         {
             var base64Payload = Convert.ToBase64String(data);
-            SendData(_socketId, base64Payload);
+            SendData(_socketNativeRef, base64Payload);
         }
 
         public void SendAsync(byte[] data, Action<bool> callback)
         {
             var base64Payload = Convert.ToBase64String(data);
-            SendData(_socketId, base64Payload);
+            SendData(_socketNativeRef, base64Payload);
             callback(true);
         }
     }
