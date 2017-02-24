@@ -68,10 +68,11 @@ var WebSocketTransport = {
         });
     },
 
-    CreateSocket: function(socketId, uri)
+    CreateSocket: function(socketPtr, serverUriPtr)
     {
-        var str = Pointer_stringify(uri);
-        var socket = new WebSocket(str);
+        var socketId = Pointer_stringify(socketPtr);
+        var serverUri = Pointer_stringify(serverUriPtr);
+        var socket = new WebSocket(serverUri);
 
         socket.onopen = function (e) {
             var socketIdBuffer = _malloc(lengthBytesUTF8(socketId) + 1);
@@ -82,7 +83,7 @@ var WebSocketTransport = {
         socket.onerror = function (e) {
             var socketIdBuffer = _malloc(lengthBytesUTF8(socketId) + 1);
             writeStringToMemory(socketId, socketIdBuffer);
-            Runtime.dynCall('vi', callbackObject.onSocketOpen, [socketIdBuffer]);
+            Runtime.dynCall('vi', callbackObject.onSocketError, [socketIdBuffer]);
             _free(socketIdBuffer);
 
             socket.close();
@@ -101,7 +102,6 @@ var WebSocketTransport = {
                     writeStringToMemory(socketId, socketIdBuffer);
 
                     Runtime.dynCall('vii', callbackObject.onSocketMessage, [socketIdBuffer, dataBuffer]);
-
                     _free(dataBuffer);
                     _free(socketIdBuffer);
                 });
@@ -116,7 +116,7 @@ var WebSocketTransport = {
             var closeCodeBuffer = _malloc(lengthBytesUTF8(closeCode) + 1);
             writeStringToMemory(closeCode, closeCodeBuffer);
 
-            Runtime.dynCall('vi', callbackObject.onSocketOpen, [socketIdBuffer, closeCodeBuffer]);
+            Runtime.dynCall('vii', callbackObject.onSocketClose, [socketIdBuffer, closeCodeBuffer]);
             _free(socketIdBuffer);
             _free(closeCodeBuffer);
 
