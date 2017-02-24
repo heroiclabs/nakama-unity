@@ -186,14 +186,13 @@ namespace Nakama
 
         public void Connect(string uri)
         {
+            // This is not a blocking call
+
             // connection happen on socket creation
             if (_socketNativeRef == -1)
             {
                 _socketNativeRef = CreateSocket(_socketId, uri);
             }
-
-            // block until socket state changes
-            while (SocketState(_socketNativeRef) == 0) {}
         }
 
         public void ConnectAsync(string uri, Action<bool> callback)

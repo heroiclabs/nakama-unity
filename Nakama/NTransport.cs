@@ -7,7 +7,7 @@ using WebSocketSharp;
 
 namespace Nakama
 {
-    internal class NTransportSharp : INTransport
+    internal class NTransport : INTransport
     {
         public event EventHandler<WebSocketCloseEventArgs> OnClose;
         public event EventHandler<WebSocketErrorEventArgs> OnError;

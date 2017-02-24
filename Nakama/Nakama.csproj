@@ -127,7 +127,7 @@
     <Compile Include="NTopicMessagesListMessage.cs" />
     <Compile Include="NTopicPresence.cs" />
     <Compile Include="NTopicPresenceEventArgs.cs" />
-    <Compile Include="NTransportSharp.cs" />
+    <Compile Include="NTransport.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />

@@ -106,7 +106,7 @@ namespace Nakama
 #if UNITY_WEBGL && !UNITY_EDITOR
             transport = new NTransportJavascript();
 #else
-            transport = new NTransportSharp();
+            transport = new NTransport();
 #endif
 
             transport.Logger = Logger;
