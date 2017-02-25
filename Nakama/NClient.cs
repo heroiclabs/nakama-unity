@@ -472,9 +472,6 @@ namespace Nakama
                 client.SSL = original.SSL;
                 client.Timeout = original.Timeout;
                 client.Trace = original.Trace;
-
-                client.transport = original.transport; //TODO(mo) is this needed?
-
                 return original;
             }
         }
