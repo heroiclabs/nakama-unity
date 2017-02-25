@@ -109,8 +109,6 @@ namespace Nakama
             transport = new NTransport();
 #endif
 
-            transport.Logger = Logger;
-            transport.Trace = Trace;
             transport.OnClose += (sender, _) =>
             {
                 collationIds.Clear();
