@@ -77,12 +77,13 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><blockquote class="doxtable">
-<p>Unity client for <a class="el" href="namespace_nakama.html">Nakama</a>. </p>
+<p>Unity client for <a class="el" href="namespace_nakama.html">Nakama</a> server. </p>
 </blockquote>
 <p><a class="el" href="namespace_nakama.html">Nakama</a> is an open-source distributed server for social and realtime games. For more information have a look at the <a href="https://heroiclabs.com/docs/">server documentation</a>; and for a quick list of build targets run <code>gradle tasks</code>.</p>
 <p>The <a href="https://heroiclabs.com/docs/clients/unity/">client guide</a> is available on the server documentation. The <a href="http://heroiclabs.github.io/nakama-unity/">client reference documentation</a> is deployed on gh-pages.</p>
 <p>If you encounter any issues with the server you can generate diagnostics for us with <code>nakama doctor</code>. Send these to <a href="#" onclick="location.href='mai'+'lto:'+'sup'+'po'+'rt@'+'he'+'roi'+'cl'+'abs'+'.c'+'om'; return false;">suppo<span style="display: none;">.nosp@m.</span>rt@h<span style="display: none;">.nosp@m.</span>eroic<span style="display: none;">.nosp@m.</span>labs<span style="display: none;">.nosp@m.</span>.com</a> or <a href="https://github.com/heroiclabs/nakama/issues">open an issue</a>. If you experience any issues with the client, it can be useful to enable trace (<code>.Trace(true)</code>) to produce logs and <a href="https://github.com/heroiclabs/nakama-unity/issues">open an issue</a>.</p>
 <h3> Start client</h3>
+<p>You can download the client directly from the <a href="https://www.assetstore.unity3d.com/en/#!/content/81338">Asset Store</a>.</p>
 <p>Have a look at the <a href="https://heroiclabs.com/docs/clients/unity/">quickstart guide</a> for a full introduction on how to get started with the client in development and/or production.</p>
 <p>To create a client and connect to the <a class="el" href="namespace_nakama.html">Nakama</a> server with the default settings:</p>
 <div class="fragment"><div class="line">using UnityEngine;</div><div class="line">using System.Collections;</div><div class="line">using Nakama;</div><div class="line"></div><div class="line">public class NewBehaviourScript : MonoBehaviour {</div><div class="line">  void Start() {</div><div class="line">    INClient client = NClient.Default(&quot;defaultkey&quot;);</div><div class="line">  }</div><div class="line"></div><div class="line">  void Update() {</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><h3>Contribute</h3>
@@ -95,9 +96,8 @@ $(function() {
 </ul>
 <p>You can then install code dependencies:</p>
 <div class="fragment"><div class="line">$&gt; gradle nugetRestore</div></div><!-- fragment --><p>For development use the compile and test run cycle:</p>
-<div class="fragment"><div class="line">$&gt; gradle nunit</div></div><!-- fragment --><p>If needed you can build and run tests which use the UnityTestTools integration with the Unity editor. These can be run headless with <code>gradle unityTest</code>.</p>
-<p>To package a release use:</p>
-<div class="fragment"><div class="line">$&gt; gradle unityRelease</div></div><!-- fragment --><h4>Credits</h4>
+<div class="fragment"><div class="line">$&gt; gradle nunit</div></div><!-- fragment --><p>To package a release use:</p>
+<div class="fragment"><div class="line">$&gt; gradle unityPackage</div></div><!-- fragment --><h4>Credits</h4>
 <p>The generated documentation theme is based on the work of <a href="https://github.com/Velron/doxygen-bootstrapped/"></a>. </p>
 </div></div><!-- contents -->
 <!--
