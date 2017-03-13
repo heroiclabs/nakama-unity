@@ -9,6 +9,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Add preprocessors to skip WebGL specific code for other build profiles.
+- Include handle in session token.
 
 ## [0.4.2] - 2017-02-27
 ### Added
