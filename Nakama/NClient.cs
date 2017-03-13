@@ -384,7 +384,8 @@ namespace Nakama
                     {
                         topicMessages.Add(new NTopicMessage(topicMessage));
                     }
-                    pair.Key(new NResultSet<INTopicMessage>(topicMessages, new NCursor(message.TopicMessages.Cursor.ToByteArray())));
+                    pair.Key(new NResultSet<INTopicMessage>(topicMessages,
+                        new NCursor(message.TopicMessages.Cursor.ToByteArray())));
                     break;
                 case Envelope.PayloadOneofCase.Users:
                     var users = new List<INUser>();
@@ -393,6 +394,25 @@ namespace Nakama
                         users.Add(new NUser(user));
                     }
                     pair.Key(new NResultSet<INUser>(users, null));
+                    break;
+                case Envelope.PayloadOneofCase.Leaderboards:
+                    var leaderboards = new List<INLeaderboard>();
+                    foreach (var leaderboard in message.Leaderboards.Leaderboards)
+                    {
+                        leaderboards.Add(new NLeaderboard(leaderboard));
+                    }
+                    pair.Key(new NResultSet<INLeaderboard>(leaderboards, new NCursor(message.Leaderboards.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.LeaderboardRecord:
+                    pair.Key(new NLeaderboardRecord(message.LeaderboardRecord.Record));
+                    break;
+                case Envelope.PayloadOneofCase.LeaderboardRecords:
+                    var leaderboardRecords = new List<INLeaderboardRecord>();
+                    foreach (var leaderboardRecord in message.LeaderboardRecords.Records)
+                    {
+                        leaderboardRecords.Add(new NLeaderboardRecord(leaderboardRecord));
+                    }
+                    pair.Key(new NResultSet<INLeaderboardRecord>(leaderboardRecords, new NCursor(message.LeaderboardRecords.Cursor.ToByteArray())));
                     break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
