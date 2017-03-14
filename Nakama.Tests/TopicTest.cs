@@ -377,5 +377,42 @@ namespace Nakama.Tests
                 Assert.AreEqual(data, msg.Data);
             }
         }
+
+        [Test]
+        public void PresenceUpdateChangeHandle()
+        {
+            INError error = null;
+
+            ManualResetEvent evt1 = new ManualResetEvent(false);
+            byte[] room = Encoding.UTF8.GetBytes("test-room-handle-update");
+            INTopic topic = null;
+
+            client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
+            {
+                Assert.AreEqual(args.TopicPresence.Leave[0].UserId, args.TopicPresence.Join[0].UserId);
+                Assert.AreEqual(args.TopicPresence.Join[0].Handle, "handle-update");
+                evt1.Set();
+            };
+
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic1) =>
+            {
+                topic = topic1;
+                client1.Send(new NSelfUpdateMessage.Builder().Handle("handle-update").Build(), (bool completed) =>
+                {
+                    // do nothing
+                }, (INError err) =>
+                {
+                    error = err;
+                    evt1.Set();
+                });
+            }, (INError err) =>
+            {
+                error = err;
+                evt1.Set();
+            });
+            evt1.WaitOne(5000, false);
+            Assert.IsNull(error);
+            Assert.IsNotNull(topic);
+        }
     }
 }

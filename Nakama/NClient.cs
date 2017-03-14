@@ -262,7 +262,7 @@ namespace Nakama
             // Init base WebSocket connection
             var scheme = (SSL) ? "wss" : "ws";
             var bUri = new UriBuilder(scheme, Host, unchecked((int)Port), "api");
-            bUri.Query = String.Format("serverkey={0}&token={1}&lang={2}", ServerKey, session.Token, Lang);
+            bUri.Query = String.Format("token={0}&lang={1}", session.Token, Lang);
             return bUri.Uri.ToString();
         }
 

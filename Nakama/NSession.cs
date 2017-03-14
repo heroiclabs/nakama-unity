@@ -27,6 +27,10 @@ namespace Nakama
             get {
                 // Hack decode JSON payload from JWT
                 var payload = Token.Split('.')[1];
+
+                var padLength = Math.Ceiling(payload.Length / 4.0) * 4;
+                payload = payload.PadRight(Convert.ToInt32(padLength), '=');
+
                 var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(payload));
                 var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
                 // NOTE http://stackoverflow.com/a/16722909

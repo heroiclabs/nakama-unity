@@ -89,6 +89,7 @@ namespace Nakama.Tests
             var message = NAuthenticateMessage.Device(DeviceId);
             client.Login(message, (INSession ses) =>
             {
+                var d = ses.Id;
                 client.Connect(ses);
                 evt.Set();
             },(INError err) => {
