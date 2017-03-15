@@ -76,7 +76,7 @@ namespace Nakama.Tests
             client2.Disconnect();
         }
 
-        [Test]
+        [Test, Order(1)]
         public void JoinTopic()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -96,7 +96,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
         }
 
-        [Test]
+        [Test, Order(2)]
         public void LeaveTopic()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -122,7 +122,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
         }
 
-        [Test]
+        [Test, Order(3)]
         public void PresenceUpdateJoinTopic()
         {
             INError error = null;
@@ -161,7 +161,7 @@ namespace Nakama.Tests
             Assert.AreEqual(joinUserId, userId2);
         }
 
-        [Test]
+        [Test, Order(4)]
         public void PresenceUpdateLeaveTopic()
         {
             INError error = null;
@@ -210,7 +210,7 @@ namespace Nakama.Tests
             Assert.AreEqual(userId2, leaveUserId);
         }
 
-        [Test]
+        [Test, Order(5)]
         public void MessageSendWithoutJoinTopic()
         {
             INError error = null;
@@ -250,7 +250,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(error);
         }
 
-        [Test]
+        [Test, Order(6)]
         public void MessageSendTopic()
         {
             INError error = null;
@@ -315,7 +315,7 @@ namespace Nakama.Tests
             Assert.AreEqual(messageAck.Handle, message.Handle);
         }
 
-        [Test]
+        [Test, Order(7)]
         public void MessagesListTopic()
         {
             INError error = null;
@@ -378,7 +378,7 @@ namespace Nakama.Tests
             }
         }
 
-        [Test]
+        [Test, Order(8)]
         public void PresenceUpdateChangeHandle()
         {
             INError error = null;
@@ -387,16 +387,17 @@ namespace Nakama.Tests
             byte[] room = Encoding.UTF8.GetBytes("test-room-handle-update");
             INTopic topic = null;
 
-            client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
-            {
-                Assert.AreEqual(args.TopicPresence.Leave[0].UserId, args.TopicPresence.Join[0].UserId);
-                Assert.AreEqual(args.TopicPresence.Join[0].Handle, "handle-update");
-                evt1.Set();
-            };
-
             client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic1) =>
             {
                 topic = topic1;
+
+                client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
+                {
+                    Assert.AreEqual(args.TopicPresence.Leave[0].UserId, args.TopicPresence.Join[0].UserId);
+                    Assert.AreEqual(args.TopicPresence.Join[0].Handle, "handle-update");
+                    evt1.Set();
+                };
+
                 client1.Send(new NSelfUpdateMessage.Builder().Handle("handle-update").Build(), (bool completed) =>
                 {
                     // do nothing
