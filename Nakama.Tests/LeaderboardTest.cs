@@ -145,8 +145,9 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsNotNull(res);
             Assert.IsNotEmpty(res.Handle);
-            Assert.AreEqual(res.Location, "San Francisco");
-            Assert.AreEqual(res.NumScore, score);
+            Assert.AreEqual("San Francisco", res.Location);
+            Assert.AreEqual(score, res.Score);
+            Assert.GreaterOrEqual(1, res.NumScore);
         }
 
         [Test, Order(3)]
