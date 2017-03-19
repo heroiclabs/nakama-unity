@@ -3,15 +3,17 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
 ## [0.5.0] - 2017-03-19
 ### Added
-- Add support for Leaderboards.
+- Add support for dynamic leaderboards.
+- Add error codes for error messages in server protocol.
 
 ### Changed
-- Add preprocessors to skip WebGL specific code for other build profiles.
-- Update session token to account for Handle.
-- Update UserPresence to contain Handle.
-- Addition of specific error messages to the Error payload.
+- Use preprocessor directive to skip WebGL specific code with other build profiles.
+- Update session token parse code for user's handle.
+- Update user presence protocol message to contain user handles.
 
 ## [0.4.2] - 2017-02-27
 ### Added
