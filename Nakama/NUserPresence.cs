@@ -22,17 +22,19 @@ namespace Nakama
     {
         public byte[] UserId { get; private set; }
         public byte[] SessionId { get; private set; }
+        public string Handle { get; private set; }
 
         internal NUserPresence(UserPresence message)
         {
             UserId = message.UserId.ToByteArray();
             SessionId = message.SessionId.ToByteArray();
+            Handle = message.Handle;
         }
 
         public override string ToString()
         {
-            var f = "NUserPresence(UserId={0},SessionId={1})";
-            return String.Format(f, UserId, SessionId);
+            var f = "NUserPresence(UserId={0},SessionId={1},Handle={2})";
+            return String.Format(f, UserId, SessionId, Handle);
         }
     }
 }

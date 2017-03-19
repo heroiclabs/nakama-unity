@@ -4,8 +4,14 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add support for Leaderboards.
+
 ### Changed
 - Add preprocessors to skip WebGL specific code for other build profiles.
+- Update session token to account for Handle.
+- Update UserPresence to contain Handle.
+- Addition of specific error messages to the Error payload.
 
 ## [0.4.2] - 2017-02-27
 ### Added

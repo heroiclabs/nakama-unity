@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
     <Compile Include="INGroupUser.cs" />
+    <Compile Include="INLeaderboard.cs" />
+    <Compile Include="INLeaderboardRecord.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
     <Compile Include="INTransport.cs" />
@@ -95,6 +97,12 @@
     <Compile Include="NGroupUpdateMessage.cs" />
     <Compile Include="NGroupUser.cs" />
     <Compile Include="NGroupUsersListMessage.cs" />
+    <Compile Include="NLeaderboard.cs" />
+    <Compile Include="NLeaderboardRecord.cs" />
+    <Compile Include="NLeaderboardRecordsFetchMessage.cs" />
+    <Compile Include="NLeaderboardRecordsListMessage.cs" />
+    <Compile Include="NLeaderboardRecordWriteMessage.cs" />
+    <Compile Include="NLeaderboardsListMessage.cs" />
     <Compile Include="NMatch.cs" />
     <Compile Include="NMatchCreateMessage.cs" />
     <Compile Include="NMatchData.cs" />

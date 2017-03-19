@@ -20,5 +20,6 @@ namespace Nakama
     {
         byte[] UserId { get; }
         byte[] SessionId { get; }
+        string Handle { get; }
     }
 }

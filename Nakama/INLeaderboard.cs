@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,25 +16,15 @@
 
 namespace Nakama
 {
-    public enum ErrorCode : uint {
-        Unknown = 0,
-        RuntimeException,
-        UnrecognizedPayload,
-        MissingPayload,
-        BadInput,
-        AuthError,
-        UserLinkInuse,
-        UserLinkProviderUnavailable,
-        UserLinkDisallowed,
-        UserHandleInuse,
-        GroupNameInuse,
-        StorageFetchDisallowed,
-        MatchNotFound
-    }
-
-    public interface INError
+    public interface INLeaderboard
     {
-        ErrorCode Code { get; }
-        string Message { get; }
+        byte[] Id { get; }
+        bool Authoritative { get; }
+        long Sort { get; }
+        long Count { get; }
+        string ResetSchedule { get; }
+        byte[] Metadata { get; }
+        byte[] NextId { get; }
+        byte[] PrevId { get; }
     }
 }
