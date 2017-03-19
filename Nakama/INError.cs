@@ -16,7 +16,21 @@
 
 namespace Nakama
 {
-    public enum ErrorCode : uint { Unknown = 0, RuntimeException, UnrecognizedPayload, MissingPayload, BadInput, AuthError, UserLinkInuse, UserLinkProviderUnavailable, UserLinkDisallowed, UserHandleInuse, GroupNameInuse, StorageFetchDisallowed, MatchNotFound }
+    public enum ErrorCode : uint {
+        Unknown = 0,
+        RuntimeException,
+        UnrecognizedPayload,
+        MissingPayload,
+        BadInput,
+        AuthError,
+        UserLinkInuse,
+        UserLinkProviderUnavailable,
+        UserLinkDisallowed,
+        UserHandleInuse,
+        GroupNameInuse,
+        StorageFetchDisallowed,
+        MatchNotFound
+    }
 
     public interface INError
     {

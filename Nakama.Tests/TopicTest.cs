@@ -381,6 +381,7 @@ namespace Nakama.Tests
         [Test, Order(8)]
         public void PresenceUpdateChangeHandle()
         {
+            string handle = random.GetString(20);
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
@@ -394,11 +395,11 @@ namespace Nakama.Tests
                 client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
                 {
                     Assert.AreEqual(args.TopicPresence.Leave[0].UserId, args.TopicPresence.Join[0].UserId);
-                    Assert.AreEqual(args.TopicPresence.Join[0].Handle, "handle-update");
+                    Assert.AreEqual(args.TopicPresence.Join[0].Handle, handle);
                     evt1.Set();
                 };
 
-                client1.Send(new NSelfUpdateMessage.Builder().Handle("handle-update").Build(), (bool completed) =>
+                client1.Send(new NSelfUpdateMessage.Builder().Handle(handle).Build(), (bool completed) =>
                 {
                     // do nothing
                 }, (INError err) =>
