@@ -21,26 +21,44 @@ namespace Nakama
 {
     internal class NError : INError
     {
+        public ErrorCode Code { get; private set; }
         public string Message { get; private set; }
 
         internal NError(AuthenticateResponse.Types.Error error)
         {
-            Message = error.Reason;
+            if (Enum.IsDefined(typeof(ErrorCode), Convert.ToUInt32(error.Code + 1)))
+            {
+                Code = (ErrorCode) Convert.ToUInt32(error.Code + 1);
+            }
+            else
+            {
+                Code = ErrorCode.Unknown;
+            }
+            Message = error.Message;
         }
 
         internal NError(Error error)
         {
-            Message = error.Reason;
+            if (Enum.IsDefined(typeof(ErrorCode), Convert.ToUInt32(error.Code + 1)))
+            {
+                Code = (ErrorCode) Convert.ToUInt32(error.Code + 1);
+            }
+            else
+            {
+                Code = ErrorCode.Unknown;
+            }
+            Message = error.Message;
         }
 
         internal NError(string message)
         {
+            Code = ErrorCode.Unknown;
             Message = message;
         }
 
         public override string ToString()
         {
-            return String.Format("NError(Message={0})", Message);
+            return String.Format("NError(Code={0},Message={1})", Code, Message);
         }
     }
 }

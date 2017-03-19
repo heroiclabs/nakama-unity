@@ -310,7 +310,7 @@ namespace Nakama
                     pair.Key(true);
                     break;
                 case Envelope.PayloadOneofCase.Error:
-                    var error = new NError(message.Error.Reason);
+                    var error = new NError(message.Error);
                     if (collationId != null)
                     {
                         pair.Value(error);
