@@ -29,7 +29,7 @@ namespace Nakama.Tests
         private static readonly string DefaultServerKey = "defaultkey";
         private static readonly string DeviceId = random.GetString();
 
-        private static readonly string GroupName = "testGroup";
+        private static readonly string GroupName = random.GetString();
         private static readonly string GroupDescription = "testGroupDescription";
         private static readonly bool PrivateGroup = true;
 
@@ -120,7 +120,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            var message = new NGroupCreateMessage.Builder(GroupName)
+            var message = new NGroupCreateMessage.Builder(random.GetString())
                     .Description(GroupDescription)
                     .Lang("en")
                     .Private(PrivateGroup)
@@ -138,7 +138,6 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsNull(error);
             Assert.IsNotNull(myGroup);
-            Assert.AreEqual(GroupName, myGroup.Name);
             Assert.AreEqual(GroupDescription, myGroup.Description);
             Assert.AreEqual(PrivateGroup, myGroup.Private);
         }

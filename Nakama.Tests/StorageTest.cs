@@ -26,7 +26,7 @@ namespace Nakama.Tests
     [TestFixture]
     public class StorageTest
     {
-        private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
+        private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().Last());
         private static readonly string DeviceId = random.GetString();
         private static readonly string DefaultServerKey = "defaultkey";
 
