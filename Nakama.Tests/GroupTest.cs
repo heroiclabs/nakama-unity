@@ -246,7 +246,7 @@ namespace Nakama.Tests
             INError error = null;
             INResultSet<INGroup> groups = null;
 
-            var message = new NGroupsFetchMessage.Builder(FriendGroup.Id).Build();
+            var message = new NGroupsFetchMessage.Builder().SetGroupIds(FriendGroup.Id).Build();
             client.Send(message, (INResultSet<INGroup> results) =>
             {
                 groups = results;
