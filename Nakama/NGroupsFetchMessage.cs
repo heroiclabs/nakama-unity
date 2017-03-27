@@ -29,6 +29,28 @@ namespace Nakama
             }
         }
 
+        private NGroupsFetchMessage(params byte[][] ids)
+        {
+            var request = new TGroupsFetch();
+            request.GroupIds = new TGroupsFetch.Types.GroupIds();
+            foreach (var id in ids)
+            {
+                request.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+            }
+            payload = new Envelope {GroupsFetch = request};
+        }
+
+        private NGroupsFetchMessage(params string[] names)
+        {
+            var request = new TGroupsFetch();
+            request.Names = new TGroupsFetch.Types.Names();
+            foreach (var name in names)
+            {
+                request.Names.Names_.Add(name);
+            }
+            payload = new Envelope {GroupsFetch = request};
+        }
+
         private NGroupsFetchMessage()
         {
             payload = new Envelope {GroupsFetch = new TGroupsFetch()};
@@ -65,9 +87,24 @@ namespace Nakama
             return String.Format("NGroupsFetchMessage({0})", output);
         }
 
+        public static NGroupsFetchMessage Default(params byte[][] ids)
+        {
+            return new NGroupsFetchMessage.Builder(ids).Build();
+        }
+
         public class Builder
         {
             private NGroupsFetchMessage message;
+
+            public Builder(params byte[][] ids)
+            {
+                message = new NGroupsFetchMessage(ids);
+            }
+
+            public Builder(params string[] names)
+            {
+                message = new NGroupsFetchMessage(names);
+            }
 
             public Builder()
             {
