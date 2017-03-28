@@ -29,10 +29,25 @@ namespace Nakama
             }
         }
 
-        private NGroupsFetchMessage(params byte[] ids)
+        private NGroupsFetchMessage(params byte[][] ids)
         {
             var request = new TGroupsFetch();
-            request.GroupIds.Add(ByteString.CopyFrom(ids));
+            request.GroupIds = new TGroupsFetch.Types.GroupIds();
+            foreach (var id in ids)
+            {
+                request.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+            }
+            payload = new Envelope {GroupsFetch = request};
+        }
+
+        private NGroupsFetchMessage(params string[] names)
+        {
+            var request = new TGroupsFetch();
+            request.Names = new TGroupsFetch.Types.Names();
+            foreach (var name in names)
+            {
+                request.Names.Names_.Add(name);
+            }
             payload = new Envelope {GroupsFetch = request};
         }
 
@@ -49,14 +64,30 @@ namespace Nakama
         public override string ToString()
         {
             string output = "";
-            foreach (var id in payload.GroupsFetch.GroupIds)
+            switch (payload.GroupsFetch.SetCase)
             {
-                output += id.ToBase64() + ",";
+                case TGroupsFetch.SetOneofCase.GroupIds:
+                    output += "GroupIds=";
+                    foreach (var id in payload.GroupsFetch.GroupIds.GroupIds_)
+                    {
+                        output += id.ToBase64() + ",";
+                    }
+                    break;
+                case TGroupsFetch.SetOneofCase.Names:
+                    output += "Names=";
+                    foreach (var name in payload.GroupsFetch.Names.Names_)
+                    {
+                        output += name + ",";
+                    }
+                    break;
+                default:
+                    output += "unknown";
+                    break;
             }
-            return String.Format("NGroupsFetchMessage(GroupIds={0})", output);
+            return String.Format("NGroupsFetchMessage({0})", output);
         }
 
-        public static NGroupsFetchMessage Default(params byte[] ids)
+        public static NGroupsFetchMessage Default(params byte[][] ids)
         {
             return new NGroupsFetchMessage.Builder(ids).Build();
         }
@@ -65,22 +96,61 @@ namespace Nakama
         {
             private NGroupsFetchMessage message;
 
-            public Builder(params byte[] ids)
+            public Builder(params byte[][] ids)
             {
                 message = new NGroupsFetchMessage(ids);
             }
 
-            public Builder Add(params byte[] ids)
+            public Builder(params string[] names)
             {
-                message.payload.GroupsFetch.GroupIds.Add(ByteString.CopyFrom(ids));
+                message = new NGroupsFetchMessage(names);
+            }
+
+            public Builder()
+            {
+                message = new NGroupsFetchMessage();
+            }
+
+            public Builder SetGroupIds(params byte[][] ids)
+            {
+                message.payload.GroupsFetch.ClearSet();
+                message.payload.GroupsFetch.GroupIds = new TGroupsFetch.Types.GroupIds();
+                foreach (var id in ids)
+                {
+                    message.payload.GroupsFetch.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+                }
                 return this;
             }
 
-            public Builder Add(IEnumerable<byte[]> ids)
+            public Builder SetGroupIds(IEnumerable<byte[]> ids)
             {
+                message.payload.GroupsFetch.ClearSet();
+                message.payload.GroupsFetch.GroupIds = new TGroupsFetch.Types.GroupIds();
                 foreach (var id in ids)
                 {
-                    message.payload.GroupsFetch.GroupIds.Add(ByteString.CopyFrom(id));
+                    message.payload.GroupsFetch.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+                }
+                return this;
+            }
+
+            public Builder SetNames(params string[] names)
+            {
+                message.payload.GroupsFetch.ClearSet();
+                message.payload.GroupsFetch.Names = new TGroupsFetch.Types.Names();
+                foreach (var name in names)
+                {
+                    message.payload.GroupsFetch.Names.Names_.Add(name);
+                }
+                return this;
+            }
+
+            public Builder SetNames(IEnumerable<string> names)
+            {
+                message.payload.GroupsFetch.ClearSet();
+                message.payload.GroupsFetch.Names = new TGroupsFetch.Types.Names();
+                foreach (var name in names)
+                {
+                    message.payload.GroupsFetch.Names.Names_.Add(name);
                 }
                 return this;
             }
@@ -90,7 +160,7 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NGroupsFetchMessage();
-                message.payload.GroupsFetch.GroupIds.Add(original.payload.GroupsFetch.GroupIds);
+                message.payload.GroupsFetch = new TGroupsFetch(original.payload.GroupsFetch);
                 return original;
             }
         }
