@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -78,6 +79,8 @@ namespace Nakama
         public uint Timeout { get; private set; }
 
         public bool Trace { get; private set; }
+
+        private Queue<Action> callbackQueue = new Queue<Action>();
 
         private IDictionary<string, KeyValuePair<Action<object>, Action<INError>>> collationIds =
                 new Dictionary<string, KeyValuePair<Action<object>, Action<INError>>>();
@@ -145,7 +148,7 @@ namespace Nakama
 
         public void Connect(INSession session, Action<bool> callback)
         {
-            transport.ConnectAsync(getWebsocketUri(session), callback);
+            transport.ConnectAsync(getWebsocketUri(session), completed => callbackQueue.Enqueue(() => callback(completed)));
         }
 
         public static NClient Default(string serverKey)
@@ -160,7 +163,7 @@ namespace Nakama
 
         public void Disconnect(Action callback)
         {
-            transport.CloseAsync(callback);
+            transport.CloseAsync(() => callbackQueue.Enqueue(callback));
         }
 
         public void Logout()
@@ -176,10 +179,7 @@ namespace Nakama
             var payload = new Envelope {Logout = new Logout()};
             var stream = new MemoryStream();
             payload.WriteTo(stream);
-            transport.SendAsync(stream.ToArray(), (bool completed) =>
-            {
-                callback(completed);
-            });
+            transport.SendAsync(stream.ToArray(), completed => callbackQueue.Enqueue(() => callback(completed)));
         }
 
         public void Send<T>(INMessage<T> message, Action<T> callback, Action<INError> errback)
@@ -189,10 +189,8 @@ namespace Nakama
             message.SetCollationId(collationId);
 
             // Track callbacks for message
-            var pair = new KeyValuePair<Action<object>, Action<INError>>((data) =>
-            {
-                callback((T)data);
-            }, errback);
+            var pair = new KeyValuePair<Action<object>, Action<INError>>(data => callbackQueue.Enqueue(() => callback((T)data)), error => callbackQueue.Enqueue(() => errback(error)));
+
             collationIds.Add(collationId, pair);
 
             var stream = new MemoryStream();
@@ -206,6 +204,14 @@ namespace Nakama
                     collationIds.Remove(collationId);
                 }
             });
+        }
+
+        public void ProcessCallbacks()
+        {
+            while (callbackQueue.Any())
+            {
+                callbackQueue.Dequeue()();
+            }
         }
 
         public override string ToString()
@@ -239,10 +245,10 @@ namespace Nakama
                 switch (authResponse.PayloadCase)
                 {
                     case AuthenticateResponse.PayloadOneofCase.Session:
-                        callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
+                        callbackQueue.Enqueue(() => callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds))));
                         break;
                     case AuthenticateResponse.PayloadOneofCase.Error:
-                        errback(new NError(authResponse.Error));
+                        callbackQueue.Enqueue(() => errback(new NError(authResponse.Error)));
                         break;
                     case AuthenticateResponse.PayloadOneofCase.None:
                         Logger.Error("Received invalid response from server");
@@ -277,25 +283,25 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.MatchData:
                     if (OnMatchData != null)
                     {
-                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
+                        callbackQueue.Enqueue(() => OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData))));
                     }
                     return;
                 case Envelope.PayloadOneofCase.MatchPresence:
                     if (OnMatchPresence != null)
                     {
-                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
+                        callbackQueue.Enqueue(() => OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence))));
                     }
                     return;
                 case Envelope.PayloadOneofCase.TopicMessage:
                     if (OnTopicMessage != null)
                     {
-                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
+                        callbackQueue.Enqueue(() => OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage))));
                     }
                     return;
                 case Envelope.PayloadOneofCase.TopicPresence:
                     if (OnTopicPresence != null)
                     {
-                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
+                        callbackQueue.Enqueue(() => OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence))));
                     }
                     return;
             }
@@ -319,7 +325,7 @@ namespace Nakama
                     {
                         if (OnError != null)
                         {
-                            OnError(this, new NErrorEventArgs(error));
+                            callbackQueue.Enqueue(() => OnError(this, new NErrorEventArgs(error)));
                         }
                     }
                     break;
