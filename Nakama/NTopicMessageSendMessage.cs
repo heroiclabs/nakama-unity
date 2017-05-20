@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NTopicMessageSendMessage : INMessage<INTopicMessageAck>
+    public class NTopicMessageSendMessage : INCollatedMessage<INTopicMessageAck>
     {
         private Envelope payload;
         public IMessage Payload {

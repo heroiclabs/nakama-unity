@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NGroupsSelfListMessage : INMessage<INResultSet<INGroup>>
+    public class NGroupsSelfListMessage : INCollatedMessage<INResultSet<INGroup>>
     {
         private Envelope payload;
         public IMessage Payload {

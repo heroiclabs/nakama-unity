@@ -20,7 +20,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NLeaderboardsListMessage : INMessage<INResultSet<INLeaderboard>>
+    public class NLeaderboardsListMessage : INCollatedMessage<INResultSet<INLeaderboard>>
     {
         private Envelope payload;
         public IMessage Payload {

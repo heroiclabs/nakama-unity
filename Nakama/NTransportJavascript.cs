@@ -185,7 +185,7 @@ namespace Nakama
             SocketCloseCallbacks.Remove(socketId);
         }
 
-        public void Connect(string uri)
+        public void Connect(string uri, bool noDelay)
         {
             // This is not a blocking call
 
@@ -196,7 +196,7 @@ namespace Nakama
             }
         }
 
-        public void ConnectAsync(string uri, Action<bool> callback)
+        public void ConnectAsync(string uri, bool noDelay, Action<bool> callback)
         {
             // connection happen on socket creation
             if (_socketNativeRef == -1)

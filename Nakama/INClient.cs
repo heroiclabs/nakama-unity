@@ -68,6 +68,8 @@ namespace Nakama
 
         void Register(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback);
 
-        void Send<T>(INMessage<T> message, Action<T> callback, Action<INError> errback);
+        void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback);
+
+        void Send(INMessage message, Action<bool> callback, Action<INError> errback);
     }
 }

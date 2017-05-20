@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NMatchJoinMessage : INMessage<INMatch>
+    public class NMatchJoinMessage : INCollatedMessage<INMatch>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -34,6 +34,12 @@ namespace Nakama
             payload.MatchJoin.MatchId = ByteString.CopyFrom(matchId);
         }
 
+        private NMatchJoinMessage(INMatchToken token)
+        {
+            payload = new Envelope {MatchJoin = new TMatchJoin()};
+            payload.MatchJoin.Token = ByteString.CopyFrom(token.Token);
+        }
+
         public void SetCollationId(string id)
         {
             payload.CollationId = id;
@@ -41,13 +47,18 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NMatchJoinMessage(MatchId={0})";
-            return String.Format(f, payload.MatchJoin.MatchId);
+            var f = "NMatchJoinMessage(MatchId={0},Token={1})";
+            return String.Format(f, payload.MatchJoin.MatchId, payload.MatchJoin.Token);
         }
 
         public static NMatchJoinMessage Default(byte[] matchId)
         {
             return new NMatchJoinMessage(matchId);
+        }
+
+        public static NMatchJoinMessage Default(INMatchToken token)
+        {
+            return new NMatchJoinMessage(token);
         }
     }
 }

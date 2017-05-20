@@ -54,7 +54,8 @@ msbuild {
   doFirst {
     copy {
       from 'packages/NUnit.3.5.0/lib/net20'
-      from 'packages/WebSocketSharp.1.0.3-rc11/lib'
+      // from 'packages/WebSocketSharp.1.0.3-rc11/lib'
+      from 'lib'
       from 'packages/protobuf3-for-unity-v3.0.0_ga_noJIT'
       into destinationDir
     }

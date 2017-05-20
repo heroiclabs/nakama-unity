@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NFriendBlockMessage : INMessage<bool>
+    public class NFriendBlockMessage : INCollatedMessage<bool>
     {
         private Envelope payload;
         public IMessage Payload {

@@ -21,7 +21,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NLeaderboardRecordsListMessage : INMessage<INResultSet<INLeaderboardRecord>>
+    public class NLeaderboardRecordsListMessage : INCollatedMessage<INResultSet<INLeaderboardRecord>>
     {
         private Envelope payload;
         public IMessage Payload {

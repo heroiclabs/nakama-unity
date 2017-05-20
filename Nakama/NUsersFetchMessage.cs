@@ -20,7 +20,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NUsersFetchMessage : INMessage<INResultSet<INUser>>
+    public class NUsersFetchMessage : INCollatedMessage<INResultSet<INUser>>
     {
         private Envelope payload;
         public IMessage Payload {

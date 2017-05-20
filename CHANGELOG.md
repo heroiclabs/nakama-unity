@@ -4,6 +4,12 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New matchmaking feature.
+- Optionally send match data to only a subset of match participants.
+
+### Fixed
+- Correctly handle callbacks when sending match data.
 
 ## [0.5.1] - 2017-03-28
 ### Added

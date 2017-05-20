@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NMatchDataSendMessage : INMessage<bool>
+    public class NMatchDataSendMessage : INMessage
     {
         private Envelope payload;
         public IMessage Payload {
@@ -34,11 +34,6 @@ namespace Nakama
             payload.MatchDataSend.MatchId = ByteString.CopyFrom(matchId);
             payload.MatchDataSend.OpCode = opCode;
             payload.MatchDataSend.Data = ByteString.CopyFrom(data);
-        }
-
-        public void SetCollationId(string id)
-        {
-            payload.CollationId = id;
         }
 
         public override string ToString()

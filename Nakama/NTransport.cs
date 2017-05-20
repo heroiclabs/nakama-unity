@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using Google.Protobuf;
 using WebSocketSharp;
@@ -182,22 +183,37 @@ namespace Nakama
 
         }
 
-        public void Connect(string uri)
+        public void Connect(string uri, bool noDelay)
         {
             if (socket == null)
             {
                 createWebSocket(uri);
             }
             socket.Connect();
+
+            // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
+            if (noDelay)
+            {
+                Logger.TraceIf(Trace, "Connect: Enabling NoDelay on socket.");
+                socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
+            }
         }
 
-        public void ConnectAsync(string uri, Action<bool> callback)
+        public void ConnectAsync(string uri, bool noDelay, Action<bool> callback)
         {
             if (socket == null)
             {
                 createWebSocket(uri);
                 socket.OnOpen += (sender, _) =>
                 {
+                    // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
+                    if (noDelay)
+                    {
+                        Logger.TraceIf(Trace, "ConnectAsync: Enabling NoDelay on socket.");
+                        socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                        Logger.TraceIf(Trace, "ConnectAsync: Enabled NoDelay on socket.");
+                    }
                     callback(true);
                 };
             }

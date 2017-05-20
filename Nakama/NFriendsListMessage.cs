@@ -18,7 +18,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NFriendsListMessage : INMessage<INResultSet<INFriend>>
+    public class NFriendsListMessage : INCollatedMessage<INResultSet<INFriend>>
     {
         private Envelope payload;
         public IMessage Payload {
