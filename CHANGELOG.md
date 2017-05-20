@@ -7,6 +7,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Added
 - New matchmaking feature.
 - Optionally send match data to only a subset of match participants.
+- Expose a way to toggle TCP_NODELAY socket option.
 
 ### Fixed
 - Correctly handle callbacks when sending match data.
