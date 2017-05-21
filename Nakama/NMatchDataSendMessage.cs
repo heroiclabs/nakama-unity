@@ -28,9 +28,14 @@ namespace Nakama
             }
         }
 
+        private NMatchDataSendMessage()
+        {
+            payload = new Envelope {MatchDataSend = new MatchDataSend()};
+        }
+
         private NMatchDataSendMessage(byte[] matchId, long opCode, byte[] data)
         {
-            payload = new Envelope {MatchDataSend = new TMatchDataSend()};
+            payload = new Envelope {MatchDataSend = new MatchDataSend()};
             payload.MatchDataSend.MatchId = ByteString.CopyFrom(matchId);
             payload.MatchDataSend.OpCode = opCode;
             payload.MatchDataSend.Data = ByteString.CopyFrom(data);
@@ -38,14 +43,64 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NMatchDataSendMessage(MatchId={0},OpCode={1},Data={2})";
+            var f = "NMatchDataSendMessage(MatchId={0},OpCode={1},Data={2},Presences={3})";
             var p = payload.MatchDataSend;
-            return String.Format(f, p.MatchId, p.OpCode, p.Data);
+            return String.Format(f, p.MatchId, p.OpCode, p.Data, p.Presences);
         }
 
         public static NMatchDataSendMessage Default(byte[] matchId, long opCode, byte[] data)
         {
             return new NMatchDataSendMessage(matchId, opCode, data);
+        }
+
+        public class Builder
+        {
+            private NMatchDataSendMessage message;
+
+            public Builder(byte[] matchId, long opCode, byte[] data)
+            {
+                message = new NMatchDataSendMessage(matchId, opCode, data);
+            }
+
+            public Builder MatchId(byte[] matchId)
+            {
+                message.payload.MatchDataSend.MatchId = ByteString.CopyFrom(matchId);
+                return this;
+            }
+
+            public Builder OpCode(long opCode)
+            {
+                message.payload.MatchDataSend.OpCode = opCode;
+                return this;
+            }
+
+            public Builder Data(byte[] data)
+            {
+                message.payload.MatchDataSend.Data = ByteString.CopyFrom(data);
+                return this;
+            }
+
+            public Builder Presences(INUserPresence[] presences)
+            {
+                message.payload.MatchDataSend.Presences.Clear();
+                foreach (var presence in presences)
+                {
+                    UserPresence userPresence = new UserPresence();
+                    userPresence.UserId = ByteString.CopyFrom(presence.UserId);
+                    userPresence.SessionId = ByteString.CopyFrom(presence.SessionId);
+                    message.payload.MatchDataSend.Presences.Add(userPresence);
+                }
+                return this;
+            }
+
+            public NMatchDataSendMessage Build()
+            {
+                // Clone object so builder now operates on new copy.
+                var original = message;
+                message = new NMatchDataSendMessage();
+                message.payload.MatchDataSend = new MatchDataSend(original.payload.MatchDataSend);
+                return original;
+            }
         }
     }
 }
