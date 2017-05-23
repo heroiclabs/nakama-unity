@@ -32,6 +32,7 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
+        private static byte[] userId1;
         private static byte[] userId2;
 
         [SetUp]
@@ -44,6 +45,7 @@ namespace Nakama.Tests
             ManualResetEvent c1Evt = new ManualResetEvent(false);
             client1.Register(NAuthenticateMessage.Device(random.GetString()), (INSession session) =>
             {
+                userId1 = session.Id;
                 client1.Connect(session);
                 c1Evt.Set();
             }, (INError err) =>
@@ -320,6 +322,65 @@ namespace Nakama.Tests
                 evt2.Set();
             });
             evt2.WaitOne(1000, false);
+            Assert.IsNull(error);
+            Assert.IsNull(d);
+        }
+
+        [Test]
+        public void SendDataSubsetMatch()
+        {
+            INError error = null;
+            INMatch m = null;
+            INUserPresence p = null;
+
+            ManualResetEvent evt1 = new ManualResetEvent(false);
+            client1.Send(NMatchCreateMessage.Default(), (INMatch match) =>
+            {
+                m = match;
+                client2.Send(NMatchJoinMessage.Default(match.Id), (INMatch match2) =>
+                {
+                    foreach (var up in match2.Presence)
+                    {
+                        if (up.UserId.SequenceEqual(userId2))
+                        {
+                            p = up;
+                            break;
+                        }
+                    }
+                    evt1.Set();
+                }, (INError err) =>
+                {
+                    error = err;
+                    evt1.Set();
+                });
+            }, (INError err) =>
+            {
+                error = err;
+                evt1.Set();
+            });
+            evt1.WaitOne(5000, false);
+            Assert.IsNull(error);
+            Assert.IsNotNull(m, "m was null");
+            Assert.IsNotNull(p, "p was null");
+
+            byte[] data = Encoding.ASCII.GetBytes("test-data");
+            long opCode = 9;
+            INMatchData d = null;
+            ManualResetEvent evt2 = new ManualResetEvent(false);
+            client1.OnMatchData += (object source, NMatchDataEventArgs args) =>
+            {
+                d = args.Data;
+                evt2.Set();
+            };
+            var msg = new NMatchDataSendMessage.Builder(m.Id, opCode, data).Presences(new INUserPresence[]{p}).Build();
+            client2.Send(msg, (bool completed) =>
+            {
+                // No action.
+            }, (INError err) => {
+                error = err;
+                evt2.Set();
+            });
+            evt2.WaitOne(2000, false);
             Assert.IsNull(error);
             Assert.IsNull(d);
         }
