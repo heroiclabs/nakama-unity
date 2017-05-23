@@ -45,6 +45,7 @@
     <Compile Include="MatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AuthenticateTest.cs" />
+    <Compile Include="RuntimeTest.cs" />
     <Compile Include="SimpleMetadataTest.cs" />
     <Compile Include="SimpleServerTest.cs" />
     <Compile Include="SocketTest.cs" />

@@ -12,6 +12,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Correctly handle callbacks when sending match data.
 
+### Added
+- Support for Runtime RPC.
+
 ## [0.5.1] - 2017-03-28
 ### Added
 - Support for fetching groups by name.

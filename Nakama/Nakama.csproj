@@ -50,6 +50,9 @@
     <Compile Include="INMatchmakeMatched.cs" />
     <Compile Include="INMatchmakeTicket.cs" />
     <Compile Include="INMatchToken.cs" />
+    <Compile Include="INRuntimeRpc.cs" />
+    <Compile Include="NRuntimeRpc.cs" />
+    <Compile Include="NRuntimeRpcMessage.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
     <Compile Include="INTransport.cs" />
