@@ -32,6 +32,8 @@ namespace Nakama
 
         event EventHandler<NErrorEventArgs> OnError;
 
+        event EventHandler<NMatchmakingResultEventArgs> OnMatchmakingResult;
+
         event EventHandler<NMatchDataEventArgs> OnMatchData;
 
         event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
@@ -70,6 +72,6 @@ namespace Nakama
 
         void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback);
 
-        void Send(INMessage message, Action<bool> callback, Action<INError> errback);
+        void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback);
     }
 }

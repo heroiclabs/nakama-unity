@@ -53,6 +53,7 @@
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
     <Compile Include="INTransport.cs" />
+    <Compile Include="INUncollatedMessage.cs" />
     <Compile Include="NCursor.cs" />
     <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />

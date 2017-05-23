@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NMatchDataSendMessage : INMessage
+    public class NMatchDataSendMessage : INUncollatedMessage
     {
         private Envelope payload;
         public IMessage Payload {

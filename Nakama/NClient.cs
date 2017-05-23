@@ -213,7 +213,7 @@ namespace Nakama
             });
         }
 
-        public void Send(INMessage message, Action<bool> callback, Action<INError> errback)
+        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
         {
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
