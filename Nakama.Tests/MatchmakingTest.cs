@@ -146,6 +146,51 @@ namespace Nakama.Tests
         }
 
         [Test, Order(3)]
+        public void MatchmakingCancel()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INError error = null;
+            INMatchmakingResult res1 = null;
+            INMatchmakingResult res2 = null;
+
+            client1.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            {
+                res1 = args.Result;
+                evt.Set();
+            };
+            client2.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            {
+                res2 = args.Result;
+                evt.Set();
+            };
+
+            client1.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket1) =>
+            {
+                client1.Send(NMatchmakingCancelMessage.Default(ticket1), (bool done) =>
+                {
+                    client2.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket2) =>
+                    {
+                        // No action.
+                    }, (INError err) =>
+                    {
+                        error = err;
+                    });
+                }, (INError err) =>
+                {
+                    error = err;
+                });
+            }, (INError err) =>
+            {
+                error = err;
+            });
+
+            evt.WaitOne(2000, false);
+            Assert.IsNull(error);
+            Assert.IsNull(res1);
+            Assert.IsNull(res2);
+        }
+
+        [Test, Order(4)]
         public void MatchmakingJoin()
         {
             ManualResetEvent evt1 = new ManualResetEvent(false);

@@ -41,6 +41,7 @@
     <Compile Include="FriendTest.cs" />
     <Compile Include="GroupTest.cs" />
     <Compile Include="LeaderboardTest.cs" />
+    <Compile Include="MatchmakingTest.cs" />
     <Compile Include="MatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AuthenticateTest.cs" />
