@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NStorageRemoveMessage : INMessage<bool>
+    public class NStorageRemoveMessage : INCollatedMessage<bool>
     {
         private Envelope payload;
         public IMessage Payload {

@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NSelfLinkMessage : INMessage<bool>
+    public class NSelfLinkMessage : INCollatedMessage<bool>
     {
         private Envelope payload;
         public IMessage Payload {

@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="websocket-sharp">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+      <HintPath>..\lib\websocket-sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Protobuf">
@@ -47,9 +47,13 @@
     <Compile Include="INGroupUser.cs" />
     <Compile Include="INLeaderboard.cs" />
     <Compile Include="INLeaderboardRecord.cs" />
+    <Compile Include="INMatchmakeMatched.cs" />
+    <Compile Include="INMatchmakeTicket.cs" />
+    <Compile Include="INMatchToken.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
     <Compile Include="INTransport.cs" />
+    <Compile Include="INUncollatedMessage.cs" />
     <Compile Include="NCursor.cs" />
     <Compile Include="NFriend.cs" />
     <Compile Include="NFriendAddMessage.cs" />
@@ -58,6 +62,7 @@
     <Compile Include="NFriendRemoveMessage.cs" />
     <Compile Include="INAuthenticateMessage.cs" />
     <Compile Include="INClient.cs" />
+    <Compile Include="INCollatedMessage.cs" />
     <Compile Include="INCursor.cs" />
     <Compile Include="INError.cs" />
     <Compile Include="INFriend.cs" />
@@ -110,8 +115,14 @@
     <Compile Include="NMatchDataSendMessage.cs" />
     <Compile Include="NMatchJoinMessage.cs" />
     <Compile Include="NMatchLeaveMessage.cs" />
+    <Compile Include="NMatchmakeRemoveMessage.cs" />
+    <Compile Include="NMatchmakeMatched.cs" />
+    <Compile Include="NMatchmakeMatchedEventArgs.cs" />
+    <Compile Include="NMatchmakeAddMessage.cs" />
+    <Compile Include="NMatchmakeTicket.cs" />
     <Compile Include="NMatchPresence.cs" />
     <Compile Include="NMatchPresenceEventArgs.cs" />
+    <Compile Include="NMatchToken.cs" />
     <Compile Include="NResultSet.cs" />
     <Compile Include="NSelf.cs" />
     <Compile Include="NSelfFetchMessage.cs" />
@@ -136,6 +147,7 @@
     <Compile Include="NTopicPresence.cs" />
     <Compile Include="NTopicPresenceEventArgs.cs" />
     <Compile Include="NTransport.cs" />
+    <Compile Include="NTransportJavascript.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />

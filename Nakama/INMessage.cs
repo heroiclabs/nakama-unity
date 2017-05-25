@@ -18,10 +18,8 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public interface INMessage<T>
+    public interface INMessage
     {
         IMessage Payload { get; }
-
-        void SetCollationId(string id);
     }
 }

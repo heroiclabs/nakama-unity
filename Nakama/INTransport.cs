@@ -16,8 +16,8 @@ namespace Nakama
             Action<byte[]> successAction,
             Action<Exception> errorAction);
 
-        void Connect(string uri);
-        void ConnectAsync(string uri, Action<bool> callback);
+        void Connect(string uri, bool noDelay);
+        void ConnectAsync(string uri, bool noDelay, Action<bool> callback);
         void Close();
         void CloseAsync(Action callback);
         void Send(byte[] data);

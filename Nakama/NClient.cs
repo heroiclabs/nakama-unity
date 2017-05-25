@@ -41,6 +41,8 @@ namespace Nakama
 
         public event EventHandler<NErrorEventArgs> OnError;
 
+        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
+
         public event EventHandler<NMatchDataEventArgs> OnMatchData;
 
         public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
@@ -77,6 +79,8 @@ namespace Nakama
 
         public uint Timeout { get; private set; }
 
+        public bool NoDelay { get; private set; }
+
         public bool Trace { get; private set; }
 
         private IDictionary<string, KeyValuePair<Action<object>, Action<INError>>> collationIds =
@@ -94,6 +98,7 @@ namespace Nakama
             ServerKey = serverKey;
             SSL = false;
             Timeout = 5000;
+            NoDelay = true;
             Trace = false;
             Lang = "en";
 #if UNITY
@@ -140,12 +145,12 @@ namespace Nakama
 
         public void Connect(INSession session)
         {
-            transport.Connect(getWebsocketUri(session));
+            transport.Connect(getWebsocketUri(session), NoDelay);
         }
 
         public void Connect(INSession session, Action<bool> callback)
         {
-            transport.ConnectAsync(getWebsocketUri(session), callback);
+            transport.ConnectAsync(getWebsocketUri(session), NoDelay, callback);
         }
 
         public static NClient Default(string serverKey)
@@ -182,7 +187,7 @@ namespace Nakama
             });
         }
 
-        public void Send<T>(INMessage<T> message, Action<T> callback, Action<INError> errback)
+        public void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback)
         {
             // Set a collation ID to dispatch callbacks on receive
             string collationId = Guid.NewGuid().ToString();
@@ -208,10 +213,28 @@ namespace Nakama
             });
         }
 
+        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        {
+            var stream = new MemoryStream();
+            message.Payload.WriteTo(stream);
+            Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
+            transport.SendAsync(stream.ToArray(), (bool completed) =>
+            {
+                if (completed)
+                {
+                    callback(true);
+                }
+                else
+                {
+                    errback(new NError("Message send error"));
+                }
+            });
+        }
+
         public override string ToString()
         {
-            var f = "NClient(ConnectTimeout={0},Host={1},Lang={2},Port={3},ServerKey={4},SSL={5},Timeout={6},Trace={7})";
-            return String.Format(f, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, Trace);
+            var f = "NClient(ConnectTimeout={0},Host={1},Lang={2},Port={3},ServerKey={4},SSL={5},Timeout={6},NoDelay={7},Trace={8})";
+            return String.Format(f, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, NoDelay, Trace);
         }
 
         private void authenticate(string path,
@@ -273,6 +296,12 @@ namespace Nakama
             {
                 case Envelope.PayloadOneofCase.Heartbeat:
                     ServerTime = message.Heartbeat.Timestamp;
+                    return;
+                case Envelope.PayloadOneofCase.MatchmakeMatched:
+                    if (OnMatchmakeMatched != null)
+                    {
+                        OnMatchmakeMatched(this, new NMatchmakeMatchedEventArgs(new NMatchmakeMatched(message.MatchmakeMatched)));
+                    }
                     return;
                 case Envelope.PayloadOneofCase.MatchData:
                     if (OnMatchData != null)
@@ -349,6 +378,9 @@ namespace Nakama
                         groups.Add(new NGroup(group));
                     }
                     pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
+                    break;
+                case Envelope.PayloadOneofCase.MatchmakeTicket:
+                    pair.Key(new NMatchmakeTicket(message.MatchmakeTicket));
                     break;
                 case Envelope.PayloadOneofCase.Match:
                     pair.Key(new NMatch(message.Match));
@@ -472,6 +504,12 @@ namespace Nakama
                 return this;
             }
 
+            public Builder NoDelay(bool enable)
+            {
+                client.NoDelay = enable;
+                return this;
+            }
+
             public Builder Trace(bool enable)
             {
                 client.Trace = enable;
@@ -491,6 +529,7 @@ namespace Nakama
                 client.Port = original.Port;
                 client.SSL = original.SSL;
                 client.Timeout = original.Timeout;
+                client.NoDelay = original.NoDelay;
                 client.Trace = original.Trace;
                 return original;
             }

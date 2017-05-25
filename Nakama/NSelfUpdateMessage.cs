@@ -20,7 +20,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NSelfUpdateMessage : INMessage<bool>
+    public class NSelfUpdateMessage : INCollatedMessage<bool>
     {
         private Envelope payload;
         public IMessage Payload {
