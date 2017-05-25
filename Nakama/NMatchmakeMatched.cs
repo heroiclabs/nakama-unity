@@ -20,16 +20,16 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    internal class NMatchmakingResult : INMatchmakingResult
+    internal class NMatchmakeMatched : INMatchmakeMatched
     {
-        public INMatchmakingTicket Ticket { get; private set; }
+        public INMatchmakeTicket Ticket { get; private set; }
         public INMatchToken Token { get; private set; }
         public IList<INUserPresence> Presence { get; private set; }
         public INUserPresence Self { get; private set; }
 
-        internal NMatchmakingResult(MatchmakingResult message)
+        internal NMatchmakeMatched(MatchmakeMatched message)
         {
-            Ticket = new NMatchmakingTicket(message.Ticket);
+            Ticket = new NMatchmakeTicket(message.Ticket);
             Token = new NMatchToken(message.Token);
             Presence = new List<INUserPresence>();
             foreach (var item in message.Presences)
@@ -41,7 +41,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NMatchmakingResult(Ticket={0},Token={1},Presence={2},Self={3})";
+            var f = "NMatchmakeMatched(Ticket={0},Token={1},Presence={2},Self={3})";
             return String.Format(f, Ticket, Token, Presence, Self);
         }
     }

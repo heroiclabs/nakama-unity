@@ -47,8 +47,8 @@
     <Compile Include="INGroupUser.cs" />
     <Compile Include="INLeaderboard.cs" />
     <Compile Include="INLeaderboardRecord.cs" />
-    <Compile Include="INMatchmakingResult.cs" />
-    <Compile Include="INMatchmakingTicket.cs" />
+    <Compile Include="INMatchmakeMatched.cs" />
+    <Compile Include="INMatchmakeTicket.cs" />
     <Compile Include="INMatchToken.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
@@ -115,11 +115,11 @@
     <Compile Include="NMatchDataSendMessage.cs" />
     <Compile Include="NMatchJoinMessage.cs" />
     <Compile Include="NMatchLeaveMessage.cs" />
-    <Compile Include="NMatchmakingCancelMessage.cs" />
-    <Compile Include="NMatchmakingResult.cs" />
-    <Compile Include="NMatchmakingResultEventArgs.cs" />
-    <Compile Include="NMatchmakingStartMessage.cs" />
-    <Compile Include="NMatchmakingTicket.cs" />
+    <Compile Include="NMatchmakeRemoveMessage.cs" />
+    <Compile Include="NMatchmakeMatched.cs" />
+    <Compile Include="NMatchmakeMatchedEventArgs.cs" />
+    <Compile Include="NMatchmakeAddMessage.cs" />
+    <Compile Include="NMatchmakeTicket.cs" />
     <Compile Include="NMatchPresence.cs" />
     <Compile Include="NMatchPresenceEventArgs.cs" />
     <Compile Include="NMatchToken.cs" />

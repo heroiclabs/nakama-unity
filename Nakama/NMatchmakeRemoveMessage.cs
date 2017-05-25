@@ -19,7 +19,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NMatchmakingStartMessage : INCollatedMessage<INMatchmakingTicket>
+    public class NMatchmakeRemoveMessage : INCollatedMessage<bool>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -28,10 +28,10 @@ namespace Nakama
             }
         }
 
-        private NMatchmakingStartMessage(long requiredCount)
+        private NMatchmakeRemoveMessage(INMatchmakeTicket ticket)
         {
-            payload = new Envelope {MatchmakingStart = new TMatchmakingStart()};
-            payload.MatchmakingStart.RequiredCount = requiredCount;
+            payload = new Envelope {MatchmakeRemove = new TMatchmakeRemove()};
+            payload.MatchmakeRemove.Ticket = ByteString.CopyFrom(ticket.Ticket);
         }
 
         public void SetCollationId(string id)
@@ -41,13 +41,13 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NMatchmakingStartMessage(RequiredCount={0})";
-            return String.Format(f, payload.MatchmakingStart.RequiredCount);
+            var f = "NMatchmakeRemoveMessage(Ticket={0})";
+            return String.Format(f, payload.MatchmakeRemove.Ticket);
         }
 
-        public static NMatchmakingStartMessage Default(long requiredCount)
+        public static NMatchmakeRemoveMessage Default(INMatchmakeTicket ticket)
         {
-            return new NMatchmakingStartMessage(requiredCount);
+            return new NMatchmakeRemoveMessage(ticket);
         }
     }
 }

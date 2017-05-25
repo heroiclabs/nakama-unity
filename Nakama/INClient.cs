@@ -32,7 +32,7 @@ namespace Nakama
 
         event EventHandler<NErrorEventArgs> OnError;
 
-        event EventHandler<NMatchmakingResultEventArgs> OnMatchmakingResult;
+        event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
 
         event EventHandler<NMatchDataEventArgs> OnMatchData;
 

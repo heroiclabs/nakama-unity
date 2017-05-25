@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+
 namespace Nakama
 {
-    public interface INMatchmakingTicket
+    public interface INMatchmakeMatched
     {
-        byte[] Ticket { get; }
+        INMatchmakeTicket Ticket { get; }
+        INMatchToken Token { get;  }
+        IList<INUserPresence> Presence { get; }
+        INUserPresence Self { get; }
     }
 }

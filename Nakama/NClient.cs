@@ -41,7 +41,7 @@ namespace Nakama
 
         public event EventHandler<NErrorEventArgs> OnError;
 
-        public event EventHandler<NMatchmakingResultEventArgs> OnMatchmakingResult;
+        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
 
         public event EventHandler<NMatchDataEventArgs> OnMatchData;
 
@@ -297,10 +297,10 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.Heartbeat:
                     ServerTime = message.Heartbeat.Timestamp;
                     return;
-                case Envelope.PayloadOneofCase.MatchmakingResult:
-                    if (OnMatchmakingResult != null)
+                case Envelope.PayloadOneofCase.MatchmakeMatched:
+                    if (OnMatchmakeMatched != null)
                     {
-                        OnMatchmakingResult(this, new NMatchmakingResultEventArgs(new NMatchmakingResult(message.MatchmakingResult)));
+                        OnMatchmakeMatched(this, new NMatchmakeMatchedEventArgs(new NMatchmakeMatched(message.MatchmakeMatched)));
                     }
                     return;
                 case Envelope.PayloadOneofCase.MatchData:
@@ -379,8 +379,8 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
                     break;
-                case Envelope.PayloadOneofCase.MatchmakingTicket:
-                    pair.Key(new NMatchmakingTicket(message.MatchmakingTicket));
+                case Envelope.PayloadOneofCase.MatchmakeTicket:
+                    pair.Key(new NMatchmakeTicket(message.MatchmakeTicket));
                     break;
                 case Envelope.PayloadOneofCase.Match:
                     pair.Key(new NMatch(message.Match));

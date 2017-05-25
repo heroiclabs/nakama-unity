@@ -14,29 +14,10 @@
  * limitations under the License.
  */
 
-using System;
-using Google.Protobuf;
-
 namespace Nakama
 {
-    internal class NMatchmakingTicket : INMatchmakingTicket
+    public interface INMatchmakeTicket
     {
-        public byte[] Ticket { get; private set; }
-
-        internal NMatchmakingTicket(ByteString ticket)
-        {
-            Ticket = ticket.ToByteArray();
-        }
-
-        internal NMatchmakingTicket(TMatchmakingTicket ticket)
-        {
-            Ticket = ticket.Ticket.ToByteArray();
-        }
-
-        public override string ToString()
-        {
-            var f = "NMatchmakingTicket(Ticket={0})";
-            return String.Format(f, Ticket);
-        }
+        byte[] Ticket { get; }
     }
 }

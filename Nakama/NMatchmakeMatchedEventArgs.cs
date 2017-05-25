@@ -15,15 +15,16 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace Nakama
 {
-    public interface INMatchmakingResult
+    public class NMatchmakeMatchedEventArgs : EventArgs
     {
-        INMatchmakingTicket Ticket { get; }
-        INMatchToken Token { get;  }
-        IList<INUserPresence> Presence { get; }
-        INUserPresence Self { get; }
+        public INMatchmakeMatched Matched { get; private set; }
+
+        internal NMatchmakeMatchedEventArgs(INMatchmakeMatched matched)
+        {
+            Matched = matched;
+        }
     }
 }

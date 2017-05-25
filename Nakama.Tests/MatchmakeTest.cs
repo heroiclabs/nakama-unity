@@ -24,7 +24,7 @@ using NUnit.Framework.Internal;
 namespace Nakama.Tests
 {
     [TestFixture]
-    public class MatchmakingTest
+    public class MatchmakeTest
     {
         private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().First());
         private static readonly string DefaultServerKey = "defaultkey";
@@ -77,19 +77,19 @@ namespace Nakama.Tests
         }
 
         [Test, Order(1)]
-        public void MatchmakingStart()
+        public void MatchmakeAdd()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
-            INMatchmakingResult res = null;
+            INMatchmakeMatched res = null;
 
-            client1.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res = args.Result;
+                res = args.Matched;
                 evt.Set();
             };
 
-            client1.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket1) =>
+            client1.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket1) =>
             {
             }, (INError err) =>
             {
@@ -102,30 +102,30 @@ namespace Nakama.Tests
         }
 
         [Test, Order(2)]
-        public void MatchmakingResult()
+        public void MatchmakeMatched()
         {
             ManualResetEvent evt1 = new ManualResetEvent(false);
             ManualResetEvent evt2 = new ManualResetEvent(false);
             INError error = null;
             INError error1 = null;
             INError error2 = null;
-            INMatchmakingResult res1 = null;
-            INMatchmakingResult res2 = null;
+            INMatchmakeMatched res1 = null;
+            INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res1 = args.Result;
+                res1 = args.Matched;
                 evt1.Set();
             };
-            client2.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res2 = args.Result;
+                res2 = args.Matched;
                 evt2.Set();
             };
 
-            client1.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket1) =>
+            client1.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket1) =>
             {
-                client2.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket2) =>
+                client2.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket2) =>
                 {
                     // No action.
                 }, (INError err) =>
@@ -146,29 +146,29 @@ namespace Nakama.Tests
         }
 
         [Test, Order(3)]
-        public void MatchmakingCancel()
+        public void MatchmakeRemove()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
-            INMatchmakingResult res1 = null;
-            INMatchmakingResult res2 = null;
+            INMatchmakeMatched res1 = null;
+            INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res1 = args.Result;
+                res1 = args.Matched;
                 evt.Set();
             };
-            client2.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res2 = args.Result;
+                res2 = args.Matched;
                 evt.Set();
             };
 
-            client1.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket1) =>
+            client1.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket1) =>
             {
-                client1.Send(NMatchmakingCancelMessage.Default(ticket1), (bool done) =>
+                client1.Send(NMatchmakeRemoveMessage.Default(ticket1), (bool done) =>
                 {
-                    client2.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket2) =>
+                    client2.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket2) =>
                     {
                         // No action.
                     }, (INError err) =>
@@ -198,23 +198,23 @@ namespace Nakama.Tests
             INError error = null;
             INError error1 = null;
             INError error2 = null;
-            INMatchmakingResult res1 = null;
-            INMatchmakingResult res2 = null;
+            INMatchmakeMatched res1 = null;
+            INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res1 = args.Result;
+                res1 = args.Matched;
                 evt1.Set();
             };
-            client2.OnMatchmakingResult += (object source, NMatchmakingResultEventArgs args) =>
+            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
             {
-                res2 = args.Result;
+                res2 = args.Matched;
                 evt2.Set();
             };
 
-            client1.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket1) =>
+            client1.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket1) =>
             {
-                client2.Send(NMatchmakingStartMessage.Default(2), (INMatchmakingTicket ticket2) =>
+                client2.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket2) =>
                 {
                     // No action.
                 }, (INError err) =>
