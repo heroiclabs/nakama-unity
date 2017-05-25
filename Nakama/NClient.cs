@@ -98,7 +98,7 @@ namespace Nakama
             ServerKey = serverKey;
             SSL = false;
             Timeout = 5000;
-            NoDelay = false;
+            NoDelay = true;
             Trace = false;
             Lang = "en";
 #if UNITY
