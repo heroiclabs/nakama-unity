@@ -8,12 +8,12 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - New matchmaking feature.
 - Optionally send match data to only a subset of match participants.
 - Expose a way to toggle TCP_NODELAY socket option.
+- Support for Runtime RPC.
+- Fetch users by handle.
+- Add friend by handle.
 
 ### Fixed
 - Correctly handle callbacks when sending match data.
-
-### Added
-- Support for Runtime RPC.
 
 ## [0.5.1] - 2017-03-28
 ### Added
