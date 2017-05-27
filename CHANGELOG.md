@@ -11,6 +11,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - Support for Runtime RPC.
 - Fetch users by handle.
 - Add friend by handle.
+- Filter leaderboards by ID.
 
 ### Fixed
 - Correctly handle callbacks when sending match data.

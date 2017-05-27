@@ -16,6 +16,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -106,7 +107,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INLeaderboard> res = null;
 
-            var message = new NLeaderboardsListMessage.Builder().Build();
+            var message= new NLeaderboardsListMessage.Builder().Add(Encoding.UTF8.GetBytes(LeaderboardIdName)).Build();
             client.Send(message, (INResultSet<INLeaderboard> results) =>
             {
                 res = results;

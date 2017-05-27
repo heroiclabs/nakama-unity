@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Google.Protobuf;
 
@@ -64,6 +65,21 @@ namespace Nakama
             public Builder Cursor(INCursor cursor)
             {
                 message.payload.LeaderboardsList.Cursor = ByteString.CopyFrom(cursor.Value);
+                return this;
+            }
+
+            public Builder Add(params byte[] ids)
+            {
+                message.payload.LeaderboardsList.FilterLeaderboardId.Add(ByteString.CopyFrom(ids));
+                return this;
+            }
+
+            public Builder Add(IEnumerable<byte[]> ids)
+            {
+                foreach (var id in ids)
+                {
+                    message.payload.LeaderboardsList.FilterLeaderboardId.Add(ByteString.CopyFrom(id));
+                }
                 return this;
             }
 
