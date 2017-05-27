@@ -20,7 +20,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NRuntimeRpcMessage : INMessage<INRuntimeRpc>
+    public class NRuntimeRpcMessage : INCollatedMessage<INRuntimeRpc>
     {
         private Envelope payload;
         public IMessage Payload {
