@@ -128,7 +128,7 @@ namespace Nakama.Tests
             INResultSet<INStorageKey> res = null;
 
             var message = new NStorageWriteMessage.Builder()
-                    .Write(Bucket, Collection, Record, StorageValue)
+                    .Write(Bucket, Collection, Record, StorageValue, StoragePermissionRead.PublicRead, StoragePermissionWrite.OwnerWrite)
                     .Build();
             client.Send(message, (INResultSet<INStorageKey> results) =>
             {

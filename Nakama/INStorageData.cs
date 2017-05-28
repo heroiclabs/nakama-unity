@@ -22,9 +22,9 @@ namespace Nakama
 
         byte[] Value { get; }
 
-        long PermissionRead { get; }
+        StoragePermissionRead PermissionRead { get; }
 
-        long PermissionWrite { get; }
+        StoragePermissionWrite PermissionWrite { get; }
 
         long CreatedAt { get; }
 
