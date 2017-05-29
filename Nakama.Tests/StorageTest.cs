@@ -97,10 +97,11 @@ namespace Nakama.Tests
         }
 
         [Test, Order(1)]
-        public void WriteStorageInvalidIfMatch()
+        public void WriteStorageIfMatchRejected()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
+            INError error = null;
 
             var message = new NStorageWriteMessage.Builder()
                     .Write(Bucket, Collection, Record, StorageValue, InvalidVersion)
@@ -109,16 +110,16 @@ namespace Nakama.Tests
             {
                 res = results;
                 evt.Set();
-            }, _ => {
+            }, (INError e) => {
+                error = e;
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNotNull(res);
-            Assert.IsNotEmpty(res.Results);
-            Assert.AreEqual(res.Results[0].Bucket, Bucket);
-            Assert.AreEqual(res.Results[0].Collection, Collection);
-            Assert.AreEqual(res.Results[0].Record, Record);
+            Assert.IsNull(res);
+            Assert.IsNotNull(error);
+            Assert.AreEqual(ErrorCode.StorageRejected, error.Code);
+            Assert.AreEqual("Storage write rejected: not found, version check failed, or permission denied", error.Message);
         }
 
         [Test, Order(2)]
@@ -141,16 +142,17 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsNotNull(res);
             Assert.IsNotEmpty(res.Results);
-            Assert.AreEqual(res.Results[0].Bucket, Bucket);
-            Assert.AreEqual(res.Results[0].Collection, Collection);
-            Assert.AreEqual(res.Results[0].Record, Record);
+            Assert.AreEqual(Bucket, res.Results[0].Bucket);
+            Assert.AreEqual(Collection, res.Results[0].Collection);
+            Assert.AreEqual(Record, res.Results[0].Record);
         }
 
         [Test, Order(3)]
-        public void WriteStorageIfNoneMatch()
+        public void WriteStorageIfNoneMatchRejected()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
+            INError error = null;
 
             var message = new NStorageWriteMessage.Builder()
                     .Write(Bucket, Collection, Record, StorageValue, IfNoneMatchVersion)
@@ -159,16 +161,16 @@ namespace Nakama.Tests
             {
                 res = results;
                 evt.Set();
-            }, _ => {
+            }, (INError e) => {
+                error = e;
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsNotNull(res);
-            Assert.IsNotEmpty(res.Results);
-            Assert.AreEqual(res.Results[0].Bucket, Bucket);
-            Assert.AreEqual(res.Results[0].Collection, Collection);
-            Assert.AreEqual(res.Results[0].Record, Record);
+            Assert.IsNull(res);
+            Assert.IsNotNull(error);
+            Assert.AreEqual(ErrorCode.StorageRejected, error.Code);
+            Assert.AreEqual("Storage write rejected: not found, version check failed, or permission denied", error.Message);
         }
 
         [Test, Order(4)]
@@ -195,19 +197,20 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.NotNull(storageData);
             Assert.NotNull(storageData.Results);
-            Assert.AreEqual(storageData.Results.Count, 1);
+            Assert.AreEqual(1, storageData.Results.Count);
             Assert.NotNull(storageData.Results[0]);
-            Assert.AreEqual(storageData.Results[0].Bucket, Bucket);
-            Assert.AreEqual(storageData.Results[0].Collection, Collection);
-            Assert.AreEqual(storageData.Results[0].Record, Record);
-            Assert.AreEqual(storageData.Results[0].Value, StorageValue);
+            Assert.AreEqual(Bucket, storageData.Results[0].Bucket);
+            Assert.AreEqual(Collection, storageData.Results[0].Collection);
+            Assert.AreEqual(Record, storageData.Results[0].Record);
+            Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
 
         [Test, Order(5)]
-        public void RemoveStorageIfMatch()
+        public void RemoveStorageInvalidIfMatch()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             var committed = false;
+            INError error = null;
 
             var message = new NStorageRemoveMessage.Builder()
                     .Remove(Bucket, Collection, Record, InvalidVersion)
@@ -215,12 +218,16 @@ namespace Nakama.Tests
             client.Send(message, (bool completed) => {
                 committed = completed;
                 evt.Set();
-            }, _ => {
+            }, (INError e) => {
+                error = e;
                 evt.Set();
             });
 
             evt.WaitOne(1000, false);
-            Assert.IsTrue(committed);
+            Assert.IsFalse(committed);
+            Assert.IsNotNull(error);
+            Assert.AreEqual(ErrorCode.StorageRejected, error.Code);
+            Assert.AreEqual("Storage remove rejected: not found, version check failed, or permission denied", error.Message);
         }
 
         [Test, Order(6)]
