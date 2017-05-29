@@ -120,8 +120,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7db9eb2bb7253b39e4cf003c7c27a30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a924b90f442fc3cb49b902a07dd225846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a924b90f442fc3cb49b902a07dd225846">Logout</a> (Action&lt; bool &gt; callback)</td></tr>
 <tr class="separator:a924b90f442fc3cb49b902a07dd225846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa63460a7acd46edb19fea3cb89abfcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#aaa63460a7acd46edb19fea3cb89abfcb">Send&lt; T &gt;</a> (<a class="el" href="interface_nakama_1_1_i_n_message.html">INMessage</a>&lt; T &gt; message, Action&lt; T &gt; callback, Action&lt; <a class="el" href="interface_nakama_1_1_i_n_error.html">INError</a> &gt; errback)</td></tr>
-<tr class="separator:aaa63460a7acd46edb19fea3cb89abfcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaeb7a6e574df4df30896583d830414c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#afaeb7a6e574df4df30896583d830414c">Send&lt; T &gt;</a> (<a class="el" href="interface_nakama_1_1_i_n_collated_message.html">INCollatedMessage</a>&lt; T &gt; message, Action&lt; T &gt; callback, Action&lt; <a class="el" href="interface_nakama_1_1_i_n_error.html">INError</a> &gt; errback)</td></tr>
+<tr class="separator:afaeb7a6e574df4df30896583d830414c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ce39e519603779767bd3301e192b96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#aa6ce39e519603779767bd3301e192b96">Send</a> (<a class="el" href="interface_nakama_1_1_i_n_uncollated_message.html">INUncollatedMessage</a> message, Action&lt; bool &gt; callback, Action&lt; <a class="el" href="interface_nakama_1_1_i_n_error.html">INError</a> &gt; errback)</td></tr>
+<tr class="separator:aa6ce39e519603779767bd3301e192b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8e9e804e51b605f79adbebf2e7e4caa"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#ac8e9e804e51b605f79adbebf2e7e4caa">ToString</a> ()</td></tr>
 <tr class="separator:ac8e9e804e51b605f79adbebf2e7e4caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -150,6 +152,8 @@ Properties</h2></td></tr>
 <tr class="separator:a745b921dac5aa3c7869444cbe5cd9a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c66e2aefee837d37aa881a181c4069a"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a3c66e2aefee837d37aa881a181c4069a">Timeout</a><code> [get]</code></td></tr>
 <tr class="separator:a3c66e2aefee837d37aa881a181c4069a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1709d9dbf2129e49e6a1cc22c23537d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#ab1709d9dbf2129e49e6a1cc22c23537d">NoDelay</a><code> [get]</code></td></tr>
+<tr class="separator:ab1709d9dbf2129e49e6a1cc22c23537d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a989bf7568ddcc92ec7e4868e6660d422"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a989bf7568ddcc92ec7e4868e6660d422">Trace</a><code> [get]</code></td></tr>
 <tr class="separator:a989bf7568ddcc92ec7e4868e6660d422"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_nakama_1_1_i_n_client"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_nakama_1_1_i_n_client')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_nakama_1_1_i_n_client.html">Nakama.INClient</a></td></tr>
@@ -180,6 +184,8 @@ Events</h2></td></tr>
 <tr class="separator:a695aa51ab6885f3d6ef3a679fae0031c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90d4243c49ff86ee9b7c514735b9c3ec"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_error_event_args.html">NErrorEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a90d4243c49ff86ee9b7c514735b9c3ec">OnError</a></td></tr>
 <tr class="separator:a90d4243c49ff86ee9b7c514735b9c3ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20768919d405a2c25989c0c84d1f40f4"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_matchmake_matched_event_args.html">NMatchmakeMatchedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a20768919d405a2c25989c0c84d1f40f4">OnMatchmakeMatched</a></td></tr>
+<tr class="separator:a20768919d405a2c25989c0c84d1f40f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a848a8fd899f78ecbafa2879f8dc8caf3"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_match_data_event_args.html">NMatchDataEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a848a8fd899f78ecbafa2879f8dc8caf3">OnMatchData</a></td></tr>
 <tr class="separator:a848a8fd899f78ecbafa2879f8dc8caf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ecccfd5eb9349f0e345b73c3474b319"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_match_presence_event_args.html">NMatchPresenceEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client.html#a0ecccfd5eb9349f0e345b73c3474b319">OnMatchPresence</a></td></tr>
@@ -193,6 +199,8 @@ Events</h2></td></tr>
 <tr class="separator:a8bc0dc322b2e1ff98a152ed6f8336e67 inherit events_interface_nakama_1_1_i_n_client"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15ee222ba5adafee0a9ea24ad50873ed inherit events_interface_nakama_1_1_i_n_client"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_error_event_args.html">NErrorEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_n_client.html#a15ee222ba5adafee0a9ea24ad50873ed">OnError</a></td></tr>
 <tr class="separator:a15ee222ba5adafee0a9ea24ad50873ed inherit events_interface_nakama_1_1_i_n_client"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02ac6581fd94804cd964d308b71e4f0 inherit events_interface_nakama_1_1_i_n_client"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_matchmake_matched_event_args.html">NMatchmakeMatchedEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_n_client.html#ae02ac6581fd94804cd964d308b71e4f0">OnMatchmakeMatched</a></td></tr>
+<tr class="separator:ae02ac6581fd94804cd964d308b71e4f0 inherit events_interface_nakama_1_1_i_n_client"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73bbaf01ab9487500436a149c1cb5832 inherit events_interface_nakama_1_1_i_n_client"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_match_data_event_args.html">NMatchDataEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_n_client.html#a73bbaf01ab9487500436a149c1cb5832">OnMatchData</a></td></tr>
 <tr class="separator:a73bbaf01ab9487500436a149c1cb5832 inherit events_interface_nakama_1_1_i_n_client"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a98fdd293e3d2b52f6429c7b3d3fe65 inherit events_interface_nakama_1_1_i_n_client"><td class="memItemLeft" align="right" valign="top">EventHandler&lt; <a class="el" href="class_nakama_1_1_n_match_presence_event_args.html">NMatchPresenceEventArgs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_n_client.html#a8a98fdd293e3d2b52f6429c7b3d3fe65">OnMatchPresence</a></td></tr>
@@ -224,7 +232,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#ab689917b86e331dab82ec09be5bb7719">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00141">141</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00146">146</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -256,7 +264,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a73e42aab5e61325b32500749af775423">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00146">146</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00151">151</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -284,7 +292,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00151">151</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00156">156</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -305,7 +313,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#aeda7fcf8fe73b7d4e8b119050c4f78e6">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00156">156</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00161">161</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -327,7 +335,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a2a778f33e350e21de2ec0dc8077bbf45">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00161">161</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00166">166</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -365,7 +373,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#aea31961285e395a6dd54ba65291b376b">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00134">134</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00139">139</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -386,7 +394,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a7ab7206fbeb49176e8aa4ef57df23185">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00166">166</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00171">171</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -408,7 +416,7 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#ae9a8d72e2ddc48cc21b5e5f151395071">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00174">174</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00179">179</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -446,20 +454,58 @@ Events</h2></td></tr>
 
 <p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a00d57aac85728bab35045eeb0af3f7ca">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00127">127</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00132">132</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
-<a id="aaa63460a7acd46edb19fea3cb89abfcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa63460a7acd46edb19fea3cb89abfcb">&#9670;&nbsp;</a></span>Send< T >()</h2>
+<a id="aa6ce39e519603779767bd3301e192b96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6ce39e519603779767bd3301e192b96">&#9670;&nbsp;</a></span>Send()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Nakama.NClient.Send&lt; T &gt; </td>
+          <td class="memname">void Nakama.NClient.Send </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_n_message.html">INMessage</a>&lt; T &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_n_uncollated_message.html">INUncollatedMessage</a>&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Action&lt; bool &gt;&#160;</td>
+          <td class="paramname"><em>callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Action&lt; <a class="el" href="interface_nakama_1_1_i_n_error.html">INError</a> &gt;&#160;</td>
+          <td class="paramname"><em>errback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a40fa2f2eefb96170c408ea03726245d8">Nakama.INClient</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00216">216</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+
+</div>
+</div>
+<a id="afaeb7a6e574df4df30896583d830414c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaeb7a6e574df4df30896583d830414c">&#9670;&nbsp;</a></span>Send< T >()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_nakama_1_1_n_client.html#aa6ce39e519603779767bd3301e192b96">Nakama.NClient.Send</a>&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_n_collated_message.html">INCollatedMessage</a>&lt; T &gt;&#160;</td>
           <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>
@@ -482,9 +528,9 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a48f89263ec29ea0865a0dc9bf40ac336">Nakama.INClient</a>.</p>
+<p>Implements <a class="el" href="interface_nakama_1_1_i_n_client.html#a9eae1a0174f6c1cfbc8068d52bff74ec">Nakama.INClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00185">185</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00190">190</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -503,7 +549,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00211">211</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00234">234</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -604,6 +650,30 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="ab1709d9dbf2129e49e6a1cc22c23537d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1709d9dbf2129e49e6a1cc22c23537d">&#9670;&nbsp;</a></span>NoDelay</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Nakama.NClient.NoDelay</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00082">82</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+
+</div>
+</div>
 <a id="a2643ab7e8edebbb71d7af9f2d95c3d4f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2643ab7e8edebbb71d7af9f2d95c3d4f">&#9670;&nbsp;</a></span>Port</h2>
 
@@ -624,7 +694,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00052">52</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00054">54</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -648,7 +718,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00054">54</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00056">56</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -672,7 +742,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00057">57</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00059">59</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -696,7 +766,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00076">76</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00078">78</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -720,7 +790,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00078">78</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00080">80</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -744,7 +814,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00080">80</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00084">84</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -793,6 +863,22 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00046">46</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+
+</div>
+</div>
+<a id="a20768919d405a2c25989c0c84d1f40f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20768919d405a2c25989c0c84d1f40f4">&#9670;&nbsp;</a></span>OnMatchmakeMatched</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EventHandler&lt;<a class="el" href="class_nakama_1_1_n_matchmake_matched_event_args.html">NMatchmakeMatchedEventArgs</a>&gt; Nakama.NClient.OnMatchmakeMatched</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 <p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00044">44</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
@@ -809,7 +895,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00046">46</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00048">48</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -825,7 +911,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00048">48</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00050">50</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -841,7 +927,7 @@ Events</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00050">50</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00052">52</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
