@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="websocket-sharp">
-      <HintPath>..\lib\websocket-sharp.dll</HintPath>
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\websocket-sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Protobuf">
@@ -50,6 +50,9 @@
     <Compile Include="INMatchmakeMatched.cs" />
     <Compile Include="INMatchmakeTicket.cs" />
     <Compile Include="INMatchToken.cs" />
+    <Compile Include="INRuntimeRpc.cs" />
+    <Compile Include="NRuntimeRpc.cs" />
+    <Compile Include="NRuntimeRpcMessage.cs" />
     <Compile Include="INStorageKey.cs" />
     <Compile Include="INGroup.cs" />
     <Compile Include="INTransport.cs" />

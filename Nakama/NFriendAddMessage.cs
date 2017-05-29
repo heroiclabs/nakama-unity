@@ -32,6 +32,11 @@ namespace Nakama
         {
             payload = new Envelope {FriendAdd = new TFriendAdd {UserId = ByteString.CopyFrom(id)}};
         }
+        
+        private NFriendAddMessage(string handle)
+        {
+            payload = new Envelope {FriendAdd = new TFriendAdd {Handle = handle}};
+        }
 
         public void SetCollationId(string id)
         {
@@ -40,12 +45,17 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NFriendAddMessage(UserId={0})", payload.FriendAdd.UserId);
+            return String.Format("NFriendAddMessage(UserId={0}, Handle={1})", payload.FriendAdd.UserId, payload.FriendAdd.Handle);
         }
 
         public static NFriendAddMessage Default(byte[] id)
         {
             return new NFriendAddMessage(id);
+        }
+        
+        public static NFriendAddMessage Default(string handle)
+        {
+            return new NFriendAddMessage(handle);
         }
     }
 }

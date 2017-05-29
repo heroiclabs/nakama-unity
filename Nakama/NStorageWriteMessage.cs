@@ -43,7 +43,8 @@ namespace Nakama
             string output = "";
             foreach (var data in payload.StorageWrite.Data)
             {
-                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, Version={3}),", data.Bucket, data.Collection, data.Record, data.Version);
+                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, Version={3}, ReadPermission={4}, WritePermission={5}),", 
+                    data.Bucket, data.Collection, data.Record, data.Version, data.PermissionRead, data.PermissionWrite);
             }
             return String.Format("NStorageWriteMessage(Keys={0})", output);
         }
@@ -74,7 +75,9 @@ namespace Nakama
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Value = ByteString.CopyFrom(value)
+                    Value = ByteString.CopyFrom(value),
+                    PermissionRead = GetReadPermission(StoragePermissionRead.OwnerRead),
+                    PermissionWrite = GetWritePermission(StoragePermissionWrite.OwnerWrite)
                 };
                 message.payload.StorageWrite.Data.Add(data);
 
@@ -89,11 +92,74 @@ namespace Nakama
                     Collection = collection,
                     Record = record,
                     Value = ByteString.CopyFrom(value),
-                    Version = ByteString.CopyFrom(version)
+                    Version = ByteString.CopyFrom(version),
+                    PermissionRead = GetReadPermission(StoragePermissionRead.OwnerRead),
+                    PermissionWrite = GetWritePermission(StoragePermissionWrite.OwnerWrite)
                 };
                 message.payload.StorageWrite.Data.Add(data);
 
                 return this;
+            }
+
+            public Builder Write(string bucket, string collection, string record, byte[] value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission)
+            {
+                var data = new TStorageWrite.Types.StorageData
+                {
+                    Bucket = bucket,
+                    Collection = collection,
+                    Record = record,
+                    Value = ByteString.CopyFrom(value),
+                    PermissionRead = GetReadPermission(readPermission),
+                    PermissionWrite = GetWritePermission(writePermission)
+                };
+                message.payload.StorageWrite.Data.Add(data);
+
+                return this;
+            }
+
+            public Builder Write(string bucket, string collection, string record, byte[] value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission, byte[] version)
+            {
+                var data = new TStorageWrite.Types.StorageData
+                {
+                    Bucket = bucket,
+                    Collection = collection,
+                    Record = record,
+                    Value = ByteString.CopyFrom(value),
+                    Version = ByteString.CopyFrom(version),
+                    PermissionRead = GetReadPermission(readPermission),
+                    PermissionWrite = GetWritePermission(writePermission)
+                };
+                message.payload.StorageWrite.Data.Add(data);
+
+                return this;
+            }
+        }
+
+        private static int GetReadPermission(StoragePermissionRead readPermission)
+        {
+            switch (readPermission)
+            {
+                case StoragePermissionRead.NoRead:
+                    return 0;
+                case StoragePermissionRead.OwnerRead:
+                    return 1;
+                case StoragePermissionRead.PublicRead:
+                    return 2;
+                default:
+                    return 1;
+            }
+        }
+
+        private static int GetWritePermission(StoragePermissionWrite writePermission)
+        {
+            switch (writePermission)
+            {
+                case StoragePermissionWrite.NoWrite:
+                    return 0;
+                case StoragePermissionWrite.OwnerWrite:
+                    return 1;
+                default:
+                    return 1;
             }
         }
     }

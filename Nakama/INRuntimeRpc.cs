@@ -16,20 +16,9 @@
 
 namespace Nakama
 {
-    public interface INStorageData : INStorageKey
+    public interface INRuntimeRpc
     {
-        byte[] UserId { get; }
-
-        byte[] Value { get; }
-
-        StoragePermissionRead PermissionRead { get; }
-
-        StoragePermissionWrite PermissionWrite { get; }
-
-        long CreatedAt { get; }
-
-        long UpdatedAt { get; }
-
-        long ExpiresAt { get; }
+        string Id { get; }
+        byte[] Payload { get; }
     }
 }

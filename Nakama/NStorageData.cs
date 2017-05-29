@@ -32,9 +32,9 @@ namespace Nakama
 
         public byte[] Version { get; private set; }
 
-        public long PermissionRead { get; private set; }
+        public StoragePermissionRead PermissionRead { get; private set; }
 
-        public long PermissionWrite { get; private set; }
+        public StoragePermissionWrite PermissionWrite { get; private set; }
 
         public long CreatedAt { get; private set; }
 
@@ -50,11 +50,31 @@ namespace Nakama
             UserId = message.UserId.ToByteArray();
             Value = message.Value.ToByteArray();
             Version = message.Version.ToByteArray();
-            PermissionRead = message.PermissionRead;
-            PermissionWrite = message.PermissionWrite;
             CreatedAt = message.CreatedAt;
             UpdatedAt = message.UpdatedAt;
             ExpiresAt = message.ExpiresAt;
+
+            switch (message.PermissionRead)
+            {
+                case 0:
+                    PermissionRead = StoragePermissionRead.NoRead;
+                    break;
+                case 1:
+                    PermissionRead = StoragePermissionRead.OwnerRead;
+                    break;
+                case 2:
+                    PermissionRead = StoragePermissionRead.PublicRead;
+                    break;
+            }
+            switch (message.PermissionWrite)
+            {
+                case 0:
+                    PermissionWrite = StoragePermissionWrite.NoWrite;
+                    break;
+                case 1:
+                    PermissionWrite = StoragePermissionWrite.OwnerWrite;
+                    break;
+            }
         }
 
         public override string ToString()

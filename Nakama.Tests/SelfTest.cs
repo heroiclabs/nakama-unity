@@ -24,6 +24,7 @@ namespace Nakama.Tests
     public class SelfTest
     {
         private static readonly string DefaultServerKey = "defaultkey";
+        private static readonly string Handle = TestContext.CurrentContext.Random.GetString(20);
 
         private INClient client;
         private INSession session;
@@ -95,8 +96,8 @@ namespace Nakama.Tests
             Assert.IsTrue(users.Results.Count == 1);
             Assert.NotNull(users.Results[0]);
         }
-
-        [Test]
+        
+        [Test, Order(1)]
         public void UpdateUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -105,7 +106,7 @@ namespace Nakama.Tests
             var message = new NSelfUpdateMessage.Builder()
                     .AvatarUrl("http://graph.facebook.com/blah")
                     .Fullname("Foo Bar")
-                    .Handle(TestContext.CurrentContext.Random.GetString(20))
+                    .Handle(Handle)
                     .Lang("en")
                     .Location("San Francisco")
                     .Metadata(Encoding.UTF8.GetBytes("{}"))
@@ -121,8 +122,28 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsTrue(committed);
         }
+        
+        [Test, Order(2)]
+        public void FetchUsersHandle()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INUser> users = null;
 
-        [Test]
+            var message = NUsersFetchMessage.Default(Handle);
+            client.Send(message, (INResultSet<INUser> results) => {
+                users = results;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.NotNull(users);
+            Assert.IsTrue(users.Results.Count == 1);
+            Assert.NotNull(users.Results[0]);
+        }
+
+        [Test, Order(3)]
         public void LinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -147,7 +168,7 @@ namespace Nakama.Tests
             Assert.True(user.DeviceIds.Contains(id));
         }
 
-        [Test]
+        [Test, Order(4)]
         public void UnlinkUser()
         {
             ManualResetEvent evt = new ManualResetEvent(false);

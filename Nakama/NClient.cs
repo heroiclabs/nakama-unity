@@ -446,6 +446,9 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INLeaderboardRecord>(leaderboardRecords, new NCursor(message.LeaderboardRecords.Cursor.ToByteArray())));
                     break;
+                case Envelope.PayloadOneofCase.Rpc:
+                    pair.Key(new NRuntimeRpc(message.Rpc));
+                    break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
                     break;

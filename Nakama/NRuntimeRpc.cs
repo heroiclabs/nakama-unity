@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace Nakama
 {
-    public interface INStorageData : INStorageKey
+    public class NRuntimeRpc : INRuntimeRpc
     {
-        byte[] UserId { get; }
+        public string Id { get; set; }
+        public byte[] Payload { get; set; }
 
-        byte[] Value { get; }
+        internal NRuntimeRpc(TRpc message)
+        {
+            Id = message.Id;
+            Payload = message.Payload.ToByteArray();
+        }
 
-        StoragePermissionRead PermissionRead { get; }
-
-        StoragePermissionWrite PermissionWrite { get; }
-
-        long CreatedAt { get; }
-
-        long UpdatedAt { get; }
-
-        long ExpiresAt { get; }
+        public override string ToString()
+        {
+            var f = "NRuntimeRpc(Id={0},Payload={1})";
+            return String.Format(f, Id, Payload);
+        }
     }
 }
