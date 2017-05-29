@@ -3,19 +3,19 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.6.0] - 2017-05-29
 ### Added
 - New matchmaking feature.
-- Optionally send match data to only a subset of match participants.
-- Expose a way to toggle TCP_NODELAY socket option.
-- Support for Runtime RPC.
+- Optionally send match data to a subset of match participants.
+- Expose a way to toggle `TCP_NODELAY` socket option.
+- Send RPC messages to run custom code.
 - Fetch users by handle.
 - Add friend by handle.
-- Filter leaderboards by ID.
-- Add storage permission when storing data.
+- Filter by IDs in leaderboard list message.
+- Storage messages can now set records with public read permission.
 
 ### Fixed
-- Correctly handle callbacks when sending match data.
+- Dispatch callbacks when sending match data.
 
 ## [0.5.1] - 2017-03-28
 ### Added
