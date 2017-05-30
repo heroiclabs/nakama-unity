@@ -83,6 +83,11 @@ namespace Nakama
         {
             private NUsersFetchMessage message;
 
+            public Builder()
+            {
+                message = new NUsersFetchMessage();
+            }
+            
             public Builder(params byte[] ids)
             {
                 message = new NUsersFetchMessage(ids);
