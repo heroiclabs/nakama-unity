@@ -120,7 +120,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder Add(params string[] handles)
+            public Builder AddHandles(params string[] handles)
             {
                 if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.Handles)
                 {
@@ -132,7 +132,7 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Add(IEnumerable<string> handles)
+            public Builder AddHandles(IEnumerable<string> handles)
             {
                 if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.Handles)
                 {

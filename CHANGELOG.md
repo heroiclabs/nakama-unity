@@ -7,9 +7,11 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 - Fixed an issue where SSL handshake would fail on Android devices.
+- Setting multiple filters on a leaderboard list request would cause problems.
 
 ### Changed
 - Remove unneccessary headers from HTTP requests.
+- Update user fetch add handle method name to ease compiler confusion.
 
 ## [0.6.0] - 2017-05-29
 ### Added
