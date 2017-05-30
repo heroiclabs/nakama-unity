@@ -458,7 +458,7 @@ namespace Nakama
                     pair.Key(new NRuntimeRpc(message.Rpc));
                     break;
                 default:
-                    Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
+                    Logger.TraceFormatIf(Trace, "Unrecognized protocol buffer message: {0}", message);
                     break;
             }
         }
