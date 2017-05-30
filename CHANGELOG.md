@@ -3,7 +3,7 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.6.1] - 2017-05-30
 
 ### Changed
 - Remove unnecessary headers from HTTP requests.
