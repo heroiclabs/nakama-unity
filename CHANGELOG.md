@@ -5,6 +5,14 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Changed
+- Remove unnecessary headers from HTTP requests.
+- Update user fetch add handle method name to avoid a type cast.
+
+### Fixed
+- Accept SSL certificates on Android devices.
+- Improve leaderboard list message to handle multiple filters.
+
 ## [0.6.0] - 2017-05-29
 ### Added
 - New matchmaking feature.
