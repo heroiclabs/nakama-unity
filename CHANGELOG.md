@@ -5,6 +5,12 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Fixed
+- Fixed an issue where SSL handshake would fail on Android devices.
+
+### Changed
+- Remove unneccessary headers from HTTP requests.
+
 ## [0.6.0] - 2017-05-29
 ### Added
 - New matchmaking feature.
