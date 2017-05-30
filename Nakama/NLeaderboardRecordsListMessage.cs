@@ -73,6 +73,7 @@ namespace Nakama
             public Builder FilterByOwnerIds(IList<byte[]> ownerIds)
             {
                 message.payload.LeaderboardRecordsList.ClearFilter();
+                message.payload.LeaderboardRecordsList.OwnerIds = new TLeaderboardRecordsList.Types.Owners();
                 foreach (var id in ownerIds)
                 {
                     message.payload.LeaderboardRecordsList.OwnerIds.OwnerIds.Add(ByteString.CopyFrom(id));

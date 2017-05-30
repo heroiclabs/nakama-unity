@@ -92,6 +92,14 @@ namespace Nakama
 
         private NClient(string serverKey)
         {
+            // Don't send Expect: 100 Continue when sending HTTP requests
+            ServicePointManager.Expect100Continue = false;
+            
+#if UNITY_ANDROID            
+            // Fix SSL certificate handshake
+            ServicePointManager.ServerCertificateValidationCallback += (o, certificate, chain, errors) => true;
+#endif
+            
             ConnectTimeout = 3000;
             Host = "127.0.0.1";
             Port = 7350;
@@ -450,7 +458,7 @@ namespace Nakama
                     pair.Key(new NRuntimeRpc(message.Rpc));
                     break;
                 default:
-                    Logger.TraceFormatIf(Trace, "Unrecognized message: {0}", message);
+                    Logger.TraceFormatIf(Trace, "Unrecognized protocol buffer message: {0}", message);
                     break;
             }
         }
