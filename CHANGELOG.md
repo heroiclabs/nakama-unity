@@ -4,6 +4,8 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- A new Unity example scene which shows how to matchmake users.
 
 ## [0.6.1] - 2017-05-30
 

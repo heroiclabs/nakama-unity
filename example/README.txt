@@ -1,0 +1,24 @@
+Setup
+--
+
+There are two examples with the Nakama Unity client.
+(1) DemoScene shows how two users can connect to a chat channel and exchange messages within one Unity app.
+(2) Matchmake shows how a user can add themselves to the matchmaker pool and connect with another user in a realtime multiplayer match. You should run a Unity app build and editor build to try it out as two users.
+
+Nakama server setup
+--
+
+For quick instructions on how to run Nakama server. Run a console and start the server "nakama --name svr1 --verbose --logtostdout".
+
+You'll need to have installed Nakama server. For full instructions on how to setup the server have a look at the docs:
+https://heroiclabs.com/docs/
+
+DemoScene
+--
+
+You'll need to attach the "DemoScene.cs" script to the GameObject in the "NakamaScriptObject" scene. When this is complete you can build and run the scene and click to register two users, connect to the server, fetch their own profiles, and join a direct message chat channel to send messages.
+
+Matchmake
+--
+
+You'll need to attach the "Matchmake.cs" script to the GameObject in the "Matchmake.unity" scene. When this is complete you can build and run the scene and also run the scene within the editor. The two clients will try to connect and can click to matchmake and once both clients have been placed into a match you can send messages between each other.
