@@ -32,6 +32,9 @@ public class Matchmake : MonoBehaviour {
     // State of the send match data button
     private bool _matchSendDataButtonEnable;
 
+    // Store actions which will need to be dispatched on the Unity main thread.
+    private Queue<System.Action> actionQueue;
+
     [Serializable]
     public class Text {
         public string timestamp;
@@ -50,6 +53,8 @@ public class Matchmake : MonoBehaviour {
                 .Port(ServerPort)
                 .SSL(ServerSsl)
                 .Build();
+
+        actionQueue = new Queue<System.Action>(1024);
     }
 
     void Start() {
@@ -63,6 +68,10 @@ public class Matchmake : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        for (int i = 0, l = actionQueue.Count; i < l; i++)
+        {
+            actionQueue.Dequeue()();
+        }
         _matchSendDataButton.interactable = _matchSendDataButtonEnable;
         // You must not do any network calls on the Update loop.
     }
@@ -155,20 +164,24 @@ public class Matchmake : MonoBehaviour {
 
     private void SetupMatchDataListener() {
         _client.OnMatchData += (object src, NMatchDataEventArgs args) => {
-            // `args.MatchData.Id` to get the `byte[]` match ID this data relates to.
-            // `args.MatchData.Presence` is the sender of this data.
-            // `args.MatchData.OpCode` and `args.MatchData.Data` are the custom
-            // fields set by the sender.
+            // We enqueue any logic which we want to execute on the Unity main thread.
+            actionQueue.Enqueue(() => {
+                // `args.MatchData.Id` to get the `byte[]` match ID this data relates to.
+                // `args.MatchData.Presence` is the sender of this data.
+                // `args.MatchData.OpCode` and `args.MatchData.Data` are the custom
+                // fields set by the sender.
 
-            var received = args.Data;
-            switch (received.OpCode) {
-            case MatchOpCode:
-                Debug.LogFormat("Received match data from {0}: {1}", received.Presence.Handle, Encoding.UTF8.GetString(received.Data));
-                break;
-            default:
-                Debug.LogFormat("Received data but didn't match expected OpsCode.");
-                break;
-            }
+                var received = args.Data;
+                switch (received.OpCode) {
+                case MatchOpCode:
+                    var dataString = Encoding.UTF8.GetString(received.Data);
+                    Debug.LogFormat("Received match data from {0}: {1}", received.Presence.Handle, dataString);
+                    break;
+                default:
+                    Debug.Log("Received data but didn't match expected OpsCode.");
+                    break;
+                }
+            });
         };
     }
 
