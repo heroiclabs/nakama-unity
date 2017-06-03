@@ -6,9 +6,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - A new Unity example scene which shows how to matchmake users.
+- New `NIds` helper class and extension methods to compare byte arrays.
 
 ## [0.6.1] - 2017-05-30
-
 ### Changed
 - Remove unnecessary headers from HTTP requests.
 - Update user fetch add handle method name to avoid a type cast.
