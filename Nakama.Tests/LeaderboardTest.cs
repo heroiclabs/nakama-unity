@@ -33,6 +33,7 @@ namespace Nakama.Tests
         private static readonly string LeaderboardId = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(LeaderboardIdName));
 
         private byte[] serverLeaderboardId;
+        private INSelf self;
         private INClient client;
 
         [OneTimeSetUp]
@@ -46,21 +47,31 @@ namespace Nakama.Tests
             client2.Register(message, (INSession ses) =>
             {
                 client2.Connect(ses);
-                var leaderboardListMessage = new NLeaderboardsListMessage.Builder().Build();
-                client2.Send(leaderboardListMessage , (INResultSet<INLeaderboard> results) =>
+
+                var selfMessage = NSelfFetchMessage.Default();
+                client2.Send(selfMessage, (INSelf self) =>
                 {
-                    bool found = false;
-                    foreach (var leaderboard in results.Results)
+                    this.self = self;
+                    var leaderboardListMessage = new NLeaderboardsListMessage.Builder().Build();
+                    client2.Send(leaderboardListMessage , (INResultSet<INLeaderboard> results) =>
                     {
-                        if (LeaderboardId.Equals(Convert.ToBase64String(leaderboard.Id)))
+                        bool found = false;
+                        foreach (var leaderboard in results.Results)
                         {
-                            serverLeaderboardId = leaderboard.Id;
-                            found = true;
-                            break;
+                            if (LeaderboardId.Equals(Convert.ToBase64String(leaderboard.Id)))
+                            {
+                                serverLeaderboardId = leaderboard.Id;
+                                found = true;
+                                break;
+                            }
                         }
-                    }
-                    client2.Logout();
-                    Assert.IsTrue(found, "Leaderboard not found. Setup the leaderboard ('{0}') in Nakama and run this test again.", LeaderboardIdName);
+                        client2.Logout();
+                        Assert.IsTrue(found, "Leaderboard not found. Setup the leaderboard ('{0}') in Nakama and run this test again.", LeaderboardIdName);
+                        evt.Set();
+                    }, (INError err) => {
+                        error = err;
+                        evt.Set();
+                    }); 
                 }, (INError err) => {
                     error = err;
                     evt.Set();
@@ -176,8 +187,34 @@ namespace Nakama.Tests
             Assert.AreEqual(res.Results[0].Location, "San Francisco");
             Assert.Greater(res.Results[0].NumScore, 0);
         }
-
+        
         [Test, Order(4)]
+        public void LeaderboardRecordsListHaystack()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INLeaderboardRecord> res = null;
+
+            var message = new NLeaderboardRecordsListMessage.Builder(serverLeaderboardId)
+                .FilterByPagingToOwnerId(self.Id)
+                .Limit(20)
+                .Build();
+            client.Send(message, (INResultSet<INLeaderboardRecord> results) =>
+            {
+                res = results;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.GreaterOrEqual(res.Results.Count, 1);
+            Assert.IsNotEmpty(res.Results[0].Handle);
+            Assert.Greater(res.Results[0].NumScore, 0);
+        }
+
+        [Test, Order(5)]
         public void LeaderboardRecordsFetch()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
