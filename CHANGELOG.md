@@ -8,6 +8,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - A new Unity example scene which shows how to matchmake users.
 - New `NIds` helper class and extension methods to compare byte arrays.
 
+### Fixed
+- Accept SSL certificates.
+- Improve handling transport errors. 
+
 ## [0.6.1] - 2017-05-30
 ### Changed
 - Remove unnecessary headers from HTTP requests.
