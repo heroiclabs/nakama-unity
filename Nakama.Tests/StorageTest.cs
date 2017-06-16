@@ -28,6 +28,7 @@ namespace Nakama.Tests
     {
         private static readonly Randomizer random = new Randomizer(Guid.NewGuid().ToByteArray().Last());
         private static readonly string DeviceId = random.GetString();
+        private static readonly string CustomId = random.GetString();
         private static readonly string DefaultServerKey = "defaultkey";
 
         private static readonly string Bucket = "testBucket";
@@ -42,16 +43,16 @@ namespace Nakama.Tests
         private INClient client;
 
         [OneTimeSetUp]
-        public void GetFriendId()
+        public void GetSelfId()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
             var client2 = new NClient.Builder(DefaultServerKey).Build();
             var message = NAuthenticateMessage.Device(DeviceId);
-            client2.Register(message, (INSession friendSession) =>
+            client2.Register(message, (INSession sess) =>
             {
-                client2.Connect(friendSession);
+                client2.Connect(sess);
                 var selfMessage = NSelfFetchMessage.Default();
                 client2.Send(selfMessage, (INSelf result) =>
                 {
@@ -129,7 +130,7 @@ namespace Nakama.Tests
             INResultSet<INStorageKey> res = null;
 
             var message = new NStorageWriteMessage.Builder()
-                    .Write(Bucket, Collection, Record, StorageValue, StoragePermissionRead.PublicRead, StoragePermissionWrite.OwnerWrite)
+                    .Write(Bucket, Collection, Record, StorageValue, StoragePermissionRead.OwnerRead, StoragePermissionWrite.OwnerWrite)
                     .Build();
             client.Send(message, (INResultSet<INStorageKey> results) =>
             {
@@ -239,6 +240,125 @@ namespace Nakama.Tests
             var message = new NStorageRemoveMessage.Builder()
                     .Remove(Bucket, Collection, Record)
                     .Build();
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
+        
+        [Test, Order(7)]
+        public void WritePublicStorage()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INStorageKey> res = null;
+
+            var message = new NStorageWriteMessage.Builder()
+                .Write(Bucket, Collection, Record, StorageValue, StoragePermissionRead.PublicRead, StoragePermissionWrite.OwnerWrite)
+                .Build();
+            client.Send(message, (INResultSet<INStorageKey> results) =>
+            {
+                res = results;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.AreEqual(Bucket, res.Results[0].Bucket);
+            Assert.AreEqual(Collection, res.Results[0].Collection);
+            Assert.AreEqual(Record, res.Results[0].Record);
+        }
+        
+        [Test, Order(8)]
+        public void ReadPublicStorage()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INStorageData> storageData = null;
+            INError error = null;
+
+            var message = new NStorageFetchMessage.Builder()
+                .Fetch(Bucket, Collection, Record, UserId)
+                .Build();
+            client.Send(message, (INResultSet<INStorageData> results) =>
+            {
+                storageData = results;
+                evt.Set();
+            }, (INError err) =>
+            {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(2000, false);
+            Assert.IsNull(error);
+            Assert.NotNull(storageData);
+            Assert.NotNull(storageData.Results);
+            Assert.AreEqual(1, storageData.Results.Count);
+            Assert.NotNull(storageData.Results[0]);
+            Assert.AreEqual(Bucket, storageData.Results[0].Bucket);
+            Assert.AreEqual(Collection, storageData.Results[0].Collection);
+            Assert.AreEqual(Record, storageData.Results[0].Record);
+            Assert.AreEqual(StorageValue, storageData.Results[0].Value);
+        }
+        
+        [Test, Order(8)]
+        public void ReadPublicStorageOtherUsers()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INStorageData> storageData = null;
+            INError error = null;
+            
+            var client2 = new NClient.Builder(DefaultServerKey).Build();
+            var regMessage = NAuthenticateMessage.Custom(CustomId);
+            client2.Register(regMessage, (INSession friendSession) =>
+            {
+                client2.Connect(friendSession);
+                
+                var message = new NStorageFetchMessage.Builder()
+                    .Fetch(Bucket, Collection, Record, UserId)
+                    .Build();
+                client2.Send(message, (INResultSet<INStorageData> results) =>
+                {
+                    storageData = results;
+                    evt.Set();
+                }, (INError err) =>
+                {
+                    error = err;
+                    evt.Set();
+                });
+            },(INError err) => {
+                error = err;
+                evt.Set();
+            });
+
+            evt.WaitOne(2000, false);
+            Assert.IsNull(error);
+            Assert.NotNull(storageData);
+            Assert.NotNull(storageData.Results);
+            Assert.AreEqual(1, storageData.Results.Count);
+            Assert.NotNull(storageData.Results[0]);
+            Assert.AreEqual(Bucket, storageData.Results[0].Bucket);
+            Assert.AreEqual(Collection, storageData.Results[0].Collection);
+            Assert.AreEqual(Record, storageData.Results[0].Record);
+            Assert.AreEqual(StorageValue, storageData.Results[0].Value);
+        }
+        
+        [Test, Order(10)]
+        public void RemovePublicStorage()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = new NStorageRemoveMessage.Builder()
+                .Remove(Bucket, Collection, Record)
+                .Build();
             client.Send(message, (bool completed) => {
                 committed = completed;
                 evt.Set();
