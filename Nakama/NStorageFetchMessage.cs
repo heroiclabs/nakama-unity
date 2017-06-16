@@ -74,7 +74,7 @@ namespace Nakama
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    UserId = ByteString.CopyFrom(userId)
+                    UserId = userId != null ? ByteString.CopyFrom(userId) : null
                 };
                 message.payload.StorageFetch.Keys.Add(storageKey);
 

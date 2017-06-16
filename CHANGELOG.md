@@ -11,6 +11,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Accept SSL certificates.
 - Improve handling transport errors. 
+- Improve fetching global storage data.
 
 ## [0.6.1] - 2017-05-30
 ### Changed
