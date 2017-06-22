@@ -15,6 +15,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Security;
 using System.Text;
 using Google.Protobuf;
 
@@ -31,14 +33,21 @@ namespace Nakama
 
         private NGroupCreateMessage()
         {
-            payload = new Envelope {GroupCreate = new TGroupCreate()};
+            payload = new Envelope {GroupsCreate = new TGroupsCreate { Groups =
+            {
+                new List<TGroupsCreate.Types.GroupCreate>()
+            }}};   
         }
 
         private NGroupCreateMessage(string name)
         {
-            var request = new TGroupCreate();
-            request.Name = name;
-            payload = new Envelope {GroupCreate = request};
+            payload = new Envelope {GroupsCreate = new TGroupsCreate { Groups =
+            {
+                new List<TGroupsCreate.Types.GroupCreate>
+                {
+                    new TGroupsCreate.Types.GroupCreate {Name = name}
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -49,8 +58,12 @@ namespace Nakama
         public override string ToString()
         {
             var f = "NGroupCreateMessage(Name={0},Description={1},AvatarUrl={2},Lang={3},Metadata={4},Private={5})";
-            var p = payload.GroupCreate;
-            return String.Format(f, p.Name, p.Description, p.AvatarUrl, p.Lang, p.Metadata, p.Private);
+            var output = "";
+            foreach (var p in payload.GroupsCreate.Groups)
+            {
+                output += String.Format(f, p.Name, p.Description, p.AvatarUrl, p.Lang, p.Metadata, p.Private); 
+            }
+            return output;
         }
 
         public class Builder
@@ -64,31 +77,31 @@ namespace Nakama
 
             public Builder Description(string description)
             {
-                message.payload.GroupCreate.Description = description;
+                message.payload.GroupsCreate.Groups[0].Description = description;
                 return this;
             }
 
             public Builder AvatarUrl(string avatarUrl)
             {
-                message.payload.GroupCreate.AvatarUrl = avatarUrl;
+                message.payload.GroupsCreate.Groups[0].AvatarUrl = avatarUrl;
                 return this;
             }
 
             public Builder Lang(string lang)
             {
-                message.payload.GroupCreate.Lang = lang;
+                message.payload.GroupsCreate.Groups[0].Lang = lang;
                 return this;
             }
 
             public Builder Metadata(byte[] metadata)
             {
-                message.payload.GroupCreate.Metadata = ByteString.CopyFrom(metadata);
+                message.payload.GroupsCreate.Groups[0].Metadata = ByteString.CopyFrom(metadata);
                 return this;
             }
 
             public Builder Private(bool privateGroup)
             {
-                message.payload.GroupCreate.Private = privateGroup;
+                message.payload.GroupsCreate.Groups[0].Private = privateGroup;
                 return this;
             }
 
@@ -97,7 +110,7 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NGroupCreateMessage();
-                message.payload.GroupCreate = new TGroupCreate(original.payload.GroupCreate);
+                message.payload.GroupsCreate = new TGroupsCreate(original.payload.GroupsCreate);
                 return original;
             }
         }

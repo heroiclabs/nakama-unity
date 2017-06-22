@@ -15,11 +15,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NMatchJoinMessage : INCollatedMessage<INMatch>
+    public class NMatchJoinMessage : INCollatedMessage<INResultSet<INMatch>>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -30,14 +31,24 @@ namespace Nakama
 
         private NMatchJoinMessage(byte[] matchId)
         {
-            payload = new Envelope {MatchJoin = new TMatchJoin()};
-            payload.MatchJoin.MatchId = ByteString.CopyFrom(matchId);
+            payload = new Envelope {MatchesJoin = new TMatchesJoin { Matches =
+            {
+                new List<TMatchesJoin.Types.MatchJoin>
+                {
+                    new TMatchesJoin.Types.MatchJoin{ MatchId = ByteString.CopyFrom(matchId) }
+                }
+            }}};   
         }
 
         private NMatchJoinMessage(INMatchToken token)
         {
-            payload = new Envelope {MatchJoin = new TMatchJoin()};
-            payload.MatchJoin.Token = ByteString.CopyFrom(token.Token);
+            payload = new Envelope {MatchesJoin = new TMatchesJoin { Matches =
+            {
+                new List<TMatchesJoin.Types.MatchJoin>
+                {
+                    new TMatchesJoin.Types.MatchJoin{ Token = ByteString.CopyFrom(token.Token) }
+                }
+            }}};   
         }
 
         public void SetCollationId(string id)
@@ -48,7 +59,7 @@ namespace Nakama
         public override string ToString()
         {
             var f = "NMatchJoinMessage(MatchId={0},Token={1})";
-            return String.Format(f, payload.MatchJoin.MatchId, payload.MatchJoin.Token);
+            return String.Format(f, payload.MatchesJoin.Matches[0].MatchId, payload.MatchesJoin.Matches[0].Token);
         }
 
         public static NMatchJoinMessage Default(byte[] matchId)

@@ -29,19 +29,27 @@ namespace Nakama
             }
         }
 
-        private NUsersFetchMessage(params byte[] ids)
+        private NUsersFetchMessage(params byte[][] ids)
         {
-            var request = new TUsersFetch();
-            request.UserIds = new TUsersFetch.Types.UserIds();
-            request.UserIds.UserIds_.Add(ByteString.CopyFrom(ids));
-            payload = new Envelope {UsersFetch = request};
+            var uf = new List<TUsersFetch.Types.UsersFetch>();
+            foreach (var id in ids)
+            {
+                var u = new TUsersFetch.Types.UsersFetch();
+                u.UserId = ByteString.CopyFrom(id);
+                uf.Add(u);
+            }
+            payload = new Envelope {UsersFetch = new TUsersFetch { Users = {uf}}};   
         }
         private NUsersFetchMessage(params string[] handles)
         {
-            var request = new TUsersFetch();
-            request.Handles = new TUsersFetch.Types.Handles();
-            request.Handles.Handles_.Add(handles);
-            payload = new Envelope {UsersFetch = request};
+            var uf = new List<TUsersFetch.Types.UsersFetch>();
+            foreach (var h in handles)
+            {
+                var u = new TUsersFetch.Types.UsersFetch();
+                u.Handle = h;
+                uf.Add(u);
+            }
+            payload = new Envelope {UsersFetch = new TUsersFetch { Users = {uf}}};
         }
 
         private NUsersFetchMessage()
@@ -56,17 +64,22 @@ namespace Nakama
 
         public override string ToString()
         {
+            var p = payload.UsersFetch;
             string ids = "";
             string handles = "";
-            foreach (var id in payload.UsersFetch.UserIds.UserIds_)
+            foreach (var u in p.Users)
             {
-                ids += id.ToBase64() + ",";
+                switch (u.IdCase)
+                {
+                    case TUsersFetch.Types.UsersFetch.IdOneofCase.Handle:
+                        handles += "handle=" + u.Handle + ",";
+                        break;
+                    case TUsersFetch.Types.UsersFetch.IdOneofCase.UserId:
+                        ids += "id=" + u.UserId + ",";
+                        break;
+                }
             }
-            foreach (var handle in payload.UsersFetch.Handles.Handles_)
-            {
-                handles += handle + ",";
-            }
-            return String.Format("NUsersFetchMessage(UserIds={0},Handles={1})", ids, handles);
+            return String.Format("NUsersFetchMessage(UserIds={0}, Handles={1})", ids, handles);
         }
 
         public static NUsersFetchMessage Default(params byte[] ids)
@@ -98,54 +111,39 @@ namespace Nakama
                 message = new NUsersFetchMessage(handles);
             }
 
-            public Builder Add(params byte[] ids)
-            {
-                if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.UserIds)
-                {
-                    message.payload.UsersFetch.ClearSet();
-                    message.payload.UsersFetch.UserIds = new TUsersFetch.Types.UserIds();
-                }
-                
-                message.payload.UsersFetch.UserIds.UserIds_.Add(ByteString.CopyFrom(ids));
-                return this;
+            public Builder Add(params byte[][] ids)
+            { 
+                return Add(new List<byte[]>(ids));
             }
 
             public Builder Add(IEnumerable<byte[]> ids)
             {
-                if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.UserIds)
-                {
-                    message.payload.UsersFetch.ClearSet();
-                    message.payload.UsersFetch.UserIds = new TUsersFetch.Types.UserIds();
-                }
-                
                 foreach (var id in ids)
                 {
-                    message.payload.UsersFetch.UserIds.UserIds_.Add(ByteString.CopyFrom(id));
+                    message.payload.UsersFetch.Users.Add(new TUsersFetch.Types.UsersFetch
+                    {
+                        UserId = ByteString.CopyFrom(id)
+                    }); 
                 }
+                
                 return this;
             }
             
             public Builder AddHandles(params string[] handles)
             {
-                if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.Handles)
-                {
-                    message.payload.UsersFetch.ClearSet();
-                    message.payload.UsersFetch.Handles = new TUsersFetch.Types.Handles();
-                }
-                
-                message.payload.UsersFetch.Handles.Handles_.Add(handles);
-                return this;
+                return AddHandles(new List<string>(handles));
             }
 
             public Builder AddHandles(IEnumerable<string> handles)
             {
-                if (message.payload.UsersFetch.SetCase != TUsersFetch.SetOneofCase.Handles)
+                foreach (var h in handles)
                 {
-                    message.payload.UsersFetch.ClearSet();
-                    message.payload.UsersFetch.Handles = new TUsersFetch.Types.Handles();
+                    message.payload.UsersFetch.Users.Add(new TUsersFetch.Types.UsersFetch
+                    {
+                        Handle = h
+                    }); 
                 }
                 
-                message.payload.UsersFetch.Handles.Handles_.Add(handles);
                 return this;
             }
 
@@ -154,17 +152,8 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NUsersFetchMessage();
-                if (original.payload.UsersFetch.SetCase == TUsersFetch.SetOneofCase.UserIds)
-                {
-                    message.payload.UsersFetch.UserIds = new TUsersFetch.Types.UserIds();
-                    message.payload.UsersFetch.UserIds.UserIds_.Add(original.payload.UsersFetch.UserIds.UserIds_);   
-                } else if (original.payload.UsersFetch.SetCase == TUsersFetch.SetOneofCase.Handles)
-                {
-                    message.payload.UsersFetch.Handles = new TUsersFetch.Types.Handles();
-                    message.payload.UsersFetch.Handles.Handles_.Add(original.payload.UsersFetch.Handles.Handles_);    
-                }
-                
-                return original;
+                message.payload.UsersFetch = new TUsersFetch(original.payload.UsersFetch);
+                return original;   
             }
         }
     }

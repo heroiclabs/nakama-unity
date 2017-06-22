@@ -15,11 +15,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NTopicJoinMessage : INCollatedMessage<INTopic>
+    public class NTopicJoinMessage : INCollatedMessage<INResultSet<INTopic>>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -30,7 +31,10 @@ namespace Nakama
 
         private NTopicJoinMessage()
         {
-            payload = new Envelope {TopicJoin = new TTopicJoin()};
+            payload = new Envelope {TopicsJoin = new TTopicsJoin {Joins =
+            {
+                new List<TTopicsJoin.Types.TopicJoin>()
+            }}};   
         }
 
         public void SetCollationId(string id)
@@ -40,22 +44,24 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NTopicJoinMessage(Id={0},IdCase={1})";
-            var p = payload.TopicJoin;
-            byte[] id = null;
-            switch (p.IdCase)
+            var p = payload.TopicsJoin;
+            string output = "";
+            foreach (var j in p.Joins)
             {
-                case TTopicJoin.IdOneofCase.UserId:
-                    id = p.UserId.ToByteArray();
-                    break;
-                case TTopicJoin.IdOneofCase.Room:
-                    id = p.Room.ToByteArray();
-                    break;
-                case TTopicJoin.IdOneofCase.GroupId:
-                    id = p.GroupId.ToByteArray();
-                    break;
+                switch (j.IdCase)
+                {
+                    case TTopicsJoin.Types.TopicJoin.IdOneofCase.UserId:
+                        output += String.Format("(Id={0},IdCase={1}),", j.UserId.ToByteArray(), j.IdCase);
+                        break;
+                    case TTopicsJoin.Types.TopicJoin.IdOneofCase.Room:
+                        output += String.Format("(Id={0},IdCase={1}),", j.Room.ToByteArray(), j.IdCase);
+                        break;
+                    case TTopicsJoin.Types.TopicJoin.IdOneofCase.GroupId:
+                        output += String.Format("(Id={0},IdCase={1}),", j.GroupId.ToByteArray(), j.IdCase);
+                        break;
+                }
             }
-            return String.Format(f, id, p.IdCase);
+            return String.Format("NTopicJoinMessage({0})", output);
         }
 
         public class Builder
@@ -69,22 +75,28 @@ namespace Nakama
 
             public Builder TopicDirectMessage(byte[] userId)
             {
-                message.payload.TopicJoin.ClearId();
-                message.payload.TopicJoin.UserId = ByteString.CopyFrom(userId);
+                message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
+                {
+                    UserId = ByteString.CopyFrom(userId)
+                });
                 return this;
             }
 
             public Builder TopicRoom(byte[] room)
             {
-                message.payload.TopicJoin.ClearId();
-                message.payload.TopicJoin.Room = ByteString.CopyFrom(room);
+                message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
+                {
+                    Room = ByteString.CopyFrom(room)
+                });
                 return this;
             }
 
             public Builder TopicGroup(byte[] groupId)
             {
-                message.payload.TopicJoin.ClearId();
-                message.payload.TopicJoin.GroupId = ByteString.CopyFrom(groupId);
+                message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
+                {
+                    GroupId= ByteString.CopyFrom(groupId)
+                });
                 return this;
             }
 
@@ -93,7 +105,7 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NTopicJoinMessage();
-                message.payload.TopicJoin = new TTopicJoin(original.payload.TopicJoin);
+                message.payload.TopicsJoin = new TTopicsJoin(original.payload.TopicsJoin);
                 return original;
             }
         }

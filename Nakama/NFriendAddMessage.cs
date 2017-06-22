@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,12 +31,24 @@ namespace Nakama
 
         private NFriendAddMessage(byte[] id)
         {
-            payload = new Envelope {FriendAdd = new TFriendAdd {UserId = ByteString.CopyFrom(id)}};
+            payload = new Envelope {FriendsAdd = new TFriendsAdd { Friends =
+            {
+                new List<TFriendsAdd.Types.FriendsAdd>
+                {
+                    new TFriendsAdd.Types.FriendsAdd {UserId = ByteString.CopyFrom(id)}
+                }
+            }}};
         }
         
         private NFriendAddMessage(string handle)
         {
-            payload = new Envelope {FriendAdd = new TFriendAdd {Handle = handle}};
+            payload = new Envelope {FriendsAdd = new TFriendsAdd { Friends =
+            {
+                new List<TFriendsAdd.Types.FriendsAdd>
+                {
+                    new TFriendsAdd.Types.FriendsAdd {Handle = handle}
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -45,7 +58,22 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NFriendAddMessage(UserId={0}, Handle={1})", payload.FriendAdd.UserId, payload.FriendAdd.Handle);
+            var p = payload.FriendsAdd;
+            string ids = "";
+            string handles = "";
+            foreach (var f in p.Friends)
+            {
+                switch (f.IdCase)
+                {
+                    case TFriendsAdd.Types.FriendsAdd.IdOneofCase.Handle:
+                        handles += "handle=" + f.Handle + ",";
+                        break;
+                    case TFriendsAdd.Types.FriendsAdd.IdOneofCase.UserId:
+                        ids += "id=" + f.UserId + ",";
+                        break;
+                }
+            }
+            return String.Format("NFriendsAddMessage(UserIds={0}, Handles={1})", ids, handles);
         }
 
         public static NFriendAddMessage Default(byte[] id)

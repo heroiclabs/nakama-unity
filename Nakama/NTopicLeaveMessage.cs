@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,20 +31,23 @@ namespace Nakama
 
         private NTopicLeaveMessage(INTopicId topic)
         {
-            payload = new Envelope {TopicLeave = new TTopicLeave()};
-            payload.TopicLeave.Topic = new TopicId();
+            var topicId = new TopicId();
             switch (topic.Type)
             {
                 case TopicType.DirectMessage:
-                    payload.TopicLeave.Topic.Dm = ByteString.CopyFrom(topic.Id);
+                    topicId.Dm = ByteString.CopyFrom(topic.Id);
                     break;
                 case TopicType.Room:
-                    payload.TopicLeave.Topic.Room = ByteString.CopyFrom(topic.Id);
+                    topicId.Room = ByteString.CopyFrom(topic.Id);
                     break;
                 case TopicType.Group:
-                    payload.TopicLeave.Topic.GroupId = ByteString.CopyFrom(topic.Id);
+                    topicId.GroupId = ByteString.CopyFrom(topic.Id);
                     break;
             }
+            payload = new Envelope {TopicsLeave = new TTopicsLeave { Topics =
+            {
+                new List<TopicId> { topicId }
+            }}};      
         }
 
         public void SetCollationId(string id)
@@ -52,8 +56,8 @@ namespace Nakama
         }
 
         public override string ToString()
-        {
-            return String.Format("NTopicLeaveMessage(Topic={0})", payload.TopicLeave.Topic);
+        {   
+            return String.Format("NTopicLeaveMessage(Topic={0})", payload.TopicsLeave.Topics);
         }
 
         public static NTopicLeaveMessage Default(INTopicId topic)

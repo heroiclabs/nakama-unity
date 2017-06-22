@@ -31,24 +31,26 @@ namespace Nakama
 
         private NGroupsFetchMessage(params byte[][] ids)
         {
-            var request = new TGroupsFetch();
-            request.GroupIds = new TGroupsFetch.Types.GroupIds();
+            var groups = new List<TGroupsFetch.Types.GroupFetch>();
             foreach (var id in ids)
             {
-                request.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+                var g = new TGroupsFetch.Types.GroupFetch();
+                g.GroupId = ByteString.CopyFrom(id);
+                groups.Add(g);
             }
-            payload = new Envelope {GroupsFetch = request};
+            payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}};    
         }
 
         private NGroupsFetchMessage(params string[] names)
         {
-            var request = new TGroupsFetch();
-            request.Names = new TGroupsFetch.Types.Names();
+            var groups = new List<TGroupsFetch.Types.GroupFetch>();
             foreach (var name in names)
             {
-                request.Names.Names_.Add(name);
+                var g = new TGroupsFetch.Types.GroupFetch();
+                g.Name = name;
+                groups.Add(g);
             }
-            payload = new Envelope {GroupsFetch = request};
+            payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}};
         }
 
         private NGroupsFetchMessage()
@@ -63,28 +65,22 @@ namespace Nakama
 
         public override string ToString()
         {
-            string output = "";
-            switch (payload.GroupsFetch.SetCase)
+            var p = payload.GroupsFetch;
+            string ids = "";
+            string names = "";
+            foreach (var g in p.Groups)
             {
-                case TGroupsFetch.SetOneofCase.GroupIds:
-                    output += "GroupIds=";
-                    foreach (var id in payload.GroupsFetch.GroupIds.GroupIds_)
-                    {
-                        output += id.ToBase64() + ",";
-                    }
-                    break;
-                case TGroupsFetch.SetOneofCase.Names:
-                    output += "Names=";
-                    foreach (var name in payload.GroupsFetch.Names.Names_)
-                    {
-                        output += name + ",";
-                    }
-                    break;
-                default:
-                    output += "unknown";
-                    break;
+                switch (g.IdCase)
+                {
+                    case TGroupsFetch.Types.GroupFetch.IdOneofCase.Name:
+                        names += "name=" + g.Name + ",";
+                        break;
+                    case TGroupsFetch.Types.GroupFetch.IdOneofCase.GroupId:
+                        ids += "id=" + g.GroupId + ",";
+                        break;
+                }
             }
-            return String.Format("NGroupsFetchMessage({0})", output);
+            return String.Format("NGroupsFetchMessage(GroupIds={0}, Names={1})", ids, names);
         }
 
         public static NGroupsFetchMessage Default(params byte[][] ids)
@@ -113,45 +109,37 @@ namespace Nakama
 
             public Builder SetGroupIds(params byte[][] ids)
             {
-                message.payload.GroupsFetch.ClearSet();
-                message.payload.GroupsFetch.GroupIds = new TGroupsFetch.Types.GroupIds();
-                foreach (var id in ids)
-                {
-                    message.payload.GroupsFetch.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
-                }
-                return this;
+                return SetGroupIds(new List<byte[]>(ids));
             }
 
             public Builder SetGroupIds(IEnumerable<byte[]> ids)
             {
-                message.payload.GroupsFetch.ClearSet();
-                message.payload.GroupsFetch.GroupIds = new TGroupsFetch.Types.GroupIds();
+                var groups = new List<TGroupsFetch.Types.GroupFetch>();
                 foreach (var id in ids)
                 {
-                    message.payload.GroupsFetch.GroupIds.GroupIds_.Add(ByteString.CopyFrom(id));
+                    var g = new TGroupsFetch.Types.GroupFetch();
+                    g.GroupId = ByteString.CopyFrom(id);
+                    groups.Add(g);
                 }
+                message.payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}}; 
                 return this;
             }
 
             public Builder SetNames(params string[] names)
             {
-                message.payload.GroupsFetch.ClearSet();
-                message.payload.GroupsFetch.Names = new TGroupsFetch.Types.Names();
-                foreach (var name in names)
-                {
-                    message.payload.GroupsFetch.Names.Names_.Add(name);
-                }
-                return this;
+                return SetNames(new List<string>(names));
             }
 
             public Builder SetNames(IEnumerable<string> names)
             {
-                message.payload.GroupsFetch.ClearSet();
-                message.payload.GroupsFetch.Names = new TGroupsFetch.Types.Names();
+                var groups = new List<TGroupsFetch.Types.GroupFetch>();
                 foreach (var name in names)
                 {
-                    message.payload.GroupsFetch.Names.Names_.Add(name);
+                    var g = new TGroupsFetch.Types.GroupFetch();
+                    g.Name = name;
+                    groups.Add(g);
                 }
+                message.payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}};
                 return this;
             }
 

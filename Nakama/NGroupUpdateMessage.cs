@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Google.Protobuf;
 
@@ -31,14 +32,21 @@ namespace Nakama
 
         private NGroupUpdateMessage()
         {
-            payload = new Envelope {GroupUpdate = new TGroupUpdate()};
+            payload = new Envelope {GroupsUpdate = new TGroupsUpdate { Groups =
+            {
+                new List<TGroupsUpdate.Types.GroupUpdate>()
+            }}};
         }
 
         private NGroupUpdateMessage(byte[] groupId)
         {
-            var request = new TGroupUpdate();
-            request.GroupId = ByteString.CopyFrom(groupId);
-            payload = new Envelope {GroupUpdate = request};
+            payload = new Envelope {GroupsUpdate = new TGroupsUpdate { Groups =
+            {
+                new List<TGroupsUpdate.Types.GroupUpdate>
+                {
+                    new TGroupsUpdate.Types.GroupUpdate {GroupId = ByteString.CopyFrom(groupId)}
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -49,8 +57,12 @@ namespace Nakama
         public override string ToString()
         {
             var f = "NGroupUpdateMessage(GroupId={0},Name={1},Description={2},AvatarUrl={3},Lang={4},Metadata={5},Private={6})";
-            var p = payload.GroupUpdate;
-            return String.Format(f, p.GroupId, p.Name, p.Description, p.AvatarUrl, p.Lang, p.Metadata, p.Private);
+            var output = "";
+            foreach (var p in payload.GroupsUpdate.Groups)
+            {
+                output += String.Format(f, p.GroupId, p.Name, p.Description, p.AvatarUrl, p.Lang, p.Metadata, p.Private); 
+            }
+            return output;
         }
 
         public class Builder
@@ -64,37 +76,37 @@ namespace Nakama
 
             public Builder Name(string name)
             {
-                message.payload.GroupUpdate.Name = name;
+                message.payload.GroupsUpdate.Groups[0].Name = name;
                 return this;
             }
 
             public Builder Description(string description)
             {
-                message.payload.GroupUpdate.Description = description;
+                message.payload.GroupsUpdate.Groups[0].Description = description;
                 return this;
             }
 
             public Builder AvatarUrl(string avatarUrl)
             {
-                message.payload.GroupUpdate.AvatarUrl = avatarUrl;
+                message.payload.GroupsUpdate.Groups[0].AvatarUrl = avatarUrl;
                 return this;
             }
 
             public Builder Lang(string lang)
             {
-                message.payload.GroupUpdate.Lang = lang;
+                message.payload.GroupsUpdate.Groups[0].Lang = lang;
                 return this;
             }
 
             public Builder Metadata(byte[] metadata)
             {
-                message.payload.GroupUpdate.Metadata = ByteString.CopyFrom(metadata);
+                message.payload.GroupsUpdate.Groups[0].Metadata = ByteString.CopyFrom(metadata);
                 return this;
             }
 
             public Builder Private(bool privateGroup)
             {
-                message.payload.GroupUpdate.Private = privateGroup;
+                message.payload.GroupsUpdate.Groups[0].Private = privateGroup;
                 return this;
             }
 
@@ -103,7 +115,7 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NGroupUpdateMessage();
-                message.payload.GroupUpdate = new TGroupUpdate(original.payload.GroupUpdate);
+                message.payload.GroupsUpdate = new TGroupsUpdate(original.payload.GroupsUpdate);
                 return original;
             }
         }

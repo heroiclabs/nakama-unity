@@ -15,12 +15,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NLeaderboardRecordWriteMessage : INCollatedMessage<INLeaderboardRecord>
+    public class NLeaderboardRecordWriteMessage : INCollatedMessage<INResultSet<INLeaderboardRecord>>
     {
         private Envelope payload;
         public IMessage Payload {
@@ -31,14 +32,22 @@ namespace Nakama
 
         private NLeaderboardRecordWriteMessage()
         {
-            payload = new Envelope {LeaderboardRecordWrite = new TLeaderboardRecordWrite()};
+            payload = new Envelope {LeaderboardRecordsWrite = new TLeaderboardRecordsWrite()};
+            payload = new Envelope {LeaderboardRecordsWrite = new TLeaderboardRecordsWrite { Records =
+            {
+                new List<TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite>()
+            }}};  
         }
 
         private NLeaderboardRecordWriteMessage(byte[] leaderboardId)
         {
-            var request = new TLeaderboardRecordWrite();
-            request.LeaderboardId = ByteString.CopyFrom(leaderboardId);
-            payload = new Envelope {LeaderboardRecordWrite = request};
+            payload = new Envelope {LeaderboardRecordsWrite = new TLeaderboardRecordsWrite { Records =
+            {
+                new List<TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite>
+                {
+                    new TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite {LeaderboardId = ByteString.CopyFrom(leaderboardId)}
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -49,8 +58,12 @@ namespace Nakama
         public override string ToString()
         {
             var f = "NLeaderboardRecordWriteMessage(LeaderboardId={0},Location={1},Timezone={2},Metadata={3},Op={4},Incr={5},Decr={6},Set={7},Best={8})";
-            var p = payload.LeaderboardRecordWrite;
-            return String.Format(f, p.LeaderboardId, p.Location, p.Timezone, p.Metadata, p.OpCase, p.Incr, p.Decr, p.Set, p.Best);
+            var output = "";
+            foreach (var p in payload.LeaderboardRecordsWrite.Records)
+            {
+                output += String.Format(f, p.LeaderboardId, p.Location, p.Timezone, p.Metadata, p.OpCase, p.Incr, p.Decr, p.Set, p.Best); 
+            }
+            return output;   
         }
 
         public class Builder
@@ -64,47 +77,47 @@ namespace Nakama
 
             public Builder Location(string location)
             {
-                message.payload.LeaderboardRecordWrite.Location = location;
+                message.payload.LeaderboardRecordsWrite.Records[0].Location = location;
                 return this;
             }
 
             public Builder Timezone(string timezone)
             {
-                message.payload.LeaderboardRecordWrite.Timezone = timezone;
+                message.payload.LeaderboardRecordsWrite.Records[0].Timezone = timezone;
                 return this;
             }
 
             public Builder Metadata(byte[] metadata)
             {
-                message.payload.LeaderboardRecordWrite.Metadata = ByteString.CopyFrom(metadata);
+                message.payload.LeaderboardRecordsWrite.Records[0].Metadata = ByteString.CopyFrom(metadata);
                 return this;
             }
 
             public Builder Increment(long value)
             {
-                message.payload.LeaderboardRecordWrite.ClearOp();
-                message.payload.LeaderboardRecordWrite.Incr = value;
+                message.payload.LeaderboardRecordsWrite.Records[0].ClearOp();
+                message.payload.LeaderboardRecordsWrite.Records[0].Incr = value;
                 return this;
             }
 
             public Builder Decrement(long value)
             {
-                message.payload.LeaderboardRecordWrite.ClearOp();
-                message.payload.LeaderboardRecordWrite.Decr = value;
+                message.payload.LeaderboardRecordsWrite.Records[0].ClearOp();
+                message.payload.LeaderboardRecordsWrite.Records[0].Decr = value;
                 return this;
             }
 
             public Builder Set(long value)
             {
-                message.payload.LeaderboardRecordWrite.ClearOp();
-                message.payload.LeaderboardRecordWrite.Set = value;
+                message.payload.LeaderboardRecordsWrite.Records[0].ClearOp();
+                message.payload.LeaderboardRecordsWrite.Records[0].Set = value;
                 return this;
             }
 
             public Builder Best(long value)
             {
-                message.payload.LeaderboardRecordWrite.ClearOp();
-                message.payload.LeaderboardRecordWrite.Best = value;
+                message.payload.LeaderboardRecordsWrite.Records[0].ClearOp();
+                message.payload.LeaderboardRecordsWrite.Records[0].Best = value;
                 return this;
             }
 
@@ -113,7 +126,7 @@ namespace Nakama
                 // Clone object so builder now operates on new copy.
                 var original = message;
                 message = new NLeaderboardRecordWriteMessage();
-                message.payload.LeaderboardRecordWrite = new TLeaderboardRecordWrite(original.payload.LeaderboardRecordWrite);
+                message.payload.LeaderboardRecordsWrite = new TLeaderboardRecordsWrite(original.payload.LeaderboardRecordsWrite);
                 return original;
             }
         }

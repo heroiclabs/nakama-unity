@@ -272,15 +272,15 @@ namespace Nakama
                 AuthenticateResponse authResponse = AuthenticateResponse.Parser.ParseFrom(data);
                 Logger.TraceFormatIf(Trace, "DecodedResponse={0}", authResponse);
 
-                switch (authResponse.PayloadCase)
+                switch (authResponse.IdCase)
                 {
-                    case AuthenticateResponse.PayloadOneofCase.Session:
+                    case AuthenticateResponse.IdOneofCase.Session:
                         callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
                         break;
-                    case AuthenticateResponse.PayloadOneofCase.Error:
+                    case AuthenticateResponse.IdOneofCase.Error:
                         errback(new NError(authResponse.Error));
                         break;
-                    case AuthenticateResponse.PayloadOneofCase.None:
+                    case AuthenticateResponse.IdOneofCase.None:
                         Logger.Error("Received invalid response from server");
                         break;
                     default:
@@ -398,12 +398,20 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.Match:
                     pair.Key(new NMatch(message.Match));
                     break;
+                case Envelope.PayloadOneofCase.Matches:
+                    var matches = new List<INMatch>();
+                    foreach (var m in message.Matches.Matches)
+                    {
+                        matches.Add(new NMatch(m));
+                    }
+                    pair.Key(new NResultSet<INMatch>(matches, null));
+                    break;
                 case Envelope.PayloadOneofCase.Self:
                     pair.Key(new NSelf(message.Self.Self));
                     break;
-                case Envelope.PayloadOneofCase.StorageKey:
+                case Envelope.PayloadOneofCase.StorageKeys:
                     var keys = new List<INStorageKey>();
-                    foreach (var key in message.StorageKey.Keys)
+                    foreach (var key in message.StorageKeys.Keys)
                     {
                         keys.Add(new NStorageKey(key));
                     }
@@ -417,8 +425,13 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INStorageData>(storageData, null));
                     break;
-                case Envelope.PayloadOneofCase.Topic:
-                    pair.Key(new NTopic(message.Topic));
+                case Envelope.PayloadOneofCase.Topics:
+                    var topics = new List<INTopic>();
+                    foreach (var topic in message.Topics.Topics)
+                    {
+                        topics.Add(new NTopic(topic));
+                    }
+                    pair.Key(new NResultSet<INTopic>(topics, null));
                     break;
                 case Envelope.PayloadOneofCase.TopicMessageAck:
                     pair.Key(new NTopicMessageAck(message.TopicMessageAck));
@@ -448,16 +461,14 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INLeaderboard>(leaderboards, new NCursor(message.Leaderboards.Cursor.ToByteArray())));
                     break;
-                case Envelope.PayloadOneofCase.LeaderboardRecord:
-                    pair.Key(new NLeaderboardRecord(message.LeaderboardRecord.Record));
-                    break;
                 case Envelope.PayloadOneofCase.LeaderboardRecords:
                     var leaderboardRecords = new List<INLeaderboardRecord>();
                     foreach (var leaderboardRecord in message.LeaderboardRecords.Records)
                     {
                         leaderboardRecords.Add(new NLeaderboardRecord(leaderboardRecord));
                     }
-                    pair.Key(new NResultSet<INLeaderboardRecord>(leaderboardRecords, new NCursor(message.LeaderboardRecords.Cursor.ToByteArray())));
+                    var cursor = message.LeaderboardRecords.Cursor == null ? null : new NCursor(message.LeaderboardRecords.Cursor.ToByteArray());
+                    pair.Key(new NResultSet<INLeaderboardRecord>(leaderboardRecords, cursor));
                     break;
                 case Envelope.PayloadOneofCase.Rpc:
                     pair.Key(new NRuntimeRpc(message.Rpc));

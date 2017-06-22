@@ -26,7 +26,9 @@ namespace Nakama
         public IList<INUserPresence> Presence { get; private set; }
         public INUserPresence Self { get; private set; }
 
-        internal NMatch(TMatch message)
+        internal NMatch(TMatch message): this(message.Match) {}
+        
+        internal NMatch(Match message)
         {
             Id = message.MatchId.ToByteArray();
             Presence = new List<INUserPresence>();
