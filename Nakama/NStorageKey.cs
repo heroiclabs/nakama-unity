@@ -28,7 +28,7 @@ namespace Nakama
 
         public byte[] Version { get; private set; }
 
-        internal NStorageKey(TStorageKey.Types.StorageKey message)
+        internal NStorageKey(TStorageKeys.Types.StorageKey message)
         {
             Bucket = message.Bucket;
             Collection = message.Collection;

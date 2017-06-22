@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,8 +31,13 @@ namespace Nakama
 
         private NGroupJoinMessage(byte[] groupId)
         {
-            payload = new Envelope {GroupJoin = new TGroupJoin()};
-            payload.GroupJoin.GroupId = ByteString.CopyFrom(groupId);
+            payload = new Envelope {GroupsJoin = new TGroupsJoin {GroupIds =
+            {
+                new List<ByteString>
+                {
+                    ByteString.CopyFrom(groupId)
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -41,7 +47,12 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NGroupJoinMessage(GroupId={0})", payload.GroupJoin.GroupId);
+            var output = "";
+            foreach (var id in payload.GroupsJoin.GroupIds)
+            {
+                output += id + ", ";
+            }
+            return String.Format("NGroupJoinMessage(GroupIds={0})", output);
         }
 
         public static NGroupJoinMessage Default(byte[] groupId)

@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,7 +31,13 @@ namespace Nakama
 
         private NFriendRemoveMessage(byte[] id)
         {
-            payload = new Envelope {FriendRemove = new TFriendRemove {UserId = ByteString.CopyFrom(id)}};
+            payload = new Envelope {FriendsRemove = new TFriendsRemove { UserIds =
+            {
+                new List<ByteString>
+                {
+                    ByteString.CopyFrom(id)
+                }
+            }}};
         }
 
         public void SetCollationId(string id)
@@ -40,7 +47,13 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NFriendRemoveMessage(UserId={0})", payload.FriendRemove.UserId);
+            var p = payload.FriendsRemove;
+            string ids = "";
+            foreach (var f in p.UserIds)
+            {
+                ids += "id=" + f + ",";
+            }
+            return String.Format("NFriendsBlockMessage(UserIds={0)", ids);   
         }
 
         public static NFriendRemoveMessage Default(byte[] id)

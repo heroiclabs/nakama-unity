@@ -13,6 +13,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - Improve handling transport errors. 
 - Improve fetching global storage data.
 
+### Changed
+- Update Client to support the new batching API.
+
 ## [0.6.1] - 2017-05-30
 ### Changed
 - Remove unnecessary headers from HTTP requests.

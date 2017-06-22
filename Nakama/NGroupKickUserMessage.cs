@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,9 +31,17 @@ namespace Nakama
 
         private NGroupKickUserMessage(byte[] groupId, byte[] userId)
         {
-            payload = new Envelope {GroupUserKick = new TGroupUserKick()};
-            payload.GroupUserKick.GroupId = ByteString.CopyFrom(groupId);
-            payload.GroupUserKick.UserId = ByteString.CopyFrom(userId);
+            payload = new Envelope {GroupUsersKick = new TGroupUsersKick { GroupUsers =
+            {
+                new List<TGroupUsersKick.Types.GroupUserKick>
+                {
+                    new TGroupUsersKick.Types.GroupUserKick
+                    {
+                        UserId = ByteString.CopyFrom(userId),
+                        GroupId = ByteString.CopyFrom(groupId)
+                    }
+                }
+            }}};   
         }
 
         public void SetCollationId(string id)
@@ -42,7 +51,13 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NGroupKickUserMessage(GroupId={0},UserId={1})", payload.GroupUserKick.GroupId, payload.GroupUserKick.UserId);
+            var p = payload.GroupUsersKick;
+            string output = "";
+            foreach (var g in p.GroupUsers)
+            {
+                output += String.Format("(UserId={0},GroupId={1}),", g.UserId, g.GroupId);
+            }
+            return String.Format("NGroupKickUserMessage({0})", output);
         }
 
         public static NGroupKickUserMessage Default(byte[] groupId, byte[] userId)

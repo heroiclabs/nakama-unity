@@ -239,18 +239,18 @@ namespace Nakama.Tests
             INMatch m2 = null;
             INError error1m = null;
             INError error2m = null;
-            client1.Send(NMatchJoinMessage.Default(res1.Token), (INMatch match) =>
+            client1.Send(NMatchJoinMessage.Default(res1.Token), (INResultSet<INMatch> matches) =>
             {
-                m1 = match;
+                m1 = matches.Results[0];
                 evt1m.Set();
             }, (INError err) =>
             {
                 error1m = err;
                 evt1m.Set();
             });
-            client2.Send(NMatchJoinMessage.Default(res2.Token), (INMatch match) =>
+            client2.Send(NMatchJoinMessage.Default(res2.Token), (INResultSet<INMatch> matches) =>
             {
-                m2 = match;
+                m2 = matches.Results[0];
                 evt2m.Set();
             }, (INError err) =>
             {

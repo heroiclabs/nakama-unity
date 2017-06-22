@@ -131,7 +131,7 @@ namespace Nakama.Tests
 
             client1.Send(NMatchCreateMessage.Default(), (INMatch match) =>
             {
-                client2.Send(NMatchJoinMessage.Default(match.Id), (INMatch match2) =>
+                client2.Send(NMatchJoinMessage.Default(match.Id), (INResultSet<INMatch> match2) =>
                 {
                     evt.Set();
                 }, (INError err) =>
@@ -176,7 +176,7 @@ namespace Nakama.Tests
                 joinedUserId = args.MatchPresence.Join[0].UserId;
                 evt2.Set();
             };
-            client2.Send(NMatchJoinMessage.Default(m.Id), (INMatch match) =>
+            client2.Send(NMatchJoinMessage.Default(m.Id), (INResultSet<INMatch> match) =>
             {
                 // No action.
             }, (INError err) =>
@@ -199,7 +199,7 @@ namespace Nakama.Tests
             client1.Send(NMatchCreateMessage.Default(), (INMatch match) =>
             {
                 m = match;
-                client2.Send(NMatchJoinMessage.Default(m.Id), (INMatch match2) =>
+                client2.Send(NMatchJoinMessage.Default(m.Id), (INResultSet<INMatch> match2) =>
                 {
                     evt1.Set();
                 }, (INError err) =>
@@ -246,7 +246,7 @@ namespace Nakama.Tests
             client1.Send(NMatchCreateMessage.Default(), (INMatch match) =>
             {
                 m = match;
-                client2.Send(NMatchJoinMessage.Default(match.Id), (INMatch match2) =>
+                client2.Send(NMatchJoinMessage.Default(match.Id), (INResultSet<INMatch> match2) =>
                 {
                     evt1.Set();
                 }, (INError err) =>
@@ -337,8 +337,9 @@ namespace Nakama.Tests
             client1.Send(NMatchCreateMessage.Default(), (INMatch match) =>
             {
                 m = match;
-                client2.Send(NMatchJoinMessage.Default(match.Id), (INMatch match2) =>
+                client2.Send(NMatchJoinMessage.Default(match.Id), (INResultSet<INMatch> matches2) =>
                 {
+                    var match2 = matches2.Results[0];
                     foreach (var up in match2.Presence)
                     {
                         if (up.UserId.SequenceEqual(userId2))

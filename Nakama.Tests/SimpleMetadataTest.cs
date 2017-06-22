@@ -32,12 +32,8 @@ namespace Nakama
         {
             var request  = setupRequest();
             var response = (HttpWebResponse) request.GetResponse();
-            var stream = response.GetResponseStream();
-            var reader = new StreamReader(stream, Encoding.UTF8);
-            var result = reader.ReadToEnd();
             response.Close();
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.StatusDescription);
-            Assert.That(result, Contains.Substring("status"));
         }
 
         [Test]
@@ -104,7 +100,7 @@ namespace Nakama
 
         private static HttpWebRequest setupRequest()
         {
-            return setupRequest("/v0/health");
+            return setupRequest("/v0/info");
         }
 
         private static HttpWebRequest setupRequest(string path)

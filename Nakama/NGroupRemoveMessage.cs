@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -30,7 +31,13 @@ namespace Nakama
 
         private NGroupRemoveMessage(byte[] id)
         {
-            payload = new Envelope {GroupRemove = new TGroupRemove {GroupId = ByteString.CopyFrom(id)}};
+            payload = new Envelope {GroupsRemove = new TGroupsRemove { GroupIds =
+            {
+                new List<ByteString>
+                {
+                    ByteString.CopyFrom(id)
+                }
+            }}}; 
         }
 
         public void SetCollationId(string id)
@@ -40,7 +47,12 @@ namespace Nakama
 
         public override string ToString()
         {
-            return String.Format("NGroupRemoveMessage(GroupId={0})", payload.GroupRemove.GroupId);
+            var output = "";
+            foreach (var id in payload.GroupsRemove.GroupIds)
+            {
+                output += id + ", ";
+            }
+            return String.Format("NGroupRemoveMessage(GroupIds={0})", output);
         }
 
         public static NGroupRemoveMessage Default(byte[] id)

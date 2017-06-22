@@ -25,9 +25,9 @@ namespace Nakama
         public IList<INUserPresence> Presences { get; private set; }
         public INUserPresence Self { get; private set; }
 
-        internal NTopic(TTopic message)
+        internal NTopic(TTopics.Types.Topic message)
         {
-            Topic = new NTopicId(message.Topic);
+            Topic = new NTopicId(message.Topic_);
             Presences = new List<INUserPresence>();
             foreach (var presence in message.Presences)
             {

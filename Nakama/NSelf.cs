@@ -64,7 +64,7 @@ namespace Nakama
             AvatarUrl = message.User.AvatarUrl;
             CreatedAt = message.User.CreatedAt;
             CustomId = message.CustomId;
-            DeviceIds = message.DeviceId;
+            DeviceIds = message.DeviceIds;
             Email = message.Email;
             FacebookId = message.FacebookId;
             Fullname = message.User.Fullname;

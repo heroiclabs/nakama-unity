@@ -146,9 +146,9 @@ namespace Nakama.Tests
                 .Set(score)
                 .Build();
 
-            client.Send(message, (INLeaderboardRecord result) =>
+            client.Send(message, (INResultSet<INLeaderboardRecord> results) =>
             {
-                res = result;
+                res = results.Results[0];
                 evt.Set();
             }, _ => {
                 evt.Set();

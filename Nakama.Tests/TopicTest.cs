@@ -83,7 +83,7 @@ namespace Nakama.Tests
             INError error = null;
 
             var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
-            client1.Send(message, (INTopic topic) =>
+            client1.Send(message, (INResultSet<INTopic> topics) =>
             {
                 evt.Set();
             }, (INError err) =>
@@ -103,8 +103,9 @@ namespace Nakama.Tests
             INError error = null;
 
             var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
-            client1.Send(message, (INTopic topic) =>
+            client1.Send(message, (INResultSet<INTopic> topics) =>
             {
+                var topic = topics.Results[0];
                 client1.Send(NTopicLeaveMessage.Default(topic.Topic), (bool complete) =>
                 {
                     evt.Set();
@@ -130,7 +131,7 @@ namespace Nakama.Tests
             ManualResetEvent evt1 = new ManualResetEvent(false);
             byte[] room = Encoding.UTF8.GetBytes("test-room");
             var message = new NTopicJoinMessage.Builder().TopicRoom(room).Build();
-            client1.Send(message, (INTopic topic) =>
+            client1.Send(message, (INResultSet<INTopic> topics) =>
             {
                 evt1.Set();
             }, (INError err) =>
@@ -148,7 +149,7 @@ namespace Nakama.Tests
                 joinUserId = args.TopicPresence.Join[0].UserId;
                 evt2.Set();
             };
-            client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic) =>
+            client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topic) =>
             {
                 // No action.
             }, (INError err) =>
@@ -169,10 +170,10 @@ namespace Nakama.Tests
             ManualResetEvent evt1 = new ManualResetEvent(false);
             byte[] room = Encoding.UTF8.GetBytes("test-room");
             INTopic topic = null;
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic1) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>
             {
-                topic = topic1;
-                client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic2) =>
+                topic = topics1.Results[0];
+                client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics2) =>
                 {
                     evt1.Set();
                 }, (INError err) =>
@@ -217,9 +218,9 @@ namespace Nakama.Tests
 
             INTopic topic = null;
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build(), (INTopic top) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build(), (INResultSet<INTopic> topics) =>
             {
-                topic = top;
+                topic = topics.Results[0];
                 client1.Send(NTopicLeaveMessage.Default(topic.Topic), (bool complete) =>
                 {
                     evt1.Set();
@@ -258,10 +259,10 @@ namespace Nakama.Tests
             ManualResetEvent evt1 = new ManualResetEvent(false);
             byte[] room = Encoding.UTF8.GetBytes("test-room");
             INTopic topic = null;
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic1) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>
             {
-                topic = topic1;
-                client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic2) =>
+                topic = topics1.Results[0];
+                client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics2) =>
                 {
                     evt1.Set();
                 }, (INError err) =>
@@ -323,9 +324,9 @@ namespace Nakama.Tests
             ManualResetEvent evt1 = new ManualResetEvent(false);
             byte[] room = Encoding.UTF8.GetBytes("history-room");
             INTopic t = null;
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics) =>
             {
-                t = topic;
+                t = topics.Results[0];
                 evt1.Set();
             }, (INError err) =>
             {
@@ -388,9 +389,9 @@ namespace Nakama.Tests
             byte[] room = Encoding.UTF8.GetBytes("test-room-handle-update");
             INTopic topic = null;
 
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INTopic topic1) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>
             {
-                topic = topic1;
+                topic = topics1.Results[0];
 
                 client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
                 {
