@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,10 +25,8 @@ namespace Nakama
     ///  A client for Nakama server which will dispatch all actions on the Unity
     ///  main thread.
     /// </summary>
-    public class NTDispatchClient : INClient, MonoBehaviour
+    public class NTDispatchClient : INClient
     {
-        // NOTE Not compiled by default; avoids dependency on UnityEngine
-
         public uint ConnectTimeout { get { return _client.ConnectTimeout; } }
 
         public string Host { get { return _client.Host; } }
@@ -36,30 +35,110 @@ namespace Nakama
 
         public INLogger Logger { get { return _client.Logger; } }
 
-        private EventHandler _onDisconnect;
+        //private EventHandler _onDisconnect;
 
-        public event EventHandler OnDisconnect {
+        public event EventHandler OnDisconnect; /*{
             add {
-                _onDisconnect = (EventHandler) Delegate.Combine(_onDisconnect, () => {
+                var handler = () => {
                     Enqueue(() => value());
-                });
+                };
+                _onDisconnect = (EventHandler) Delegate.Combine(_onDisconnect, handler);
             }
             remove {
-                // FIXME
+                // FIXME does it work?
+                _onDisconnect = (EventHandler) Delegate.Remove(_onDisconnect, value);
             }
-        }
+        }*/
 
-        public event EventHandler<NErrorEventArgs> OnError;
+        //private EventHandler<NErrorEventArgs> _onError;
 
-        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
+        public event EventHandler<NErrorEventArgs> OnError; /*{
+            add {
+                var handler = (object source, NErrorEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onError = (EventHandler<NErrorEventArgs>) Delegate.Combine(_onError, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onError = (EventHandler<NErrorEventArgs>) Delegate.Remove(_onError, value);
+            }
+        }*/
 
-        public event EventHandler<NMatchDataEventArgs> OnMatchData;
+        //private EventHandler<NMatchmakeMatchedEventArgs> _onMatchmakeMatched;
 
-        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched; /*{
+            add {
+                var handler = (object source, NMatchmakeMatchedEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onMatchmakeMatched = (EventHandler<NMatchmakeMatchedEventArgs>) Delegate.Combine(_onMatchmakeMatched, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onMatchmakeMatched = (EventHandler<NMatchmakeMatchedEventArgs>) Delegate.Remove(_onMatchmakeMatched, value);
+            }
+        }*/
 
-        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+        //private EventHandler<NMatchDataEventArgs> _onMatchData;
 
-        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+        public event EventHandler<NMatchDataEventArgs> OnMatchData; /*{
+            add {
+                var handler = (object source, NMatchDataEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onMatchData = (EventHandler<NMatchDataEventArgs>) Delegate.Combine(_onMatchData, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onMatchData = (EventHandler<NMatchDataEventArgs>) Delegate.Remove(_onMatchData, value);
+            }
+        }*/
+
+        //private EventHandler<NMatchPresenceEventArgs> _onMatchPresence;
+
+        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence; /*{
+            add {
+                var handler = (object source, NMatchPresenceEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onMatchPresence = (EventHandler<NMatchPresenceEventArgs>) Delegate.Combine(_onMatchPresence, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onMatchPresence = (EventHandler<NMatchPresenceEventArgs>) Delegate.Remove(_onMatchPresence, value);
+            }
+        }*/
+
+        //private EventHandler<NTopicMessageEventArgs> _onTopicMessage;
+
+        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage; /*{
+            add {
+                var handler = (object source, NTopicMessageEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onTopicMessage = (EventHandler<NTopicMessageEventArgs>) Delegate.Combine(_onTopicMessage, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onTopicMessage = (EventHandler<NTopicMessageEventArgs>) Delegate.Remove(_onTopicMessage, value);
+            }
+        }*/
+
+        //private EventHandler<NTopicPresenceEventArgs> _onTopicPresence;
+
+        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence; /*{
+            add {
+                var handler = (object source, NTopicPresenceEventArgs args) => {
+                    Enqueue(() => value(source, args));
+                };
+                _onTopicPresence = (EventHandler<NTopicPresenceEventArgs>) Delegate.Combine(_onTopicPresence, handler);
+            }
+            remove {
+                // FIXME does it work?
+                _onTopicPresence = (EventHandler<NTopicPresenceEventArgs>) Delegate.Remove(_onTopicPresence, value);
+            }
+        }*/
 
         public uint Port { get { return _client.Port; } }
 
@@ -71,46 +150,13 @@ namespace Nakama
 
         public uint Timeout { get { return _client.Timeout; } }
 
-        public bool NoDelay { get { return _client.NoDelay; } }
-
         public bool Trace { get { return _client.Trace; } }
 
         private INClient _client;
 
-        private Queue<IEnumerator> _executionQueue;
-
         public NTDispatchClient(NClient client)
-            : this(client, 2048)
         {
-        }
-
-        public NTDispatchClient(NClient client, int initialQueueSize)
-        {
-            if (initialQueueSize < 1)
-            {
-                throw new ArgumentException("'initialQueueSize' cannot be less than 1.");
-            }
             _client = client;
-            _executionQueue = new Queue<IEnumerator>(initialQueueSize);
-        }
-
-        public void Update()
-        {
-            lock (_executionQueue)
-            {
-                for (int i = 0, l = _executionQueue.Count; i < l; i++)
-                {
-                    StartCoroutine(_executionQueue.Dequeue());
-                }
-            }
-        }
-
-        private void Enqueue(Action action)
-        {
-            lock (_executionQueue)
-            {
-                _executionQueue.Enqueue(WrapAction(action));
-            }
         }
 
         public void Connect(INSession session)
@@ -121,7 +167,7 @@ namespace Nakama
         public void Connect(INSession session, Action<bool> callback)
         {
             _client.Connect(session, (bool done) => {
-                Enqueue(() => callback(done));
+                MainThreadDispatcher.Enqueue(() => callback(done));
             });
         }
 
@@ -133,16 +179,16 @@ namespace Nakama
         public void Disconnect(Action callback)
         {
             _client.Disconnect(() => {
-              Enqueue(() => callback());
+                MainThreadDispatcher.Enqueue(() => callback());
             });
         }
 
         public void Login(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback)
         {
             _client.Login(message, (INSession session) => {
-                Enqueue(() => callback(session));
+                MainThreadDispatcher.Enqueue(() => callback(session));
             }, (INError error) => {
-                Enqueue(() => errback(error));
+                MainThreadDispatcher.Enqueue(() => errback(error));
             });
         }
 
@@ -154,41 +200,35 @@ namespace Nakama
         public void Logout(Action<bool> callback)
         {
             _client.Logout((bool done) => {
-                Enqueue(() => callback(done));
+                MainThreadDispatcher.Enqueue(() => callback(done));
             });
         }
 
         public void Register(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback)
         {
             _client.Register(message, (INSession session) => {
-                Enqueue(() => callback(session));
+                MainThreadDispatcher.Enqueue(() => callback(session));
             }, (INError error) => {
-                Enqueue(() => errback(error));
+                MainThreadDispatcher.Enqueue(() => errback(error));
             });
         }
 
         public void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback)
         {
             _client.Send<T>(message, (T result) => {
-                Enqueue(() => callback(result));
+                MainThreadDispatcher.Enqueue(() => callback(result));
             }, (INError error) => {
-                Enqueue(() => errback(error));
+                MainThreadDispatcher.Enqueue(() => errback(error));
             });
         }
 
         public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
         {
             _client.Send(message, (bool done) => {
-                Enqueue(() => callback(done));
+                MainThreadDispatcher.Enqueue(() => callback(done));
             }, (INError error) => {
-                Enqueue(() => errback(error));
+                MainThreadDispatcher.Enqueue(() => errback(error));
             });
-        }
-
-        private static IEnumerator WrapAction(Action action)
-        {
-            action();
-            yield return null;
         }
     }
 }
