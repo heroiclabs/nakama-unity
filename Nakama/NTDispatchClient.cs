@@ -17,7 +17,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Nakama
 {
@@ -27,6 +26,8 @@ namespace Nakama
     /// </summary>
     public class NTDispatchClient : INClient
     {
+        // NOTE: Not compiled by default; avoids dependency on UnityEngine.
+
         public uint ConnectTimeout { get { return _client.ConnectTimeout; } }
 
         public string Host { get { return _client.Host; } }
@@ -35,33 +36,55 @@ namespace Nakama
 
         public INLogger Logger { get { return _client.Logger; } }
 
-        //private EventHandler _onDisconnect;
+        private IDictionary<Delegate, EventHandler> _onDisconnectMap;
+        private EventHandler _onDisconnect;
 
-        public event EventHandler OnDisconnect; /*{
+        public event EventHandler OnDisconnect
+        {
             add {
-                var handler = () => {
-                    Enqueue(() => value());
+                EventHandler handler = delegate(object sender, EventArgs args) {
+                    //MainThreadDispatcher.Enqueue(() => value(sender, args));
+                    UnityEngine.Debug.Log("Here!");
+                    value(sender, args);
                 };
-                _onDisconnect = (EventHandler) Delegate.Combine(_onDisconnect, handler);
+                lock (this)
+                {
+                    _onDisconnectMap.Add(value, handler);
+                    _onDisconnect += handler;
+                }
             }
             remove {
-                // FIXME does it work?
-                _onDisconnect = (EventHandler) Delegate.Remove(_onDisconnect, value);
+                EventHandler handler;
+                _onDisconnectMap.TryGetValue(value, out handler);
+                lock (this)
+                {
+                    _onDisconnect -= handler;
+                }
             }
-        }*/
+        }
 
-        //private EventHandler<NErrorEventArgs> _onError;
+        private IDictionary<Delegate, EventHandler<NErrorEventArgs>> _onErrorMap;
+        private EventHandler<NErrorEventArgs> _onError;
 
-        public event EventHandler<NErrorEventArgs> OnError; /*{
+        public event EventHandler<NErrorEventArgs> OnError; /*
+        {
             add {
-                var handler = (object source, NErrorEventArgs args) => {
-                    Enqueue(() => value(source, args));
+                EventHandler<NErrorEventArgs> handler = delegate(object sender, NErrorEventArgs args) {
+                    //value(sender, args);
                 };
-                _onError = (EventHandler<NErrorEventArgs>) Delegate.Combine(_onError, handler);
+                lock (this)
+                {
+                    _onErrorMap.Add(value, handler);
+                    _onError += handler;
+                }
             }
             remove {
-                // FIXME does it work?
-                _onError = (EventHandler<NErrorEventArgs>) Delegate.Remove(_onError, value);
+                EventHandler<NErrorEventArgs> handler;
+                _onErrorMap.TryGetValue(value, out handler);
+                lock (this)
+                {
+                    _onError -= handler;
+                }
             }
         }*/
 
@@ -157,6 +180,8 @@ namespace Nakama
         public NTDispatchClient(NClient client)
         {
             _client = client;
+            _onDisconnectMap = new Dictionary<Delegate, EventHandler>();
+            _onErrorMap = new Dictionary<Delegate, EventHandler<NErrorEventArgs>>();
         }
 
         public void Connect(INSession session)

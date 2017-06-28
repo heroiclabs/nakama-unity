@@ -32,14 +32,9 @@ namespace Nakama
     /// </summary>
     public class MainThreadDispatcher : MonoBehaviour
     {
-        private static readonly Queue<IEnumerator> _executionQueue;
+        private static readonly Queue<IEnumerator> _executionQueue = new Queue<IEnumerator>(1024);
 
         private static MainThreadDispatcher _instance;
-
-        public MainThreadDispatcher()
-        {
-            _executionQueue = new Queue<Action>(1024);
-        }
 
         private void Awake()
         {
@@ -66,7 +61,7 @@ namespace Nakama
 
         IEnumerator ActionWrapper(Action action)
         {
-            a();
+            action();
             yield return null;
         }
 
@@ -90,7 +85,7 @@ namespace Nakama
         {
             lock (_executionQueue)
             {
-                _executionQueue(_instance.ActionWrapper(action));
+                _executionQueue.Enqueue(_instance.ActionWrapper(action));
             }
         }
     }
