@@ -24,7 +24,7 @@ namespace Nakama
     ///  A client for Nakama server which will dispatch all actions on the Unity
     ///  main thread.
     /// </summary>
-    public class NTDispatchClient : INClient
+    public class NThreadedClient
     {
         // NOTE: Not compiled by default; avoids dependency on UnityEngine.
 
@@ -36,6 +36,26 @@ namespace Nakama
 
         public INLogger Logger { get { return _client.Logger; } }
 
+        private Action _onDisconnect;
+        public Action OnDisconnect
+        {
+            get {
+                return _onDisconnect;
+            }
+            set {
+                Action action = delegate() {
+                    MainThreadDispatcher.Enqueue(() => value());
+                };
+                _onDisconnect = action;
+                //_client.OnDisconnect = null; // wipe all registered event handlers
+                _client.OnDisconnect += (object sender, EventArgs args) => {
+                    action();
+                };
+            }
+        }
+
+        // NOTE This code causes an ICE with the Mono/Unity compiler.
+        /*
         private IDictionary<Delegate, EventHandler> _onDisconnectMap;
         private EventHandler _onDisconnect;
 
@@ -62,106 +82,115 @@ namespace Nakama
                 }
             }
         }
+        */
 
-        private IDictionary<Delegate, EventHandler<NErrorEventArgs>> _onErrorMap;
-        private EventHandler<NErrorEventArgs> _onError;
-
-        public event EventHandler<NErrorEventArgs> OnError; /*
+        private Action<NErrorEventArgs> _onError;
+        public Action<NErrorEventArgs> OnError
         {
-            add {
-                EventHandler<NErrorEventArgs> handler = delegate(object sender, NErrorEventArgs args) {
-                    //value(sender, args);
+            get {
+                return _onError;
+            }
+            set {
+                Action<NErrorEventArgs> action = delegate(NErrorEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
                 };
-                lock (this)
-                {
-                    _onErrorMap.Add(value, handler);
-                    _onError += handler;
-                }
-            }
-            remove {
-                EventHandler<NErrorEventArgs> handler;
-                _onErrorMap.TryGetValue(value, out handler);
-                lock (this)
-                {
-                    _onError -= handler;
-                }
-            }
-        }*/
-
-        //private EventHandler<NMatchmakeMatchedEventArgs> _onMatchmakeMatched;
-
-        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched; /*{
-            add {
-                var handler = (object source, NMatchmakeMatchedEventArgs args) => {
-                    Enqueue(() => value(source, args));
+                _onError = action;
+                //_client.OnError = null; // wipe all registered event handlers.
+                _client.OnError += (object sender, NErrorEventArgs args) => {
+                    action(args);
                 };
-                _onMatchmakeMatched = (EventHandler<NMatchmakeMatchedEventArgs>) Delegate.Combine(_onMatchmakeMatched, handler);
             }
-            remove {
-                // FIXME does it work?
-                _onMatchmakeMatched = (EventHandler<NMatchmakeMatchedEventArgs>) Delegate.Remove(_onMatchmakeMatched, value);
+        }
+
+        private Action<NMatchmakeMatchedEventArgs> _onMatchmakeMatched;
+        public Action<NMatchmakeMatchedEventArgs> OnMatchmakeMatched
+        {
+            get {
+                return _onMatchmakeMatched;
             }
-        }*/
-
-        //private EventHandler<NMatchDataEventArgs> _onMatchData;
-
-        public event EventHandler<NMatchDataEventArgs> OnMatchData; /*{
-            add {
-                var handler = (object source, NMatchDataEventArgs args) => {
-                    Enqueue(() => value(source, args));
+            set {
+                Action<NMatchmakeMatchedEventArgs> action = delegate(NMatchmakeMatchedEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
                 };
-                _onMatchData = (EventHandler<NMatchDataEventArgs>) Delegate.Combine(_onMatchData, handler);
-            }
-            remove {
-                // FIXME does it work?
-                _onMatchData = (EventHandler<NMatchDataEventArgs>) Delegate.Remove(_onMatchData, value);
-            }
-        }*/
-
-        //private EventHandler<NMatchPresenceEventArgs> _onMatchPresence;
-
-        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence; /*{
-            add {
-                var handler = (object source, NMatchPresenceEventArgs args) => {
-                    Enqueue(() => value(source, args));
+                _onMatchmakeMatched = action;
+                //_client.OnMatchmakeMatched = null; // wipe all registered event handlers.
+                _client.OnMatchmakeMatched += (object sender, NMatchmakeMatchedEventArgs args) => {
+                    action(args);
                 };
-                _onMatchPresence = (EventHandler<NMatchPresenceEventArgs>) Delegate.Combine(_onMatchPresence, handler);
             }
-            remove {
-                // FIXME does it work?
-                _onMatchPresence = (EventHandler<NMatchPresenceEventArgs>) Delegate.Remove(_onMatchPresence, value);
+        }
+
+        private Action<NMatchDataEventArgs> _onMatchData;
+        public Action<NMatchDataEventArgs> OnMatchData
+        {
+            get {
+                return _onMatchData;
             }
-        }*/
-
-        //private EventHandler<NTopicMessageEventArgs> _onTopicMessage;
-
-        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage; /*{
-            add {
-                var handler = (object source, NTopicMessageEventArgs args) => {
-                    Enqueue(() => value(source, args));
+            set {
+                Action<NMatchDataEventArgs> action = delegate(NMatchDataEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
                 };
-                _onTopicMessage = (EventHandler<NTopicMessageEventArgs>) Delegate.Combine(_onTopicMessage, handler);
-            }
-            remove {
-                // FIXME does it work?
-                _onTopicMessage = (EventHandler<NTopicMessageEventArgs>) Delegate.Remove(_onTopicMessage, value);
-            }
-        }*/
-
-        //private EventHandler<NTopicPresenceEventArgs> _onTopicPresence;
-
-        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence; /*{
-            add {
-                var handler = (object source, NTopicPresenceEventArgs args) => {
-                    Enqueue(() => value(source, args));
+                _onMatchData = action;
+                //_client.OnMatchData = null; // wipe all registered event handlers.
+                _client.OnMatchData += (object sender, NMatchDataEventArgs args) => {
+                    action(args);
                 };
-                _onTopicPresence = (EventHandler<NTopicPresenceEventArgs>) Delegate.Combine(_onTopicPresence, handler);
             }
-            remove {
-                // FIXME does it work?
-                _onTopicPresence = (EventHandler<NTopicPresenceEventArgs>) Delegate.Remove(_onTopicPresence, value);
+        }
+
+        private Action<NMatchPresenceEventArgs> _onMatchPresence;
+        public Action<NMatchPresenceEventArgs> OnMatchPresence
+        {
+            get {
+                return _onMatchPresence;
             }
-        }*/
+            set {
+                Action<NMatchPresenceEventArgs> action = delegate(NMatchPresenceEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
+                };
+                _onMatchPresence = action;
+                //_client.OnMatchPresence = null; // wipe all registered event handlers.
+                _client.OnMatchPresence += (object sender, NMatchPresenceEventArgs args) => {
+                    action(args);
+                };
+            }
+        }
+
+        private Action<NTopicMessageEventArgs> _onTopicMessage;
+        public Action<NTopicMessageEventArgs> OnTopicMessage
+        {
+            get {
+                return _onTopicMessage;
+            }
+            set {
+                Action<NTopicMessageEventArgs> action = delegate(NTopicMessageEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
+                };
+                _onTopicMessage = action;
+                //_client.OnTopicMessage = null; // wipe all registered event handlers.
+                _client.OnTopicMessage += (object sender, NTopicMessageEventArgs args) => {
+                    action(args);
+                };
+            }
+        }
+
+        private Action<NTopicPresenceEventArgs> _onTopicPresence;
+        public Action<NTopicPresenceEventArgs> OnTopicPresence
+        {
+            get {
+                return _onTopicPresence;
+            }
+            set {
+                Action<NTopicPresenceEventArgs> action = delegate(NTopicPresenceEventArgs args) {
+                    MainThreadDispatcher.Enqueue(() => value(args));
+                };
+                _onTopicPresence = action;
+                _client.OnTopicPresence = null; // wipe all registered event handlers.
+                _client.OnTopicPresence += (object sender, NTopicPresenceEventArgs args) => {
+                    action(args);
+                };
+            }
+        }
 
         public uint Port { get { return _client.Port; } }
 
@@ -177,11 +206,9 @@ namespace Nakama
 
         private INClient _client;
 
-        public NTDispatchClient(NClient client)
+        public NThreadedClient(NClient client)
         {
             _client = client;
-            _onDisconnectMap = new Dictionary<Delegate, EventHandler>();
-            _onErrorMap = new Dictionary<Delegate, EventHandler<NErrorEventArgs>>();
         }
 
         public void Connect(INSession session)

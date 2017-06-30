@@ -16,6 +16,8 @@
 
 using Nakama;
 using System;
+using System.Collections;
+using UnityEngine;
 
 /// <summary>
 ///  This example demonstrates how to dispatch all action callbacks on the
@@ -30,9 +32,9 @@ public class UnityMainThreadDispatch : MonoBehaviour
     private const bool ServerSsl = false;
 
     // Nakama client.
-    private readonly INClient _client;
+    private readonly NThreadedClient _client;
 
-    // Stores information on the current logged in user.
+    // Store session from the current logged in user.
     private INSession _session;
 
     public UnityMainThreadDispatch()
@@ -43,34 +45,115 @@ public class UnityMainThreadDispatch : MonoBehaviour
                 .Port(ServerPort)
                 .SSL(ServerSsl)
                 .Build();
-        // Wrap the socket thread so we dispatch all callbacks on the main thread.
-        _client = new NTDispatchClient(client);
+        // Wrap the socket client so we dispatch all callbacks on the main thread.
+        _client = new NThreadedClient(client);
+
+        // Attach an error handler for received message errors.
+        _client.OnError = (NErrorEventArgs args) => {
+            ErrorHandler(args.Error);
+        };
+        // Log a message whenever we're disconnected from the server.
+        _client.OnDisconnect = () => {
+            Debug.Log("Disconnected from server.");
+            // We'll set a UI label from the socket.
+            SetLabel("Disconnected.");
+        };
+    }
+
+    private void Awake()
+    {
+        RestoreSessionAndConnect();
+        if (_session == null)
+        {
+            // This will also connect a client.
+            LoginOrRegister();
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (_session != null)
+        {
+            _client.Disconnect();
+        }
+    }
+
+    private void OnGUI()
+    {
+        // Set initial UI.
+        SetLabel("Initial state.");
+    }
+
+    private void Start()
+    {
+        // Wait before disconnect.
+        StartCoroutine(Wait(5, () => _client.Disconnect()));
+    }
+
+    private void RestoreSessionAndConnect()
+    {
+        // Lets check if we can restore a cached session.
+        var session = PlayerPrefs.GetString("nk.session");
+        if (string.IsNullOrEmpty(session))
+        {
+            // We have no session to restore.
+            return;
+        }
+        SessionHandler(NSession.Restore(session));
     }
 
     private void LoginOrRegister()
     {
-        // Lets see if we have a cached id in PlayerPrefs
-        var id = PlayerPrefs.GetString("nkid");
+        // See if we have a cached id in PlayerPrefs.
+        var id = PlayerPrefs.GetString("nk.id");
         if (string.IsNullOrEmpty(id)) {
             // We'll use device ID for the user account. Have a look at the docs
             // for other options: https://heroiclabs.com/docs/development/authentication/
             id = SystemInfo.deviceUniqueIdentifier;
-            // Store the identifier for next game start
-            PlayerPrefs.SetString("nkid", id);
+            // Store the identifier for next game start.
+            PlayerPrefs.SetString("nk.id", id);
         }
 
         var message = NAuthenticateMessage.Device(id);
-        client.Login(message, (INSession session) => {
-            Debug.Log ("Login successful: '{0}'.", session.Token);
-            client.Connect(session);
-        }, (INError error) => {
-            Debug.LogErrorFormat ("Could not login user: '{0}'.", error.Message);
+        _client.Login(message, SessionHandler, (INError error) => {
+            if (error.Message.Equals("ID not found"))
+            {
+                _client.Register(message, SessionHandler, ErrorHandler);
+                return;
+            }
+            Debug.LogErrorFormat("Login error: code '{0}' - '{1}'.", error.Code, error.Message);
         });
     }
 
-    // In this example we'll re-use the same error handler
+    private void SessionHandler(INSession session)
+    {
+        Debug.LogFormat("Session: '{0}'.", session.Token);
+        _session = session;
+        _client.Connect(_session, (bool done) => {
+            Debug.Log("Session connected.");
+            // We'll set a UI label from the socket.
+            SetLabel("Connected.");
+            // Store session for quick reconnects.
+            PlayerPrefs.SetString("nk.session", session.Token);
+        });
+    }
+
+    // In this example we'll re-use the same error handler.
     private static void ErrorHandler(INError error)
     {
-        Debug.LogErrorFormat ("Send error: code '{0}' - '{1}'.", error.Code, error.Message);
+        Debug.LogErrorFormat("Send error: code '{0}' - '{1}'.", error.Code, error.Message);
+    }
+
+    private static void SetLabel(string labelText)
+    {
+        // UI code should only be set on the Unity main thread.
+        GUI.Label(new Rect(10, 10, 400, 20), labelText);
+    }
+
+    // Add a util function for delayed wait.
+    private static IEnumerator Wait(int seconds, Action action)
+    {
+        yield return new WaitForSeconds((float)seconds);
+        action();
     }
 }
