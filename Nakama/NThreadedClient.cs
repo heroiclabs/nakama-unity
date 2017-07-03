@@ -24,10 +24,26 @@ namespace Nakama
     ///  A client for Nakama server which will dispatch all actions on the Unity
     ///  main thread.
     /// </summary>
+    /// <example>
+    /// Wrap a socket client <see cref="NClient"/> so all actions are dispatched
+    /// on the Unity main thread.
+    /// <code>
+    /// public class SomeObject : MonoBehaviour {
+    ///     private NThreadedClient _client;
+    ///
+    ///     private void Start() {
+    ///         var client = NClient.Default("somesecret");
+    ///         _client = new NThreadedClient(client);
+    ///     }
+    ///
+    ///     private void Update() {
+    ///         _client.ExecuteActions();
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
     public class NThreadedClient
     {
-        // NOTE: Not compiled by default; avoids dependency on UnityEngine.
-
         public uint ConnectTimeout { get { return _client.ConnectTimeout; } }
 
         public string Host { get { return _client.Host; } }
@@ -36,23 +52,7 @@ namespace Nakama
 
         public INLogger Logger { get { return _client.Logger; } }
 
-        private Action _onDisconnect;
-        public Action OnDisconnect
-        {
-            get {
-                return _onDisconnect;
-            }
-            set {
-                Action action = delegate() {
-                    MainThreadDispatcher.Enqueue(() => value());
-                };
-                _onDisconnect = action;
-                //_client.OnDisconnect = null; // wipe all registered event handlers
-                _client.OnDisconnect += (object sender, EventArgs args) => {
-                    action();
-                };
-            }
-        }
+        public Action OnDisconnect { get; set; }
 
         // NOTE This code causes an ICE with the Mono/Unity compiler.
         /*
@@ -84,113 +84,17 @@ namespace Nakama
         }
         */
 
-        private Action<NErrorEventArgs> _onError;
-        public Action<NErrorEventArgs> OnError
-        {
-            get {
-                return _onError;
-            }
-            set {
-                Action<NErrorEventArgs> action = delegate(NErrorEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onError = action;
-                //_client.OnError = null; // wipe all registered event handlers.
-                _client.OnError += (object sender, NErrorEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NErrorEventArgs> OnError { get; set; }
 
-        private Action<NMatchmakeMatchedEventArgs> _onMatchmakeMatched;
-        public Action<NMatchmakeMatchedEventArgs> OnMatchmakeMatched
-        {
-            get {
-                return _onMatchmakeMatched;
-            }
-            set {
-                Action<NMatchmakeMatchedEventArgs> action = delegate(NMatchmakeMatchedEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onMatchmakeMatched = action;
-                //_client.OnMatchmakeMatched = null; // wipe all registered event handlers.
-                _client.OnMatchmakeMatched += (object sender, NMatchmakeMatchedEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NMatchmakeMatchedEventArgs> OnMatchmakeMatched { get; set; }
 
-        private Action<NMatchDataEventArgs> _onMatchData;
-        public Action<NMatchDataEventArgs> OnMatchData
-        {
-            get {
-                return _onMatchData;
-            }
-            set {
-                Action<NMatchDataEventArgs> action = delegate(NMatchDataEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onMatchData = action;
-                //_client.OnMatchData = null; // wipe all registered event handlers.
-                _client.OnMatchData += (object sender, NMatchDataEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NMatchDataEventArgs> OnMatchData { get; set; }
 
-        private Action<NMatchPresenceEventArgs> _onMatchPresence;
-        public Action<NMatchPresenceEventArgs> OnMatchPresence
-        {
-            get {
-                return _onMatchPresence;
-            }
-            set {
-                Action<NMatchPresenceEventArgs> action = delegate(NMatchPresenceEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onMatchPresence = action;
-                //_client.OnMatchPresence = null; // wipe all registered event handlers.
-                _client.OnMatchPresence += (object sender, NMatchPresenceEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NMatchPresenceEventArgs> OnMatchPresence { get; set; }
 
-        private Action<NTopicMessageEventArgs> _onTopicMessage;
-        public Action<NTopicMessageEventArgs> OnTopicMessage
-        {
-            get {
-                return _onTopicMessage;
-            }
-            set {
-                Action<NTopicMessageEventArgs> action = delegate(NTopicMessageEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onTopicMessage = action;
-                //_client.OnTopicMessage = null; // wipe all registered event handlers.
-                _client.OnTopicMessage += (object sender, NTopicMessageEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NTopicMessageEventArgs> OnTopicMessage { get; set; }
 
-        private Action<NTopicPresenceEventArgs> _onTopicPresence;
-        public Action<NTopicPresenceEventArgs> OnTopicPresence
-        {
-            get {
-                return _onTopicPresence;
-            }
-            set {
-                Action<NTopicPresenceEventArgs> action = delegate(NTopicPresenceEventArgs args) {
-                    MainThreadDispatcher.Enqueue(() => value(args));
-                };
-                _onTopicPresence = action;
-                _client.OnTopicPresence = null; // wipe all registered event handlers.
-                _client.OnTopicPresence += (object sender, NTopicPresenceEventArgs args) => {
-                    action(args);
-                };
-            }
-        }
+        public Action<NTopicPresenceEventArgs> OnTopicPresence { get; set; }
 
         public uint Port { get { return _client.Port; } }
 
@@ -206,9 +110,58 @@ namespace Nakama
 
         private INClient _client;
 
-        public NThreadedClient(NClient client)
+        private Queue<Action> _executionQueue;
+
+        public NThreadedClient(NClient client) : this(client, 1024)
         {
+        }
+
+        public NThreadedClient(NClient client, int initialSize)
+        {
+            _executionQueue = new Queue<Action>(initialSize);
             _client = client;
+            _client.OnDisconnect += (object sender, EventArgs args) => {
+                if (OnDisconnect != null)
+                {
+                    Enqueue(() => OnDisconnect());
+                }
+            };
+            _client.OnError += (object sender, NErrorEventArgs args) => {
+                if (OnError != null)
+                {
+                    Enqueue(() => OnError(args));
+                }
+            };
+            _client.OnMatchmakeMatched += (object sender, NMatchmakeMatchedEventArgs args) => {
+                if (OnMatchmakeMatched != null)
+                {
+                    Enqueue(() => OnMatchmakeMatched(args));
+                }
+            };
+            _client.OnMatchData += (object sender, NMatchDataEventArgs args) => {
+                if (OnMatchData != null)
+                {
+                    Enqueue(() => OnMatchData(args));
+                }
+            };
+            _client.OnMatchPresence += (object sender, NMatchPresenceEventArgs args) => {
+                if (OnMatchPresence != null)
+                {
+                    Enqueue(() => OnMatchPresence(args));
+                }
+            };
+            _client.OnTopicMessage += (object sender, NTopicMessageEventArgs args) => {
+                if (OnTopicMessage != null)
+                {
+                    Enqueue(() => OnTopicMessage(args));
+                }
+            };
+            _client.OnTopicPresence += (object sender, NTopicPresenceEventArgs args) => {
+                if (OnTopicPresence != null)
+                {
+                    Enqueue(() => OnTopicPresence(args));
+                }
+            };
         }
 
         public void Connect(INSession session)
@@ -219,7 +172,7 @@ namespace Nakama
         public void Connect(INSession session, Action<bool> callback)
         {
             _client.Connect(session, (bool done) => {
-                MainThreadDispatcher.Enqueue(() => callback(done));
+                Enqueue(() => callback(done));
             });
         }
 
@@ -231,16 +184,45 @@ namespace Nakama
         public void Disconnect(Action callback)
         {
             _client.Disconnect(() => {
-                MainThreadDispatcher.Enqueue(() => callback());
+                Enqueue(() => callback());
             });
+        }
+
+        private void Enqueue(Action action)
+        {
+            lock (_executionQueue)
+            {
+                _executionQueue.Enqueue(action);
+
+                // NOTE if client can't keep up we disconnect to prevent memory leaks.
+                if (_executionQueue.Count > 1024)
+                {
+#if UNITY_5
+                    var message = "Queued actions were not executed fast enough so forced client disconnect. Did you add '.ExecuteActions()' inside '.Update()'?";
+                    UnityEngine.Debug.LogError(message);
+#endif
+                    _client.Disconnect();
+                }
+            }
+        }
+
+        public void ExecuteActions()
+        {
+            lock (_executionQueue)
+            {
+                for (int i = 0, l = _executionQueue.Count; i < l; i++)
+                {
+                    _executionQueue.Dequeue()();
+                }
+            }
         }
 
         public void Login(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback)
         {
             _client.Login(message, (INSession session) => {
-                MainThreadDispatcher.Enqueue(() => callback(session));
+                Enqueue(() => callback(session));
             }, (INError error) => {
-                MainThreadDispatcher.Enqueue(() => errback(error));
+                Enqueue(() => errback(error));
             });
         }
 
@@ -252,35 +234,41 @@ namespace Nakama
         public void Logout(Action<bool> callback)
         {
             _client.Logout((bool done) => {
-                MainThreadDispatcher.Enqueue(() => callback(done));
+                Enqueue(() => callback(done));
             });
         }
 
         public void Register(INAuthenticateMessage message, Action<INSession> callback, Action<INError> errback)
         {
             _client.Register(message, (INSession session) => {
-                MainThreadDispatcher.Enqueue(() => callback(session));
+                Enqueue(() => callback(session));
             }, (INError error) => {
-                MainThreadDispatcher.Enqueue(() => errback(error));
+                Enqueue(() => errback(error));
             });
         }
 
         public void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback)
         {
             _client.Send<T>(message, (T result) => {
-                MainThreadDispatcher.Enqueue(() => callback(result));
+                Enqueue(() => callback(result));
             }, (INError error) => {
-                MainThreadDispatcher.Enqueue(() => errback(error));
+                Enqueue(() => errback(error));
             });
         }
 
         public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
         {
             _client.Send(message, (bool done) => {
-                MainThreadDispatcher.Enqueue(() => callback(done));
+                Enqueue(() => callback(done));
             }, (INError error) => {
-                MainThreadDispatcher.Enqueue(() => errback(error));
+                Enqueue(() => errback(error));
             });
+        }
+
+        private static IEnumerator ActionWrapper(Action action)
+        {
+            action();
+            yield return null;
         }
     }
 }

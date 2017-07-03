@@ -90,6 +90,11 @@ public class UnityMainThreadDispatch : MonoBehaviour
         StartCoroutine(Wait(5, () => _client.Disconnect()));
     }
 
+    private void Update()
+    {
+        _client.ExecuteActions();
+    }
+
     private void RestoreSessionAndConnect()
     {
         // Lets check if we can restore a cached session.
