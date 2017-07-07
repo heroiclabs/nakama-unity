@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace Nakama
 {
     public interface INSession
     {
         long CreatedAt { get; }
 
+        long ExpiresAt { get; }
+
+        string Handle { get; }
+
         byte[] Id { get; }
 
         string Token { get; }
+
+        bool HasExpired(DateTime dateTime);
     }
 }

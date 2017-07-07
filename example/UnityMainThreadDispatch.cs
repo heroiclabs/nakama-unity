@@ -95,19 +95,26 @@ public class UnityMainThreadDispatch : MonoBehaviour
 
     private void Update()
     {
+        // This ensures all callbacks are executed on the main thread.
         _client.ExecuteActions();
     }
 
     private void RestoreSessionAndConnect()
     {
         // Lets check if we can restore a cached session.
-        var session = PlayerPrefs.GetString("nk.session");
-        if (string.IsNullOrEmpty(session))
+        var sessionString = PlayerPrefs.GetString("nk.session");
+        if (string.IsNullOrEmpty(sessionString))
         {
             // We have no session to restore.
             return;
         }
-        SessionHandler(NSession.Restore(session));
+        var session = NSession.Restore(sessionString);
+        if (session.HasExpired(DateTime.UtcNow))
+        {
+            // We can't restore an expired session.
+            return;
+        }
+        SessionHandler(session);
     }
 
     private void LoginOrRegister()

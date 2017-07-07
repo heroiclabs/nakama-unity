@@ -8,6 +8,8 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - Cursors can now be serialized and restored.
 - New storage partial update feature.
 - New storage list feature.
+- A new Unity code example which shows how to dispatch actions on the main thread.
+- A session now exposes `.ExpiresAt` and `.Handle` from the token.
 
 ### Changed
 - Added default builder for Notification listing and removal.
@@ -26,7 +28,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 - Accept SSL certificates.
-- Improve handling transport errors. 
+- Improve handling transport errors.
 - Improve fetching global storage records.
 
 ## [0.6.1] - 2017-05-30
