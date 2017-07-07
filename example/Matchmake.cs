@@ -135,10 +135,10 @@ public class Matchmake : MonoBehaviour {
             // The match token is used to join a multiplayer match.
             // Lets accept the match and join it.
             var message = NMatchJoinMessage.Default(args.Matched.Token);
-            _client.Send(message, (INMatch match) => {
-                Debug.Log("Successfully joined match.");
+            _client.Send(message, (INResultSet<INMatch> matches) => {
+                Debug.Log("Successfully joined matches.");
 
-                _match = match;
+                _match = matches.Results[0];
                 // Lets enable the button now that we've joined a match.
                 _matchSendDataButtonEnable = true;
             }, (INError error) => {
