@@ -37,6 +37,8 @@ public class UnityMainThreadDispatch : MonoBehaviour
     // Store session from the current logged in user.
     private INSession _session;
 
+    private string _uiLabelMessage;
+
     public UnityMainThreadDispatch()
     {
         // A new Nakama client which uses a socket thread.
@@ -47,6 +49,7 @@ public class UnityMainThreadDispatch : MonoBehaviour
                 .Build();
         // Wrap the socket client so we dispatch all callbacks on the main thread.
         _client = new NThreadedClient(client);
+        _uiLabelMessage = "Initial state.";
 
         // Attach an error handler for received message errors.
         _client.OnError = (NErrorEventArgs args) => {
@@ -56,7 +59,7 @@ public class UnityMainThreadDispatch : MonoBehaviour
         _client.OnDisconnect = () => {
             Debug.Log("Disconnected from server.");
             // We'll set a UI label from the socket.
-            SetLabel("Disconnected.");
+            _uiLabelMessage = "Disconnected.";
         };
     }
 
@@ -81,13 +84,13 @@ public class UnityMainThreadDispatch : MonoBehaviour
     private void OnGUI()
     {
         // Set initial UI.
-        SetLabel("Initial state.");
+        SetLabel(_uiLabelMessage);
     }
 
     private void Start()
     {
-        // Wait before disconnect.
-        StartCoroutine(Wait(5, () => _client.Disconnect()));
+        // Wait before we force a disconnect.
+        StartCoroutine(Wait(10, () => _client.Disconnect()));
     }
 
     private void Update()
@@ -137,7 +140,7 @@ public class UnityMainThreadDispatch : MonoBehaviour
         _client.Connect(_session, (bool done) => {
             Debug.Log("Session connected.");
             // We'll set a UI label from the socket.
-            SetLabel("Connected.");
+            _uiLabelMessage = "Connected.";
             // Store session for quick reconnects.
             PlayerPrefs.SetString("nk.session", session.Token);
         });
