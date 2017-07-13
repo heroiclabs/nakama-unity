@@ -71,9 +71,9 @@ namespace Nakama.Tests
                         .Lang("fa")
                         .Private(PrivateGroup)
                         .Build();
-                client2.Send(message, (INGroup group) =>
+                client2.Send(message, (INResultSet<INGroup> result) =>
                 {
-                    FriendGroup = group;
+                    FriendGroup = result.Results[0];
                     client2.Logout();
                 }, (INError err) => {
                     error = err;
@@ -125,9 +125,9 @@ namespace Nakama.Tests
                     .Lang("en")
                     .Private(PrivateGroup)
                     .Build();
-            client.Send(message, (INGroup group) =>
+            client.Send(message, (INResultSet<INGroup> result) =>
             {
-                myGroup = group;
+                myGroup = result.Results[0];
                 evt.Set();
             }, (INError err) =>
             {

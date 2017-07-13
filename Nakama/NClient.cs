@@ -373,9 +373,6 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INFriend>(friends, null));
                     break;
-                case Envelope.PayloadOneofCase.Group:
-                    pair.Key(new NGroup(message.Group.Group));
-                    break;
                 case Envelope.PayloadOneofCase.GroupUsers:
                     var groupUsers = new List<INGroupUser>();
                     foreach (var groupUser in message.GroupUsers.Users)

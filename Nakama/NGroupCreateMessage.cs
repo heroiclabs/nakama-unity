@@ -22,7 +22,7 @@ using Google.Protobuf;
 
 namespace Nakama
 {
-    public class NGroupCreateMessage : INCollatedMessage<INGroup>
+    public class NGroupCreateMessage : INCollatedMessage<INResultSet<INGroup>>
     {
         private Envelope payload;
         public IMessage Payload {
