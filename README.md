@@ -32,6 +32,16 @@ public class NewBehaviourScript : MonoBehaviour {
 }
 ```
 
+### Build Settings for Android
+
+Nakama Unity Client requires the full .Net 2.0 runtime. In Unity Build Settings window, change API Compatibility Level to .Net 2.0.
+
+In addition to above, you'll need to change Stripping Level to either "Disabled" or "Strip Assemblies".
+
+### Build Settings for iOS
+
+Nakama Unity Client requires the full .Net 2.0 runtime. In Unity Build Settings window, change API Compatibility Level to .Net 2.0.
+
 ### Contribute
 
 To build the codebase you will need to install these dependencies:
