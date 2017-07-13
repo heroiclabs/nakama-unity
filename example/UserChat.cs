@@ -5,7 +5,7 @@ using Nakama;
 using System.Text;
 using System;
 
-public class DemoScene : MonoBehaviour {
+public class UserChat : MonoBehaviour {
 
 	private readonly string EMAIL = "email@example.com";
 	private readonly string PASSWORD = "SOME_VERY_SECURE_PASSWORD";
