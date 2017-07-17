@@ -32,11 +32,6 @@ namespace Nakama
         {
             payload = new Envelope {NotificationsList = new TNotificationsList()};
         }
-        
-        private NNotificationsListMessage(TNotificationsList notificationsList)
-        {
-            payload = new Envelope {NotificationsList = notificationsList};
-        }
 
         public void SetCollationId(string id)
         {
