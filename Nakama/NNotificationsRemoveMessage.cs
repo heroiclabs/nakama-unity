@@ -58,9 +58,19 @@ namespace Nakama
         {
             private NNotificationsRemoveMessage message;
 
-            public Builder()
+            public Builder(byte[] notificationId)
             {
                 message = new NNotificationsRemoveMessage();
+                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(notificationId));
+            }
+            
+            public Builder(params byte[][] notificationId)
+            {
+                message = new NNotificationsRemoveMessage();
+                foreach (var n in notificationId)
+                {
+                    message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
+                }
             }
 
             public Builder Remove(byte[] notificationId)

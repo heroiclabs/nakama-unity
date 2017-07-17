@@ -41,6 +41,8 @@ namespace Nakama
         event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
 
         event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+        
+        event EventHandler<NNotificationEventArgs> OnNotification;
 
         uint Port { get; }
 
