@@ -3,20 +3,20 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.7.0] - 2017-07-18
 ### Added
 - A new Unity example scene which shows how to matchmake users.
 - New `NIds` helper class and extension methods to compare byte arrays.
 - Add new In-App Notification feature.
 - Add new In-App Purchase Validation feature.   
 
+### Changed
+- Update client to support the new batch-orientated server protocol.
+
 ### Fixed
 - Accept SSL certificates.
 - Improve handling transport errors. 
-- Improve fetching global storage data.
-
-### Changed
-- Update Client to support the new batching API.
+- Improve fetching global storage records.
 
 ## [0.6.1] - 2017-05-30
 ### Changed
