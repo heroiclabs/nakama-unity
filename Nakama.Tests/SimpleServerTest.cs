@@ -57,7 +57,7 @@ namespace Nakama.Tests
         {
             var request  = setupRequest();
             var response = extractBadResponse(request);
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode, response.StatusDescription);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode, response.StatusDescription);
         }
 
         private static HttpWebRequest setupRequest()

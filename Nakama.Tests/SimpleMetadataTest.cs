@@ -67,8 +67,8 @@ namespace Nakama
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, response.StatusDescription);
             Assert.That(result, Contains.Substring("name"));
             Assert.That(result, Contains.Substring("port"));
-            Assert.That(result, Contains.Substring("ops_port"));
-            Assert.That(result, Contains.Substring("dsns"));
+            Assert.That(result, Contains.Substring("dashboard_port"));
+            Assert.That(result, Contains.Substring("db"));
         }
 
         [Test]
