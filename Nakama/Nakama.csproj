@@ -50,7 +50,15 @@
     <Compile Include="INMatchmakeMatched.cs" />
     <Compile Include="INMatchmakeTicket.cs" />
     <Compile Include="INMatchToken.cs" />
+    <Compile Include="INNotification.cs" />
+    <Compile Include="INPurchaseRecord.cs" />
     <Compile Include="INRuntimeRpc.cs" />
+    <Compile Include="NNotification.cs" />
+    <Compile Include="NNotificationEventArgs.cs" />
+    <Compile Include="NNotificationsRemoveMessage.cs" />
+    <Compile Include="NNotificationsListMessage.cs" />
+    <Compile Include="NPurchaseValidateMessage.cs" />
+    <Compile Include="NPurchaseRecord.cs" />
     <Compile Include="NRuntimeRpc.cs" />
     <Compile Include="NRuntimeRpcMessage.cs" />
     <Compile Include="INStorageKey.cs" />

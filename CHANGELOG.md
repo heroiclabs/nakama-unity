@@ -7,6 +7,8 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Added
 - A new Unity example scene which shows how to matchmake users.
 - New `NIds` helper class and extension methods to compare byte arrays.
+- Add new In-App Notification feature.
+- Add new In-App Purchase Validation feature.   
 
 ### Fixed
 - Accept SSL certificates.

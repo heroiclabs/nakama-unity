@@ -50,6 +50,8 @@ namespace Nakama
         public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
 
         public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+        
+        public event EventHandler<NNotificationEventArgs> OnNotification;
 
         public uint Port { get; private set; }
 
@@ -340,6 +342,15 @@ namespace Nakama
                         OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
                     }
                     return;
+                case Envelope.PayloadOneofCase.LiveNotifications:
+                    if (OnNotification != null)
+                    {
+                        foreach (var n in message.LiveNotifications.Notifications_)
+                        {
+                            OnNotification(this, new NNotificationEventArgs(new NNotification(n)));   
+                        }
+                    }
+                    return;
             }
 
             var collationId = message.CollationId;
@@ -469,6 +480,15 @@ namespace Nakama
                     break;
                 case Envelope.PayloadOneofCase.Rpc:
                     pair.Key(new NRuntimeRpc(message.Rpc));
+                    break;
+                case Envelope.PayloadOneofCase.Notifications:
+                    var notifications = new List<INNotification>();
+                    foreach (var n in message.Notifications.Notifications)
+                    {
+                        notifications.Add(new NNotification(n));
+                    }
+                    var resumableCursor = message.Notifications.ResumableCursor == null ? null : new NCursor(message.Notifications.ResumableCursor.ToByteArray());
+                    pair.Key(new NResultSet<INNotification>(notifications, resumableCursor));
                     break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized protocol message: {0}", message);

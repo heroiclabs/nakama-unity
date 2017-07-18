@@ -45,6 +45,8 @@
     <Compile Include="MatchmakeTest.cs" />
     <Compile Include="MatchTest.cs" />
     <Compile Include="NIdsTest.cs" />
+    <Compile Include="NotificationTest.cs" />
+    <Compile Include="PurchaseTest.cs" />
     <Compile Include="RuntimeTest.cs" />
     <Compile Include="SelfTest.cs" />
     <Compile Include="SimpleMetadataTest.cs" />
