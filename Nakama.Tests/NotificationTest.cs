@@ -95,7 +95,7 @@ namespace Nakama.Tests
             INResultSet<INNotification> res = null;
             INError error = null;
 
-            var message = new NNotificationsListMessage.Builder().Limit(10).Build();
+            var message = NNotificationsListMessage.Default(10);
             client.Send(message, (INResultSet<INNotification> results) =>
             {
                 res = results;
@@ -125,7 +125,7 @@ namespace Nakama.Tests
             {
                 ids.Add(n.Id);
             }
-            var message = new NNotificationsRemoveMessage.Builder(ids.ToArray()).Build();
+            var message = NNotificationsRemoveMessage.Default(ids);
             client.Send(message, (bool results) =>
             {
                 evt.Set();

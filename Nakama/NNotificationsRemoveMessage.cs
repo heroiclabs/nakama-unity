@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 
@@ -54,39 +55,26 @@ namespace Nakama
             return String.Format("NNotificationsRemoveMessage(NotificationIds={0})", output);
         }
 
-        public class Builder
+        public static NNotificationsRemoveMessage Default(params byte[][] notificationIds)
         {
-            private NNotificationsRemoveMessage message;
-
-            public Builder(byte[] notificationId)
+            var message = new NNotificationsRemoveMessage();
+            foreach (var n in notificationIds)
             {
-                message = new NNotificationsRemoveMessage();
-                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(notificationId));
-            }
-            
-            public Builder(params byte[][] notificationId)
-            {
-                message = new NNotificationsRemoveMessage();
-                foreach (var n in notificationId)
-                {
-                    message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
-                }
+                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
             }
 
-            public Builder Remove(byte[] notificationId)
+            return message;
+        }
+        
+        public static NNotificationsRemoveMessage Default(IEnumerable<byte[]> notificationIds)
+        {
+            var message = new NNotificationsRemoveMessage();
+            foreach (var n in notificationIds)
             {
-                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(notificationId));
-                return this;
+                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
             }
 
-            public NNotificationsRemoveMessage Build()
-            {
-                // Clone object so builder now operates on new copy.
-                var original = message;
-                message = new NNotificationsRemoveMessage();
-                message.payload.NotificationsRemove = new TNotificationsRemove(original.payload.NotificationsRemove);
-                return original;
-            }
+            return message;
         }
     }
 }

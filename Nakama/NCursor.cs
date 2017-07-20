@@ -27,6 +27,16 @@ namespace Nakama
             Value = cursor;
         }
 
+        public string Serialise()
+        {
+            return Convert.ToBase64String(Value);
+        }
+
+        public void Restore(string cursor)
+        {
+            Value = Convert.FromBase64String(cursor);
+        }
+
         public override string ToString()
         {
             return String.Format("NCursor(Value={0})", Value);

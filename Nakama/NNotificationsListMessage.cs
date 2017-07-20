@@ -45,22 +45,22 @@ namespace Nakama
             return String.Format(f, p.Limit, p.ResumableCursor);
         }
 
+        public static NNotificationsListMessage Default(long limit)
+        {
+            return new Builder(limit).Build();
+        }
+        
         public class Builder
         {
             private NNotificationsListMessage message;
 
-            public Builder()
+            public Builder(long limit)
             {
                 message = new NNotificationsListMessage();
+                message.payload.NotificationsList.Limit = limit;
             }
 
-            public Builder Limit(long limit)
-            {
-                message.payload.NotificationsList.Limit = limit;
-                return this;
-            }
-            
-            public Builder ResumableCursor(byte[] resumableCursor)
+            public Builder Cursor(byte[] resumableCursor)
             {
                 message.payload.NotificationsList.ResumableCursor = ByteString.CopyFrom(resumableCursor);
                 return this;

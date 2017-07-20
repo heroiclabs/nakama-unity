@@ -4,6 +4,11 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Cursors can now be serialized and restored. 
+
+### Changed
+- Added default builder for Notification listing and removal.
 
 ## [0.7.0] - 2017-07-18
 ### Added
