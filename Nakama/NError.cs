@@ -22,6 +22,7 @@ namespace Nakama
     internal class NError : INError
     {
         public ErrorCode Code { get; private set; }
+        public int eCode { get; private set; }
         public string Message { get; private set; }
 
         internal NError(AuthenticateResponse.Types.Error error)
@@ -53,6 +54,12 @@ namespace Nakama
         internal NError(string message)
         {
             Code = ErrorCode.Unknown;
+            Message = message;
+        }
+
+        internal NError(int code, string message)
+        {
+            eCode = code;
             Message = message;
         }
 
