@@ -196,10 +196,10 @@ namespace Nakama.Tests
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
-            INResultSet<INGroup> groups = null;
+            INResultSet<INGroupSelf> groups = null;
 
             var message = NGroupsSelfListMessage.Default();
-            client.Send(message, (INResultSet<INGroup> results) =>
+            client.Send(message, (INResultSet<INGroupSelf> results) =>
             {
                 groups = results;
                 evt.Set();
@@ -216,6 +216,7 @@ namespace Nakama.Tests
             Assert.AreEqual(1, groups.Results.Count);
             Assert.NotNull(groups.Results[0]);
             Assert.AreEqual(groups.Results[0].Id, myGroup.Id);
+            Assert.AreNotEqual(groups.Results[0].State, 2);
             // Defined earlier on in GroupUpdate test
             Assert.AreEqual(groups.Results[0].AvatarUrl, GroupDescription);
         }

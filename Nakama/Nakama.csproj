@@ -148,6 +148,7 @@
     <Compile Include="NStorageData.cs" />
     <Compile Include="NStorageFetchMessage.cs" />
     <Compile Include="NStorageKey.cs" />
+    <Compile Include="NStorageListMessage.cs" />
     <Compile Include="NStorageRemoveMessage.cs" />
     <Compile Include="NStorageWriteMessage.cs" />
     <Compile Include="NTopic.cs" />
