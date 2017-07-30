@@ -400,6 +400,14 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
                     break;
+                case Envelope.PayloadOneofCase.GroupsSelfList:
+                    var groupsSelf = new List<INGroupSelf>();
+                    foreach (var gs in message.GroupsSelf.GroupsSelf)
+                    {
+                        groupsSelf.Add(new NGroupSelf(gs));
+                    }
+                    pair.Key(new NResultSet<INGroupSelf>(groupsSelf, null));
+                    break;    
                 case Envelope.PayloadOneofCase.MatchmakeTicket:
                     pair.Key(new NMatchmakeTicket(message.MatchmakeTicket));
                     break;

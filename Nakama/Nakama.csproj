@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
+    <Compile Include="INGroupSelf.cs" />
     <Compile Include="INGroupUser.cs" />
     <Compile Include="INLeaderboard.cs" />
     <Compile Include="INLeaderboardRecord.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="INNotification.cs" />
     <Compile Include="INPurchaseRecord.cs" />
     <Compile Include="INRuntimeRpc.cs" />
+    <Compile Include="NGroupSelf.cs" />
     <Compile Include="NNotification.cs" />
     <Compile Include="NNotificationEventArgs.cs" />
     <Compile Include="NNotificationsRemoveMessage.cs" />

@@ -16,10 +16,10 @@
 
 namespace Nakama
 {
-    public enum UserType : uint { Admin = 0, Member, Join }
+    public enum UserState : uint { Admin = 0, Member, Join }
 
     public interface INGroupUser : INUser
     {
-        UserType Type{ get; }
+        UserState State { get; }
     }
 }
