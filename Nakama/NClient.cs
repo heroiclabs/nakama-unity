@@ -400,7 +400,7 @@ namespace Nakama
                     }
                     pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
                     break;
-                case Envelope.PayloadOneofCase.GroupsSelfList:
+                case Envelope.PayloadOneofCase.GroupsSelf:
                     var groupsSelf = new List<INGroupSelf>();
                     foreach (var gs in message.GroupsSelf.GroupsSelf)
                     {
