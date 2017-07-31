@@ -232,18 +232,19 @@ namespace Nakama
                 return this;
             }
             
-            // TODO complete this 
-            public StorageUpdateBuilder Patch (string path, bool conditional, byte[] value)
-            {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
-                {
-                    Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Patch),
-                    Path = path,
-                    Conditional = conditional,
-                    Value = ByteString.CopyFrom(value)
-                });
-                return this;
-            }
+//            // TODO complete this 
+//            public StorageUpdateBuilder Patch (string path, bool conditional, byte[] value)
+//            {
+//                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
+//                {
+//                    Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Patch),
+//                    Path = path,
+//                    Conditional = conditional,
+//                    Value = ByteString.CopyFrom(value)
+//                });
+//                return this;
+//            }
+            
             public StorageUpdateBuilder Remove (string path)
             {
                 ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
