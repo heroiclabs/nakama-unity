@@ -16,8 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Google.Protobuf;
-using Google.Protobuf.Collections;
 
 namespace Nakama
 {
@@ -59,12 +59,6 @@ namespace Nakama
             {
                 message = new NStorageUpdateMessage();
             }
-            
-            public Builder(string bucket, string collection, string record, StoragePermissionRead readPermission, StoragePermissionWrite writePermission, byte[] version)
-            {
-                message = new NStorageUpdateMessage();
-                
-            }
 
             public NStorageUpdateMessage Build()
             {
@@ -80,7 +74,7 @@ namespace Nakama
             {
                 var update = new TStorageUpdate.Types.StorageUpdate
                 {
-                    Key = new TStorageUpdate.Types.StorageUpdate.Types.StorageKey()
+                    Key = new TStorageUpdate.Types.StorageUpdate.Types.StorageKey
                     {
                         Bucket = bucket,
                         Collection = collection,
@@ -97,7 +91,7 @@ namespace Nakama
             {
                 var update = new TStorageUpdate.Types.StorageUpdate
                 {
-                    Key = new TStorageUpdate.Types.StorageUpdate.Types.StorageKey()
+                    Key = new TStorageUpdate.Types.StorageUpdate.Types.StorageKey
                     {
                         Bucket = bucket,
                         Collection = collection,
@@ -116,7 +110,13 @@ namespace Nakama
 
         public class StorageUpdateBuilder
         {
-            private List<TStorageUpdate.Types.StorageUpdate.Types.UpdateOp> ops = new List<TStorageUpdate.Types.StorageUpdate.Types.UpdateOp>();
+            private List<TStorageUpdate.Types.StorageUpdate.Types.UpdateOp> ops;
+            
+            public StorageUpdateBuilder()
+            {
+                ops = new List<TStorageUpdate.Types.StorageUpdate.Types.UpdateOp>();
+            }
+            
             public List<TStorageUpdate.Types.StorageUpdate.Types.UpdateOp> Build()
             {
                 return ops;
@@ -155,9 +155,9 @@ namespace Nakama
                 }
             }
 
-            public StorageUpdateBuilder Add(string path, byte[] value)
+            public StorageUpdateBuilder Add (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Add),
                     Path = path,
@@ -166,9 +166,9 @@ namespace Nakama
                 return this;
             }
             
-            public StorageUpdateBuilder Append(string path, byte[] value)
+            public StorageUpdateBuilder Append (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Append),
                     Path = path,
@@ -177,31 +177,31 @@ namespace Nakama
                 return this;
             }
             
-            public StorageUpdateBuilder Copy(string from, string path)
+            public StorageUpdateBuilder Copy (string from, string path)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Copy),
                     From = from,
-                    Path = path,
+                    Path = path
                 });
                 return this;
             }
             
-            public StorageUpdateBuilder Incr(string path, long value)
+            public StorageUpdateBuilder Incr (string path, long value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Incr),
                     Path = path,
-                    Value = ByteString.CopyFrom(BitConverter.GetBytes(value))
+                    Value = ByteString.CopyFrom(Encoding.UTF8.GetBytes(value.ToString()))
                 });
                 return this;
             }
             
-            public StorageUpdateBuilder Init(string path, byte[] value)
+            public StorageUpdateBuilder Init (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Init),
                     Path = path,
@@ -210,9 +210,9 @@ namespace Nakama
                 return this;
             }
             
-            public StorageUpdateBuilder Merge(string path, byte[] value)
+            public StorageUpdateBuilder Merge (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Merge),
                     Path = path,
@@ -221,21 +221,21 @@ namespace Nakama
                 return this;
             }
             
-            public StorageUpdateBuilder Move(string from, string path)
+            public StorageUpdateBuilder Move (string from, string path)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Move),
                     From = from,
-                    Path = path,
+                    Path = path
                 });
                 return this;
             }
             
             // TODO complete this 
-            public StorageUpdateBuilder Patch(string path, bool conditional, byte[] value)
+            public StorageUpdateBuilder Patch (string path, bool conditional, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Patch),
                     Path = path,
@@ -244,19 +244,19 @@ namespace Nakama
                 });
                 return this;
             }
-            public StorageUpdateBuilder Remove(string path)
+            public StorageUpdateBuilder Remove (string path)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Remove),
-                    Path = path,
+                    Path = path
                 });
                 return this;
             }
             
-            public StorageUpdateBuilder Replace(string path, byte[] value)
+            public StorageUpdateBuilder Replace (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Replace),
                     Path = path,
@@ -264,9 +264,9 @@ namespace Nakama
                 });
                 return this;
             }
-            public StorageUpdateBuilder Test(string path, byte[] value)
+            public StorageUpdateBuilder Test (string path, byte[] value)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Test),
                     Path = path,
@@ -274,9 +274,9 @@ namespace Nakama
                 });
                 return this;
             }
-            public StorageUpdateBuilder Compare(string path, byte[] value, long assert)
+            public StorageUpdateBuilder Compare (string path, byte[] value, long assert)
             {
-                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp()
+                ops.Add(new TStorageUpdate.Types.StorageUpdate.Types.UpdateOp
                 {
                     Op = GetOpCode(TStorageUpdate.Types.StorageUpdate.Types.UpdateOp.Types.UpdateOpCode.Compare),
                     Path = path,

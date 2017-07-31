@@ -206,7 +206,39 @@ namespace Nakama.Tests
             Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
         
-        [Test, Order(4)]
+        [Test, Order(5)]
+        public void UpdateStorage()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            INResultSet<INStorageKey> res = null;
+
+            var jsonString = "{\"coins\": 100, \"gems\": 10, \"artifacts\": 0}";
+            byte[] json = Encoding.UTF8.GetBytes(jsonString);
+            
+            var message = new NStorageUpdateMessage.Builder()
+                .Update(Bucket, Collection, Record, new NStorageUpdateMessage.StorageUpdateBuilder()
+                    .Init("/foo", json)     // make sure record is setup.
+                    .Incr("/foo/coins", -10) // perform other updates to the record.
+                    .Build())
+                .Build();
+            client.Send(message, (INResultSet<INStorageKey> results) =>
+            {
+                res = results;
+                evt.Set();
+            }, (INError err) => {
+                
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsNotNull(res);
+            Assert.IsNotEmpty(res.Results);
+            Assert.AreEqual(Bucket, res.Results[0].Bucket);
+            Assert.AreEqual(Collection, res.Results[0].Collection);
+            Assert.AreEqual(Record, res.Results[0].Record);
+        }
+        
+        [Test, Order(6)]
         public void ListStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -240,7 +272,7 @@ namespace Nakama.Tests
             Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
 
-        [Test, Order(6)]
+        [Test, Order(7)]
         public void RemoveStorageInvalidIfMatch()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -265,7 +297,7 @@ namespace Nakama.Tests
             Assert.AreEqual("Storage remove rejected: not found, version check failed, or permission denied", error.Message);
         }
 
-        [Test, Order(7)]
+        [Test, Order(8)]
         public void RemoveStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -285,7 +317,7 @@ namespace Nakama.Tests
             Assert.IsTrue(committed);
         }
         
-        [Test, Order(8)]
+        [Test, Order(9)]
         public void WritePublicStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -310,7 +342,7 @@ namespace Nakama.Tests
             Assert.AreEqual(Record, res.Results[0].Record);
         }
         
-        [Test, Order(9)]
+        [Test, Order(10)]
         public void ReadPublicStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -342,7 +374,7 @@ namespace Nakama.Tests
             Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
         
-        [Test, Order(10)]
+        [Test, Order(11)]
         public void ReadPublicStorageOtherUsers()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -384,7 +416,7 @@ namespace Nakama.Tests
             Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
         
-        [Test, Order(11)]
+        [Test, Order(12)]
         public void RemovePublicStorage()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
