@@ -28,7 +28,7 @@ namespace Nakama
 
         INLogger Logger { get; }
 
-        event EventHandler OnDisconnect;
+        event EventHandler<NDisconnectEventArgs> OnDisconnect;
 
         event EventHandler<NErrorEventArgs> OnError;
 
@@ -41,7 +41,7 @@ namespace Nakama
         event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
 
         event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
-        
+
         event EventHandler<NNotificationEventArgs> OnNotification;
 
         uint Port { get; }

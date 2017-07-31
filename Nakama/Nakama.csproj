@@ -99,6 +99,7 @@
     <Compile Include="NAuthenticateMessage.cs" />
     <Compile Include="NClient.cs" />
     <Compile Include="NConsoleLogger.cs" />
+    <Compile Include="NDisconnectEventArgs.cs" />
     <Compile Include="NError.cs" />
     <Compile Include="NErrorEventArgs.cs" />
     <Compile Include="NExtensionMethods.cs" />

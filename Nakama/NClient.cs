@@ -37,7 +37,7 @@ namespace Nakama
 
         public INLogger Logger { get; private set; }
 
-        public event EventHandler OnDisconnect;
+        public event EventHandler<NDisconnectEventArgs> OnDisconnect;
 
         public event EventHandler<NErrorEventArgs> OnError;
 
@@ -50,7 +50,7 @@ namespace Nakama
         public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
 
         public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
-        
+
         public event EventHandler<NNotificationEventArgs> OnNotification;
 
         public uint Port { get; private set; }
@@ -123,10 +123,10 @@ namespace Nakama
 
             transport.Logger = Logger;
             transport.Trace = Trace;
-            transport.OnClose += (sender, _) =>
+            transport.OnClose += (sender, args) =>
             {
                 collationIds.Clear();
-                OnDisconnect.Emit(this, EventArgs.Empty);
+                OnDisconnect.Emit(this, new NDisconnectEventArgs(args.Code, args.Reason));
             };
             transport.OnMessage += (sender, m) =>
             {
@@ -347,7 +347,7 @@ namespace Nakama
                     {
                         foreach (var n in message.LiveNotifications.Notifications_)
                         {
-                            OnNotification(this, new NNotificationEventArgs(new NNotification(n)));   
+                            OnNotification(this, new NNotificationEventArgs(new NNotification(n)));
                         }
                     }
                     return;
@@ -407,7 +407,7 @@ namespace Nakama
                         groupsSelf.Add(new NGroupSelf(gs));
                     }
                     pair.Key(new NResultSet<INGroupSelf>(groupsSelf, null));
-                    break;    
+                    break;
                 case Envelope.PayloadOneofCase.MatchmakeTicket:
                     pair.Key(new NMatchmakeTicket(message.MatchmakeTicket));
                     break;
