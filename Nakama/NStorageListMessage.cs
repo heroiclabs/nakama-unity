@@ -15,9 +15,7 @@
  */
 
 using System;
-using System.Runtime.Remoting.Messaging;
 using Google.Protobuf;
-using IMessage = Google.Protobuf.IMessage;
 
 namespace Nakama
 {

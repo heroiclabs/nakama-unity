@@ -205,7 +205,7 @@ namespace Nakama.Tests
             Assert.AreEqual(Record, storageData.Results[0].Record);
             Assert.AreEqual(StorageValue, storageData.Results[0].Value);
         }
-        
+
         [Test, Order(5)]
         public void UpdateStorage()
         {
