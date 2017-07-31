@@ -150,6 +150,7 @@
     <Compile Include="NStorageKey.cs" />
     <Compile Include="NStorageListMessage.cs" />
     <Compile Include="NStorageRemoveMessage.cs" />
+    <Compile Include="NStorageUpdateMessage.cs" />
     <Compile Include="NStorageWriteMessage.cs" />
     <Compile Include="NTopic.cs" />
     <Compile Include="NTopicId.cs" />
