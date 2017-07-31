@@ -23,23 +23,20 @@ namespace Nakama
         MissingPayload,
         BadInput,
         AuthError,
-        UserNotFound,
-        UserRegisterInuse,
         UserLinkInuse,
         UserLinkProviderUnavailable,
-        UserUnlinkDisallowed,
+        UserLinkDisallowed,
         UserHandleInuse,
         GroupNameInuse,
         GroupLastAdmin,
         StorageRejected,
-        MatchNotFound,
-        RuntimeFunctionNotFound,
-        RuntimeFunctionException
+        MatchNotFound
     }
 
     public interface INError
     {
         ErrorCode Code { get; }
+        int eCode { get; }
         string Message { get; }
     }
 }

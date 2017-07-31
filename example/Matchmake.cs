@@ -102,7 +102,8 @@ public class Matchmake : MonoBehaviour {
 
     private void RegisterAndConnect() {
         // Lets log a message whenever we're disconnected from the server.
-        _client.OnDisconnect += (object sender, EventArgs args) => {
+        _client.OnDisconnect += (object sender, NDisconnectErrorEventArgs args) =>
+        {
             Debug.Log("Disconnected from the server.");
         };
 
