@@ -135,7 +135,7 @@ namespace Nakama
             }
         }
 
-        private static int GetReadPermission(StoragePermissionRead readPermission)
+        internal static int GetReadPermission(StoragePermissionRead readPermission)
         {
             switch (readPermission)
             {
@@ -150,7 +150,7 @@ namespace Nakama
             }
         }
 
-        private static int GetWritePermission(StoragePermissionWrite writePermission)
+        internal static int GetWritePermission(StoragePermissionWrite writePermission)
         {
             switch (writePermission)
             {

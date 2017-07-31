@@ -31,7 +31,7 @@ namespace Nakama
         public byte[] Metadata { get; private set; }
         public string Timezone { get; private set; }
         public long UpdatedAt { get; private set; }
-        public UserType Type { get; private set; }
+        public UserState State { get; private set; }
 
         internal NGroupUser (GroupUser message)
         {
@@ -47,16 +47,16 @@ namespace Nakama
             Timezone = message.User.Timezone;
             UpdatedAt = message.User.UpdatedAt;
 
-            switch (message.Type)
+            switch (message.State)
             {
                 case 0:
-                    Type = UserType.Admin;
+                    State = UserState.Admin;
                     break;
                 case 1:
-                    Type = UserType.Member;
+                    State = UserState.Member;
                     break;
                 case 2:
-                    Type = UserType.Join;
+                    State = UserState.Join;
                     break;
             }
         }
@@ -64,9 +64,9 @@ namespace Nakama
         public override string ToString()
         {
             var f = "NGroupUser(AvatarUrl={0},CreatedAt={1},Fullname={2},Handle={3},Id={4},Lang={5}," +
-                    "LastOnlineAt={6},Location={7},Metadata={8},Timezone={9},UpdatedAt={10},Type={11})";
+                    "LastOnlineAt={6},Location={7},Metadata={8},Timezone={9},UpdatedAt={10},State={11})";
             return String.Format(f, AvatarUrl, CreatedAt, Fullname, Handle, Id, Lang, LastOnlineAt,
-                Location, Metadata, Timezone, UpdatedAt, Type);
+                Location, Metadata, Timezone, UpdatedAt, State);
         }
 
     }

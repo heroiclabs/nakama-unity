@@ -47,7 +47,7 @@ namespace Nakama
             Timezone = message.User.Timezone;
             UpdatedAt = message.User.UpdatedAt;
 
-            switch (message.Type)
+            switch (message.State)
             {
                 case 0:
                     State = FriendState.Friend;
