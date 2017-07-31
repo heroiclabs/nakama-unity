@@ -5,10 +5,14 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Added
-- Cursors can now be serialized and restored. 
+- Cursors can now be serialized and restored.
+- New storage partial update feature.
+- New storage list feature.
 
 ### Changed
 - Added default builder for Notification listing and removal.
+- Group self list operations now return the user's membership type to each group.
+- Group leave operations now return a specific error code when the last admin attempts to leave.
 
 ## [0.7.0] - 2017-07-18
 ### Added

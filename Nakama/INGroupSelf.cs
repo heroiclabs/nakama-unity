@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,30 +16,10 @@
 
 namespace Nakama
 {
-    public enum ErrorCode : uint {
-        Unknown = 0,
-        RuntimeException,
-        UnrecognizedPayload,
-        MissingPayload,
-        BadInput,
-        AuthError,
-        UserNotFound,
-        UserRegisterInuse,
-        UserLinkInuse,
-        UserLinkProviderUnavailable,
-        UserUnlinkDisallowed,
-        UserHandleInuse,
-        GroupNameInuse,
-        GroupLastAdmin,
-        StorageRejected,
-        MatchNotFound,
-        RuntimeFunctionNotFound,
-        RuntimeFunctionException
-    }
-
-    public interface INError
+    public enum GroupState : uint { Admin = 0, Member, Join }
+    
+    public interface INGroupSelf : INGroup
     {
-        ErrorCode Code { get; }
-        string Message { get; }
+        GroupState State { get; }
     }
 }
