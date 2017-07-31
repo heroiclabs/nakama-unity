@@ -70,15 +70,15 @@ public class UserChat : MonoBehaviour {
 			.SSL(false)
 			.Build();
 
-		client1.OnTopicMessage += (object sender, NTopicMessageEventArgs e) => {
-			outputText = Encoding.UTF8.GetString(e.Message.Data);
+		client1.OnTopicMessage = (INTopicMessage message) => {
+			outputText = Encoding.UTF8.GetString(message.Data);
 		};
 
-		client2.OnTopicMessage += (object sender, NTopicMessageEventArgs e) => {
-			outputText = Encoding.UTF8.GetString(e.Message.Data);
+		client2.OnTopicMessage = (INTopicMessage message) => {
+			outputText = Encoding.UTF8.GetString(message.Data);
 		};
 	}
-    
+
 	void Update () {
 		RegisterButtonPlayer1.interactable = RegisterButtonPlayer1Enable;
 		LoginButtonPlayer1.interactable = LoginButtonPlayer1Enable;
@@ -169,7 +169,7 @@ public class UserChat : MonoBehaviour {
 		client2Connected = true;
 
 		ConnectPlayer2Enable = false;
-		
+
 		JoinTopicPlayer1Enable = true;
 	}
 

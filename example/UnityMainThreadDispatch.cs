@@ -32,7 +32,7 @@ public class UnityMainThreadDispatch : MonoBehaviour
     private const bool ServerSsl = false;
 
     // Nakama client.
-    private readonly NThreadedClient _client;
+    private readonly INClient _client;
 
     // Store session from the current logged in user.
     private INSession _session;
@@ -48,15 +48,15 @@ public class UnityMainThreadDispatch : MonoBehaviour
                 .SSL(ServerSsl)
                 .Build();
         // Wrap the socket client so we dispatch all callbacks on the main thread.
-        _client = new NThreadedClient(client);
+        _client = new NManagedClient(client);
         _uiLabelMessage = "Initial state.";
 
         // Attach an error handler for received message errors.
-        _client.OnError = (NErrorEventArgs args) => {
-            ErrorHandler(args.Error);
+        _client.OnError = (INError error) => {
+            ErrorHandler(error);
         };
         // Log a message whenever we're disconnected from the server.
-        _client.OnDisconnect = () => {
+        _client.OnDisconnect = (INDisconnectEvent evt) => {
             Debug.Log("Disconnected from server.");
             // We'll set a UI label from the socket.
             _uiLabelMessage = "Disconnected.";
@@ -96,7 +96,7 @@ public class UnityMainThreadDispatch : MonoBehaviour
     private void Update()
     {
         // This ensures all callbacks are executed on the main thread.
-        _client.ExecuteActions();
+        (_client as NManagedClient).ExecuteActions();
     }
 
     private void RestoreSessionAndConnect()

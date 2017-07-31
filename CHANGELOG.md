@@ -15,6 +15,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - Added default builder for Notification listing and removal.
 - Group self list operations now return the user's membership type to each group.
 - Group leave operations now return a specific error code when the last admin attempts to leave.
+- The client interface now uses action delegates instead of event handlers to support a proxy pattern.
 
 ## [0.7.0] - 2017-07-18
 ### Added

@@ -40,7 +40,7 @@ namespace Nakama.Tests
             INError error = null;
 
             var client2 = new NClient.Builder(DefaultServerKey).Build();
-            client2.OnDisconnect += (sender, _) =>
+            client2.OnDisconnect = (INDisconnectEvent _) =>
             {
                 var message = NAuthenticateMessage.Device(DeviceId);
                 client2.Register(message, (INSession session) =>
