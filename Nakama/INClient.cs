@@ -28,21 +28,21 @@ namespace Nakama
 
         INLogger Logger { get; }
 
-        event EventHandler<NDisconnectEventArgs> OnDisconnect;
+        Action<INDisconnectEvent> OnDisconnect { get; }
 
-        event EventHandler<NErrorEventArgs> OnError;
+        Action<INError> OnError { get; }
 
-        event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
+        Action<INMatchmakeMatched> OnMatchmakeMatched { get; }
 
-        event EventHandler<NMatchDataEventArgs> OnMatchData;
+        Action<INMatchData> OnMatchData { get; }
 
-        event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+        Action<INMatchPresence> OnMatchPresence { get; }
 
-        event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+        Action<INTopicMessage> OnTopicMessage { get; }
 
-        event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+        Action<INTopicPresence> OnTopicPresence { get; }
 
-        event EventHandler<NNotificationEventArgs> OnNotification;
+        Action<INNotification> OnNotification { get; }
 
         uint Port { get; }
 

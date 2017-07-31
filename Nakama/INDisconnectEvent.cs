@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Nakama
 {
-    public class NNotificationEventArgs : EventArgs
+    public interface INDisconnectEvent
     {
-        public INNotification Notification { get; private set; }
-        internal NNotificationEventArgs(INNotification notification)
-        {
-            Notification = notification;
-        }
+        int Code { get; }
+
+        string Reason { get; }
     }
 }

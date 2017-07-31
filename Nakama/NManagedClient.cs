@@ -25,24 +25,24 @@ namespace Nakama
     ///  main thread.
     /// </summary>
     /// <example>
-    /// Wrap a socket client <see cref="NClient"/> so all actions are dispatched
+    /// Wrap a socket client <see cref="NClient"/> so all actions can be dispatched
     /// on the Unity main thread.
     /// <code>
-    /// public class SomeObject : MonoBehaviour {
-    ///     private NThreadedClient _client;
+    /// public class NakamaSessionManager : MonoBehaviour {
+    ///     private INClient _client;
     ///
     ///     private void Start() {
     ///         var client = NClient.Default("somesecret");
-    ///         _client = new NThreadedClient(client);
+    ///         _client = new NManagedClient(client);
     ///     }
     ///
     ///     private void Update() {
-    ///         _client.ExecuteActions();
+    ///         (_client as NManagedClient).ExecuteActions();
     ///     }
     /// }
     /// </code>
     /// </example>
-    public class NThreadedClient
+    public class NManagedClient : INClient
     {
         public uint ConnectTimeout { get { return _client.ConnectTimeout; } }
 
@@ -52,49 +52,93 @@ namespace Nakama
 
         public INLogger Logger { get { return _client.Logger; } }
 
-        public Action OnDisconnect { get; set; }
-
-        // NOTE This code causes an ICE with the Mono/Unity compiler.
-        /*
-        private IDictionary<Delegate, EventHandler> _onDisconnectMap;
-        private EventHandler _onDisconnect;
-
-        public event EventHandler OnDisconnect
-        {
-            add {
-                EventHandler handler = delegate(object sender, EventArgs args) {
-                    //MainThreadDispatcher.Enqueue(() => value(sender, args));
-                    UnityEngine.Debug.Log("Here!");
-                    value(sender, args);
-                };
-                lock (this)
-                {
-                    _onDisconnectMap.Add(value, handler);
-                    _onDisconnect += handler;
-                }
+        public Action<INDisconnectEvent> OnDisconnect {
+            get {
+                return _client.OnDisconnect;
             }
-            remove {
-                EventHandler handler;
-                _onDisconnectMap.TryGetValue(value, out handler);
-                lock (this)
-                {
-                    _onDisconnect -= handler;
-                }
+            set {
+                _client.OnDisconnect = (INDisconnectEvent evt) => {
+                    Enqueue(() => value(evt));
+                };
             }
         }
-        */
 
-        public Action<NErrorEventArgs> OnError { get; set; }
+        public Action<INError> OnError {
+            get {
+                return _client.OnError;
+            }
+            set {
+                _client.OnError = (INError error) => {
+                    Enqueue(() => value(error));
+                };
+            }
+        }
 
-        public Action<NMatchmakeMatchedEventArgs> OnMatchmakeMatched { get; set; }
+        public Action<INMatchmakeMatched> OnMatchmakeMatched {
+            get {
+                return _client.OnMatchmakeMatched;
+            }
+            set {
+                _client.OnMatchmakeMatched = (INMatchmakeMatched matched) => {
+                    Enqueue(() => value(matched));
+                };
+            }
+        }
 
-        public Action<NMatchDataEventArgs> OnMatchData { get; set; }
+        public Action<INMatchData> OnMatchData {
+            get {
+                return _client.OnMatchData;
+            }
+            set {
+                _client.OnMatchData = (INMatchData match) => {
+                    Enqueue(() => value(match));
+                };
+            }
+        }
 
-        public Action<NMatchPresenceEventArgs> OnMatchPresence { get; set; }
+        public Action<INMatchPresence> OnMatchPresence {
+            get {
+                return _client.OnMatchPresence;
+            }
+            set {
+                _client.OnMatchPresence = (INMatchPresence presence) => {
+                    Enqueue(() => value(presence));
+                };
+            }
+        }
 
-        public Action<NTopicMessageEventArgs> OnTopicMessage { get; set; }
+        public Action<INTopicMessage> OnTopicMessage {
+            get {
+                return _client.OnTopicMessage;
+            }
+            set {
+                _client.OnTopicMessage = (INTopicMessage message) => {
+                    Enqueue(() => value(message));
+                };
+            }
+        }
 
-        public Action<NTopicPresenceEventArgs> OnTopicPresence { get; set; }
+        public Action<INTopicPresence> OnTopicPresence {
+            get {
+                return _client.OnTopicPresence;
+            }
+            set {
+                _client.OnTopicPresence = (INTopicPresence presence) => {
+                    Enqueue(() => value(presence));
+                };
+            }
+        }
+
+        public Action<INNotification> OnNotification {
+            get {
+                return _client.OnNotification;
+            }
+            set {
+                _client.OnNotification = (INNotification notification) => {
+                    Enqueue(() => value(notification));
+                };
+            }
+        }
 
         public uint Port { get { return _client.Port; } }
 
@@ -108,60 +152,18 @@ namespace Nakama
 
         public bool Trace { get { return _client.Trace; } }
 
-        private INClient _client;
+        private NClient _client;
 
         private Queue<Action> _executionQueue;
 
-        public NThreadedClient(NClient client) : this(client, 1024)
+        public NManagedClient(NClient client) : this(client, 1024)
         {
         }
 
-        public NThreadedClient(NClient client, int initialSize)
+        public NManagedClient(NClient client, int initialSize)
         {
             _executionQueue = new Queue<Action>(initialSize);
             _client = client;
-            _client.OnDisconnect += (object sender, EventArgs args) => {
-                if (OnDisconnect != null)
-                {
-                    Enqueue(() => OnDisconnect());
-                }
-            };
-            _client.OnError += (object sender, NErrorEventArgs args) => {
-                if (OnError != null)
-                {
-                    Enqueue(() => OnError(args));
-                }
-            };
-            _client.OnMatchmakeMatched += (object sender, NMatchmakeMatchedEventArgs args) => {
-                if (OnMatchmakeMatched != null)
-                {
-                    Enqueue(() => OnMatchmakeMatched(args));
-                }
-            };
-            _client.OnMatchData += (object sender, NMatchDataEventArgs args) => {
-                if (OnMatchData != null)
-                {
-                    Enqueue(() => OnMatchData(args));
-                }
-            };
-            _client.OnMatchPresence += (object sender, NMatchPresenceEventArgs args) => {
-                if (OnMatchPresence != null)
-                {
-                    Enqueue(() => OnMatchPresence(args));
-                }
-            };
-            _client.OnTopicMessage += (object sender, NTopicMessageEventArgs args) => {
-                if (OnTopicMessage != null)
-                {
-                    Enqueue(() => OnTopicMessage(args));
-                }
-            };
-            _client.OnTopicPresence += (object sender, NTopicPresenceEventArgs args) => {
-                if (OnTopicPresence != null)
-                {
-                    Enqueue(() => OnTopicPresence(args));
-                }
-            };
         }
 
         public void Connect(INSession session)

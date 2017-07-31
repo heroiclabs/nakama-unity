@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Nakama
 {
-    public class NTopicPresenceEventArgs : EventArgs
+    public class NDisconnectEvent : INDisconnectEvent
     {
-        public INTopicPresence TopicPresence { get; private set; }
+        public int Code { get; private set; }
 
-        internal NTopicPresenceEventArgs(INTopicPresence topicPresence)
+        public string Reason { get; private set; }
+
+        internal NDisconnectEvent(int code, string reason)
         {
-            TopicPresence = topicPresence;
+            Code = code;
+            Reason = reason;
         }
     }
 }
