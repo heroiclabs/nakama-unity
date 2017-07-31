@@ -83,9 +83,9 @@ namespace Nakama.Tests
             INError error = null;
             INMatchmakeMatched res = null;
 
-            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client1.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res = args.Matched;
+                res = matched;
                 evt.Set();
             };
 
@@ -112,14 +112,14 @@ namespace Nakama.Tests
             INMatchmakeMatched res1 = null;
             INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client1.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res1 = args.Matched;
+                res1 = matched;
                 evt1.Set();
             };
-            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client2.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res2 = args.Matched;
+                res2 = matched;
                 evt2.Set();
             };
 
@@ -153,14 +153,14 @@ namespace Nakama.Tests
             INMatchmakeMatched res1 = null;
             INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client1.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res1 = args.Matched;
+                res1 = matched;
                 evt.Set();
             };
-            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client2.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res2 = args.Matched;
+                res2 = matched;
                 evt.Set();
             };
 
@@ -201,14 +201,14 @@ namespace Nakama.Tests
             INMatchmakeMatched res1 = null;
             INMatchmakeMatched res2 = null;
 
-            client1.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client1.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res1 = args.Matched;
+                res1 = matched;
                 evt1.Set();
             };
-            client2.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) =>
+            client2.OnMatchmakeMatched = (INMatchmakeMatched matched) =>
             {
-                res2 = args.Matched;
+                res2 = matched;
                 evt2.Set();
             };
 

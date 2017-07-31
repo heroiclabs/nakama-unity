@@ -23,23 +23,11 @@ namespace Nakama
     {
         public long CreatedAt { get; private set; }
 
-        public byte[] Id {
-            get {
-                // Hack decode JSON payload from JWT
-                var payload = Token.Split('.')[1];
+        public long ExpiresAt { get; private set; }
 
-                var padLength = Math.Ceiling(payload.Length / 4.0) * 4;
-                payload = payload.PadRight(Convert.ToInt32(padLength), '=');
+        public string Handle { get; private set; }
 
-                var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(payload));
-                var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
-                // NOTE http://stackoverflow.com/a/16722909
-                Array.Reverse(guid, 6, 2);
-                Array.Reverse(guid, 4, 2);
-                Array.Reverse(guid, 0, 4);
-                return guid;
-            }
-        }
+        public byte[] Id { get; private set; }
 
         public string Token { get; private set; }
 
@@ -47,6 +35,24 @@ namespace Nakama
         {
             CreatedAt = createdAt;
             Token = token;
+
+            var decoded = JwtUnpack(Token);
+            var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
+            // NOTE http://stackoverflow.com/a/16722909
+            Array.Reverse(guid, 6, 2);
+            Array.Reverse(guid, 4, 2);
+            Array.Reverse(guid, 0, 4);
+
+            // Set computed fields
+            Handle = decoded.Split('"')[5];
+            Id = guid;
+            var expiresAt = Convert.ToInt64(decoded.Split('"')[2].TrimStart(':').TrimEnd(','));
+            ExpiresAt = Convert.ToInt64(TimeSpan.FromSeconds(expiresAt).TotalMilliseconds);
+        }
+
+        public bool HasExpired(DateTime dateTime)
+        {
+            return (ExpiresAt - TimeSpan.FromTicks(dateTime.Ticks).TotalMilliseconds) < 0L;
         }
 
         public static INSession Restore(string token)
@@ -58,6 +64,17 @@ namespace Nakama
         public override string ToString()
         {
             return String.Format("NSession(CreatedAt={0},Token={1})", CreatedAt, Token);
+        }
+
+        private static string JwtUnpack(string jwt)
+        {
+            // Hack decode JSON payload from JWT
+            var payload = jwt.Split('.')[1];
+
+            var padLength = Math.Ceiling(payload.Length / 4.0) * 4;
+            payload = payload.PadRight(Convert.ToInt32(padLength), '=');
+
+            return Encoding.UTF8.GetString(Convert.FromBase64String(payload));
         }
     }
 }

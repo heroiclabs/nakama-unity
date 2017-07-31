@@ -144,9 +144,9 @@ namespace Nakama.Tests
 
             byte[] joinUserId = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
+            client1.OnTopicPresence = (INTopicPresence presence) =>
             {
-                joinUserId = args.TopicPresence.Join[0].UserId;
+                joinUserId = presence.Join[0].UserId;
                 evt2.Set();
             };
             client2.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topic) =>
@@ -192,9 +192,9 @@ namespace Nakama.Tests
 
             byte[] leaveUserId = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
+            client1.OnTopicPresence = (INTopicPresence presence) =>
             {
-                leaveUserId = args.TopicPresence.Leave[0].UserId;
+                leaveUserId = presence.Leave[0].UserId;
                 evt2.Set();
             };
             client2.Send(NTopicLeaveMessage.Default(topic.Topic), (bool complete) =>
@@ -284,9 +284,9 @@ namespace Nakama.Tests
             INTopicMessageAck messageAck = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
             ManualResetEvent evt3 = new ManualResetEvent(false);
-            client1.OnTopicMessage += (object source, NTopicMessageEventArgs args) =>
+            client1.OnTopicMessage = (INTopicMessage msg) =>
             {
-                message = args.Message;
+                message = msg;
                 evt2.Set();
             };
             client2.Send(NTopicMessageSendMessage.Default(topic.Topic, data), (INTopicMessageAck ack) =>
@@ -393,10 +393,10 @@ namespace Nakama.Tests
             {
                 topic = topics1.Results[0];
 
-                client1.OnTopicPresence += (object source, NTopicPresenceEventArgs args) =>
+                client1.OnTopicPresence = (INTopicPresence presence) =>
                 {
-                    Assert.AreEqual(args.TopicPresence.Leave[0].UserId, args.TopicPresence.Join[0].UserId);
-                    Assert.AreEqual(args.TopicPresence.Join[0].Handle, handle);
+                    Assert.AreEqual(presence.Leave[0].UserId, presence.Join[0].UserId);
+                    Assert.AreEqual(presence.Join[0].Handle, handle);
                     evt1.Set();
                 };
 

@@ -37,21 +37,21 @@ namespace Nakama
 
         public INLogger Logger { get; private set; }
 
-        public event EventHandler<NDisconnectEventArgs> OnDisconnect;
+        public Action<INDisconnectEvent> OnDisconnect { get; set; }
 
-        public event EventHandler<NErrorEventArgs> OnError;
+        public Action<INError> OnError { get; set; }
 
-        public event EventHandler<NMatchmakeMatchedEventArgs> OnMatchmakeMatched;
+        public Action<INMatchmakeMatched> OnMatchmakeMatched { get; set; }
 
-        public event EventHandler<NMatchDataEventArgs> OnMatchData;
+        public Action<INMatchData> OnMatchData { get; set; }
 
-        public event EventHandler<NMatchPresenceEventArgs> OnMatchPresence;
+        public Action<INMatchPresence> OnMatchPresence { get; set; }
 
-        public event EventHandler<NTopicMessageEventArgs> OnTopicMessage;
+        public Action<INTopicMessage> OnTopicMessage { get; set; }
 
-        public event EventHandler<NTopicPresenceEventArgs> OnTopicPresence;
+        public Action<INTopicPresence> OnTopicPresence { get; set; }
 
-        public event EventHandler<NNotificationEventArgs> OnNotification;
+        public Action<INNotification> OnNotification { get; set; }
 
         public uint Port { get; private set; }
 
@@ -126,7 +126,10 @@ namespace Nakama
             transport.OnClose += (sender, args) =>
             {
                 collationIds.Clear();
-                OnDisconnect.Emit(this, new NDisconnectEventArgs(args.Code, args.Reason));
+                if (OnDisconnect != null)
+                {
+                    OnDisconnect(new NDisconnectEvent(args.Code, args.Reason));
+                }
             };
             transport.OnMessage += (sender, m) =>
             {
@@ -139,7 +142,7 @@ namespace Nakama
                 if (OnError != null)
                 {
                     var message = (m.Error != null) ? m.Error.Message : "A transport error occured.";
-                    OnError(this, new NErrorEventArgs(new NError(message)));
+                    OnError(new NError(message));
                 }
             };
         }
@@ -315,31 +318,31 @@ namespace Nakama
                 case Envelope.PayloadOneofCase.MatchmakeMatched:
                     if (OnMatchmakeMatched != null)
                     {
-                        OnMatchmakeMatched(this, new NMatchmakeMatchedEventArgs(new NMatchmakeMatched(message.MatchmakeMatched)));
+                        OnMatchmakeMatched(new NMatchmakeMatched(message.MatchmakeMatched));
                     }
                     return;
                 case Envelope.PayloadOneofCase.MatchData:
                     if (OnMatchData != null)
                     {
-                        OnMatchData(this, new NMatchDataEventArgs(new NMatchData(message.MatchData)));
+                        OnMatchData(new NMatchData(message.MatchData));
                     }
                     return;
                 case Envelope.PayloadOneofCase.MatchPresence:
                     if (OnMatchPresence != null)
                     {
-                        OnMatchPresence(this, new NMatchPresenceEventArgs(new NMatchPresence(message.MatchPresence)));
+                        OnMatchPresence(new NMatchPresence(message.MatchPresence));
                     }
                     return;
                 case Envelope.PayloadOneofCase.TopicMessage:
                     if (OnTopicMessage != null)
                     {
-                        OnTopicMessage(this, new NTopicMessageEventArgs(new NTopicMessage(message.TopicMessage)));
+                        OnTopicMessage(new NTopicMessage(message.TopicMessage));
                     }
                     return;
                 case Envelope.PayloadOneofCase.TopicPresence:
                     if (OnTopicPresence != null)
                     {
-                        OnTopicPresence(this, new NTopicPresenceEventArgs(new NTopicPresence(message.TopicPresence)));
+                        OnTopicPresence(new NTopicPresence(message.TopicPresence));
                     }
                     return;
                 case Envelope.PayloadOneofCase.LiveNotifications:
@@ -347,7 +350,7 @@ namespace Nakama
                     {
                         foreach (var n in message.LiveNotifications.Notifications_)
                         {
-                            OnNotification(this, new NNotificationEventArgs(new NNotification(n)));
+                            OnNotification(new NNotification(n));
                         }
                     }
                     return;
@@ -372,7 +375,7 @@ namespace Nakama
                     {
                         if (OnError != null)
                         {
-                            OnError(this, new NErrorEventArgs(error));
+                            OnError(error);
                         }
                     }
                     break;

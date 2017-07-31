@@ -1,4 +1,20 @@
-﻿using Nakama;
+/**
+ * Copyright 2017 The Nakama Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using Nakama;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -102,7 +118,7 @@ public class Matchmake : MonoBehaviour {
 
     private void RegisterAndConnect() {
         // Lets log a message whenever we're disconnected from the server.
-        _client.OnDisconnect += (object sender, NDisconnectEventArgs args) => {
+        _client.OnDisconnect = (INDisconnectEvent evt) => {
             Debug.Log("Disconnected from the server.");
         };
 
@@ -127,14 +143,14 @@ public class Matchmake : MonoBehaviour {
         // Attach an event handler for when the user is matched with other users.
         // This only needs to be done once.
         // For more information have a look at: https://heroiclabs.com/docs/development/matchmaker/
-        _client.OnMatchmakeMatched += (object source, NMatchmakeMatchedEventArgs args) => {
+        _client.OnMatchmakeMatched = (INMatchmakeMatched matched) => {
             // Set the local cache to null now that we've been offered a match.
             _matchmakeTicket = null;
             Debug.Log("Matchmaker found an opponent.");
 
             // The match token is used to join a multiplayer match.
             // Lets accept the match and join it.
-            var message = NMatchJoinMessage.Default(args.Matched.Token);
+            var message = NMatchJoinMessage.Default(matched.Token);
             _client.Send(message, (INResultSet<INMatch> matches) => {
                 Debug.Log("Successfully joined matches.");
 
@@ -149,21 +165,21 @@ public class Matchmake : MonoBehaviour {
 
     private void SetupMatchPresenceListener() {
         // For more information have a look at: https://heroiclabs.com/docs/development/realtime-multiplayer/
-        _client.OnMatchPresence += (object src, NMatchPresenceEventArgs args) => {
+        _client.OnMatchPresence = (INMatchPresence presences) => {
             // `args.MatchPresence.Id` to get the `byte[]` match ID this update relates to.
             // `args.MatchPresence.Join` and `args.MatchPresence.Leave` for lists of
             // presences that have joined/left since the last update for this match.
-            foreach (var presence in args.MatchPresence.Join) {
+            foreach (var presence in presences.Join) {
                 Debug.LogFormat("User handle '{0}' joined the match.", presence.Handle);
             }
-            foreach (var presence in args.MatchPresence.Leave) {
+            foreach (var presence in presences.Leave) {
                 Debug.LogFormat("User handle '{0}' left the match.", presence.Handle);
             }
         };
     }
 
     private void SetupMatchDataListener() {
-        _client.OnMatchData += (object src, NMatchDataEventArgs args) => {
+        _client.OnMatchData = (INMatchData matchData) => {
             // We enqueue any logic which we want to execute on the Unity main thread.
             actionQueue.Enqueue(() => {
                 // `args.MatchData.Id` to get the `byte[]` match ID this data relates to.
@@ -171,7 +187,7 @@ public class Matchmake : MonoBehaviour {
                 // `args.MatchData.OpCode` and `args.MatchData.Data` are the custom
                 // fields set by the sender.
 
-                var received = args.Data;
+                var received = matchData;
                 switch (received.OpCode) {
                 case MatchOpCode:
                     var dataString = Encoding.UTF8.GetString(received.Data);

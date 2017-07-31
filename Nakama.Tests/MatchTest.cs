@@ -171,9 +171,9 @@ namespace Nakama.Tests
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
             byte[] joinedUserId = null;
-            client1.OnMatchPresence += (object source, NMatchPresenceEventArgs args) =>
+            client1.OnMatchPresence = (INMatchPresence presence) =>
             {
-                joinedUserId = args.MatchPresence.Join[0].UserId;
+                joinedUserId = presence.Join[0].UserId;
                 evt2.Set();
             };
             client2.Send(NMatchJoinMessage.Default(m.Id), (INResultSet<INMatch> match) =>
@@ -218,9 +218,9 @@ namespace Nakama.Tests
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
             byte[] leftUserId = null;
-            client1.OnMatchPresence += (object source, NMatchPresenceEventArgs args) =>
+            client1.OnMatchPresence = (INMatchPresence presence) =>
             {
-                leftUserId = args.MatchPresence.Leave[0].UserId;
+                leftUserId = presence.Leave[0].UserId;
                 evt2.Set();
             };
             client2.Send(NMatchLeaveMessage.Default(m.Id), (bool complete) =>
@@ -267,9 +267,9 @@ namespace Nakama.Tests
             long opCode = 9;
             INMatchData d = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client2.OnMatchData += (object source, NMatchDataEventArgs args) =>
+            client2.OnMatchData = (INMatchData matchData) =>
             {
-                d = args.Data;
+                d = matchData;
                 evt2.Set();
             };
             client1.Send(NMatchDataSendMessage.Default(m.Id, opCode, data), (bool completed) =>
@@ -309,9 +309,9 @@ namespace Nakama.Tests
 
             INMatchData d = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client1.OnMatchData += (object source, NMatchDataEventArgs args) =>
+            client1.OnMatchData = (INMatchData data) =>
             {
-                d = args.Data;
+                d = data;
                 evt2.Set();
             };
             client1.Send(NMatchDataSendMessage.Default(m.Id, 9, Encoding.ASCII.GetBytes("test-data")), (bool completed) =>
@@ -368,9 +368,9 @@ namespace Nakama.Tests
             long opCode = 9;
             INMatchData d = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client1.OnMatchData += (object source, NMatchDataEventArgs args) =>
+            client1.OnMatchData = (INMatchData matchData) =>
             {
-                d = args.Data;
+                d = matchData;
                 evt2.Set();
             };
             var msg = new NMatchDataSendMessage.Builder(m.Id, opCode, data).Presences(new INUserPresence[]{p}).Build();

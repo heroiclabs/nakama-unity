@@ -33,7 +33,7 @@ namespace Nakama.Tests
         private byte[] userId;
 
         private static IList<INNotification> notifications;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -68,15 +68,15 @@ namespace Nakama.Tests
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError err = null;
-            
+
             var message = new NRuntimeRpcMessage.Builder("notification_send").Build();
-            
-            client.OnNotification += (sender, m) =>
+
+            client.OnNotification = (INNotification notification) =>
             {
-                Assert.IsTrue(m.Notification.CreatedAt > 0);
+                Assert.IsTrue(notification.CreatedAt > 0);
                 evt.Set();
             };
-            
+
             client.Send(message, (INRuntimeRpc result) =>
             {
             }, (INError e) => {
@@ -119,7 +119,7 @@ namespace Nakama.Tests
         {
             ManualResetEvent evt = new ManualResetEvent(false);
             INError err = null;
-            
+
             var ids = new List<byte[]>();
             foreach (var n in notifications)
             {
