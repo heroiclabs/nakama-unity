@@ -3,18 +3,18 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.8.0] - 2017-08-01
 ### Added
-- Cursors can now be serialized and restored.
+- A paging cursor can now be serialized and restored.
 - New storage partial update feature.
 - New storage list feature.
 - A new Unity code example which shows how to dispatch actions on the main thread.
 - A session now exposes `.ExpiresAt` and `.Handle` from the token.
 
 ### Changed
-- Added default builder for Notification listing and removal.
-- Group self list operations now return the user's membership type to each group.
-- Group leave operations now return a specific error code when the last admin attempts to leave.
+- Add default builder for notification list and remove messages.
+- A group self list operation now return the user's membership state with each group.
+- A group leave operation now return a specific error code when the last admin attempts to leave.
 - The client interface now uses action delegates instead of event handlers to support a proxy pattern.
 
 ## [0.7.0] - 2017-07-18
