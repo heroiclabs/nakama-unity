@@ -49,7 +49,7 @@ namespace Nakama.Tests
             request.ContentType = "application/json;";
             request.Accept = "application/json;";
             var response = extractBadResponse(request);
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode, response.StatusDescription);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode, response.StatusDescription);
         }
 
         [Test]
