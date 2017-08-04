@@ -21,6 +21,8 @@ namespace Nakama
 {
     public class NSession : INSession
     {
+        private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         public long CreatedAt { get; private set; }
 
         public long ExpiresAt { get; private set; }
@@ -52,12 +54,13 @@ namespace Nakama
 
         public bool HasExpired(DateTime dateTime)
         {
-            return (ExpiresAt - TimeSpan.FromTicks(dateTime.Ticks).TotalMilliseconds) < 0L;
+            var expireDate = Epoch + TimeSpan.FromMilliseconds(ExpiresAt);
+            return dateTime > expireDate;
         }
 
         public static INSession Restore(string token)
         {
-            TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            TimeSpan span = DateTime.UtcNow - Epoch;
             return new NSession(token, System.Convert.ToInt64(span.TotalMilliseconds));
         }
 
