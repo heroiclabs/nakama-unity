@@ -36,7 +36,7 @@ public class NewBehaviourScript : MonoBehaviour {
 
 Nakama Unity Client requires the full .Net 2.0 runtime. In Unity Build Settings window, change API Compatibility Level to .Net 2.0.
 
-In addition to above, you'll need to change Stripping Level to either "Disabled" or "Strip Assemblies".
+In addition to above, you'll need to change Stripping Level to either "Disabled" or "Strip Assemblies". Alternatively you can add the `link.xml` to the Assets folder of your project which configures how the Linker strips down the generated code.
 
 ### Build Settings for iOS
 
