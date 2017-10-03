@@ -1,9 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Threading;
 using Google.Protobuf;
+using NetcodeIO.NET;
+using ReliableNetcode;
 using WebSocketSharp;
 
 namespace Nakama
@@ -18,7 +22,12 @@ namespace Nakama
         public bool Trace { get; set; }
         public INLogger Logger { get; set; }
 
-        private WebSocket socket;
+        private int tickrate = 30;
+        
+        private Client client;
+        private ReliableEndpoint endpoint;
+        private ManualResetEvent connectedEvt;
+        private bool isConnected = false;
 
         public void Post(string uri,
             AuthenticateRequest payload,
@@ -135,122 +144,188 @@ namespace Nakama
             }
         }
 
-        private void createWebSocket(string uri)
+        private void createClient()
         {
-            socket = new WebSocket(uri);
-            if (Trace)
+            client = new Client();
+            endpoint = new ReliableEndpoint();
+            connectedEvt = new ManualResetEvent(false);
+            client.Tickrate = tickrate;
+
+            client.OnStateChanged += (ClientState state) =>
             {
-                socket.Log.Level = LogLevel.Debug;
+                switch (state)
+                {
+                        case ClientState.ConnectTokenExpired:
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connect token expired")));
+                            }
+                            break;
+                        case ClientState.InvalidConnectToken:
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("invalid connect token")));
+                            }
+                            break;
+                        case ClientState.ConnectionTimedOut:
+                            isConnected = false;
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection timed out")));
+                            }
+                            break;
+                        case ClientState.ChallengeResponseTimedOut:
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection response timed out")));
+                            }
+                            break;
+                        case ClientState.ConnectionRequestTimedOut:
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection request timed out")));
+                            }
+                            break;
+                        case ClientState.ConnectionDenied:
+                            if (OnError != null)
+                            {
+                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection denied")));
+                            }
+                            break;
+                        case ClientState.Disconnected:
+                            isConnected = false;
+                            OnClose.Emit(this, new WebSocketCloseEventArgs(1, "disconnected"));
+                            break;
+                        case ClientState.SendingConnectionRequest:
+                            break;
+                        case ClientState.SendingChallengeResponse:
+                            break;
+                        case ClientState.Connected:
+                            isConnected = true;
+                            connectedEvt.Set();
+                            if (OnOpen != null)
+                            {
+                                OnOpen.Emit(client, new EventArgs());
+                            }
+                            break;
+                        default:
+                            Logger.Warn(String.Format("Unknown client state in change: {0}", state));
+                            break;
+                }
+            };
+
+            client.OnMessageReceived += (payload, size) =>
+            {
+                endpoint.ReceivePacket(payload, size);
+            };
+            
+            endpoint.TransmitCallback = (payload, size) =>
+            {
+                client.Send(payload, size);
+            };
+            endpoint.ReceiveCallback = (payload, size) =>
+            {
+                var payloadCopy = new byte[size];
+                Array.Copy(payload, 0, payloadCopy, 0, size);
+                if (OnMessage != null)
+                {
+                    OnMessage.Emit(this, new WebSocketMessageEventArgs(payloadCopy));
+                }
+            };
+        }
+
+        public void Connect(string uri, byte[] token)
+        {
+            if (client == null)
+            {
+                createClient();
+                client.Connect(token);
             }
-
-            socket.OnClose += (sender, evt) =>
-            {
-                // Release socket handle
-                socket = null;
-                Logger.TraceIf(Trace, String.Format("Socket Closed. Code={0}, Reason={1}", evt.Code, evt.Reason));
-                OnClose.Emit(this, new WebSocketCloseEventArgs(evt.Code, evt.Reason));
-            };
-            socket.OnMessage += (sender, evt) =>
-            {
-                if (evt.IsPing)
-                {
-                    Logger.TraceIf(Trace, "SocketReceive: WebSocket ping.");
-                    return;
-                }
-
-                if (evt.IsText)
-                {
-                    Logger.TraceIf(Trace, "SocketReceive: Invalid content (text/plain).");
-                    return;
-                }
-
-                OnMessage.Emit(this, new WebSocketMessageEventArgs(evt.RawData));
-            };
-            socket.OnError += (sender, evt) =>
+            connectedEvt.WaitOne(10000);
+            if (client.State != ClientState.Connected)
             {
                 if (OnError != null)
                 {
-                    OnError.Emit(sender, new WebSocketErrorEventArgs(evt.Exception));
+                    OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("client timed out while connecting")));
                 }
-            };
-            socket.OnOpen += (sender, evt) =>
-            {
-                if (OnOpen != null)
-                {
-                    OnOpen.Emit(sender, evt);
-                }
-            };
-
+                return;
+            }
+            ThreadPool.QueueUserWorkItem(tick);
         }
 
-        public void Connect(string uri, bool noDelay)
+        public void ConnectAsync(string uri, byte[] token, Action<bool> callback)
         {
-            if (socket == null)
+            if (client == null)
             {
-                createWebSocket(uri);
-            }
-            socket.Connect();
-
-            // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
-            if (noDelay)
-            {
-                Logger.TraceIf(Trace, "Connect: Enabling NoDelay on socket.");
-                socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
-            }
-        }
-
-        public void ConnectAsync(string uri, bool noDelay, Action<bool> callback)
-        {
-            if (socket == null)
-            {
-                createWebSocket(uri);
-                socket.OnOpen += (sender, _) =>
+                createClient();
+                client.OnStateChanged += (ClientState state) =>
                 {
-                    // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
-                    if (noDelay)
+                    if (state == ClientState.Connected)
                     {
-                        Logger.TraceIf(Trace, "ConnectAsync: Enabling NoDelay on socket.");
-                        socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                        Logger.TraceIf(Trace, "ConnectAsync: Enabled NoDelay on socket.");
+//                        client.OnStateChanged -= this;
+                        callback(true);
+                        ThreadPool.QueueUserWorkItem(tick);
                     }
-                    callback(true);
+                    else if (state != ClientState.SendingConnectionRequest &&
+                             state != ClientState.SendingChallengeResponse)
+                    {
+//                        client.OnStateChanged -= this;
+                        if (OnError != null)
+                        {
+                            OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("client timed out while connecting")));
+                        }
+                    }
                 };
+                client.Connect(token);
             }
-
-            socket.ConnectAsync();
         }
 
         public void Close()
         {
-            if (socket != null)
+            if (client != null)
             {
-                socket.Close(CloseStatusCode.Normal);
+                client.Disconnect();
+                client = null;
+                connectedEvt = null;
             }
         }
 
         public void CloseAsync(Action callback)
         {
-            if (socket != null)
+            if (client != null)
             {
-                socket.CloseAsync(CloseStatusCode.Normal);
-            }
-            callback();
-        }
-
-        public void Send(byte[] data)
-        {
-            if (socket != null)
-            {
-                socket.Send(data);
+                client.Disconnect();
+                client = null;
+                connectedEvt = null;
             }
         }
 
-        public void SendAsync(byte[] data, Action<bool> completed)
+        public void Send(byte[] data, bool reliable)
         {
-            if (socket != null)
+            if (client != null)
             {
-                socket.SendAsync(data, completed);
+                client.Send(data, data.Length);
+            }
+        }
+
+        public void SendAsync(byte[] data, bool reliable, Action<bool> completed)
+        {
+            if (client != null)
+            {
+                client.Send(data, data.Length);
+                completed(true);
+            }
+        }
+
+        private void tick(Object stateInfo)
+        {
+            while (isConnected)
+            {
+                endpoint.Update();
+
+                // sleep until next tick
+                double tickLength = 1.0 / tickrate;
+                Thread.Sleep((int)(tickLength * 1000));
             }
         }
     }

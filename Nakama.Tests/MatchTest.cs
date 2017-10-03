@@ -272,7 +272,7 @@ namespace Nakama.Tests
                 d = matchData;
                 evt2.Set();
             };
-            client1.Send(NMatchDataSendMessage.Default(m.Id, opCode, data), (bool completed) =>
+            client1.Send(NMatchDataSendMessage.Default(m.Id, opCode, data), false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {
@@ -314,7 +314,7 @@ namespace Nakama.Tests
                 d = data;
                 evt2.Set();
             };
-            client1.Send(NMatchDataSendMessage.Default(m.Id, 9, Encoding.ASCII.GetBytes("test-data")), (bool completed) =>
+            client1.Send(NMatchDataSendMessage.Default(m.Id, 9, Encoding.ASCII.GetBytes("test-data")), false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {
@@ -374,7 +374,7 @@ namespace Nakama.Tests
                 evt2.Set();
             };
             var msg = new NMatchDataSendMessage.Builder(m.Id, opCode, data).Presences(new INUserPresence[]{p}).Build();
-            client2.Send(msg, (bool completed) =>
+            client2.Send(msg, false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {

@@ -16,12 +16,12 @@ namespace Nakama
             Action<byte[]> successAction,
             Action<Exception> errorAction);
 
-        void Connect(string uri, bool noDelay);
-        void ConnectAsync(string uri, bool noDelay, Action<bool> callback);
+        void Connect(string uri, byte[] token);
+        void ConnectAsync(string uri, byte[] token, Action<bool> callback);
         void Close();
         void CloseAsync(Action callback);
-        void Send(byte[] data);
-        void SendAsync(byte[] data, Action<bool> completed);
+        void Send(byte[] data, bool reliable);
+        void SendAsync(byte[] data, bool reliable, Action<bool> completed);
 
         event EventHandler<WebSocketCloseEventArgs> OnClose;
         event EventHandler<WebSocketErrorEventArgs> OnError;

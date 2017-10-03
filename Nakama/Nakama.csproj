@@ -32,6 +32,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BCCrypto">
+      <HintPath>..\packages\Netcode.IO.NET\BCCrypto.pdb</HintPath>
+    </Reference>
+    <Reference Include="BCCrypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Netcode.IO.NET\BCCrypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Netcode.IO.NET">
+      <HintPath>..\packages\Netcode.IO.NET\Netcode.IO.NET.pdb</HintPath>
+    </Reference>
+    <Reference Include="Netcode.IO.NET, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Netcode.IO.NET\Netcode.IO.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ReliableNetcode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\ReliableNetcode.NET\ReliableNetcode.dll</HintPath>
+    </Reference>
     <Reference Include="websocket-sharp">
       <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\websocket-sharp.dll</HintPath>
       <Private>True</Private>
@@ -87,7 +102,6 @@
     <Compile Include="INMatch.cs" />
     <Compile Include="INMatchData.cs" />
     <Compile Include="INMatchPresence.cs" />
-    <Compile Include="INMessage.cs" />
     <Compile Include="INResultSet.cs" />
     <Compile Include="INSelf.cs" />
     <Compile Include="INSession.cs" />

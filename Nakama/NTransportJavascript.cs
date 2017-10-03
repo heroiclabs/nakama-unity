@@ -185,7 +185,7 @@ namespace Nakama
             SocketCloseCallbacks.Remove(socketId);
         }
 
-        public void Connect(string uri, bool noDelay)
+        public void Connect(string uri, bool noDelay, byte[] token)
         {
             // This is not a blocking call
 
@@ -196,7 +196,7 @@ namespace Nakama
             }
         }
 
-        public void ConnectAsync(string uri, bool noDelay, Action<bool> callback)
+        public void ConnectAsync(string uri, bool noDelay, byte[] token, Action<bool> callback)
         {
             // connection happen on socket creation
             if (_socketNativeRef == -1)
@@ -217,13 +217,13 @@ namespace Nakama
             CloseSocket(_socketNativeRef);
         }
 
-        public void Send(byte[] data)
+        public void Send(byte[] data, bool reliable)
         {
             var base64Payload = Convert.ToBase64String(data);
             SendData(_socketNativeRef, base64Payload);
         }
 
-        public void SendAsync(byte[] data, Action<bool> callback)
+        public void SendAsync(byte[] data, bool reliable, Action<bool> callback)
         {
             var base64Payload = Convert.ToBase64String(data);
             SendData(_socketNativeRef, base64Payload);

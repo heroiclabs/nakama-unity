@@ -29,6 +29,8 @@ namespace Nakama
         byte[] Id { get; }
 
         string Token { get; }
+        
+        byte[] UdpToken { get; }
 
         bool HasExpired(DateTime dateTime);
     }

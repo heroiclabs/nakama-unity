@@ -70,6 +70,7 @@ namespace Nakama.Tests
 
             evt.WaitOne(1000, false);
             Assert.That(serverTime, Is.Not.EqualTo(0));
+//            Thread.Sleep(30000);
             client.Disconnect();
         }
     }

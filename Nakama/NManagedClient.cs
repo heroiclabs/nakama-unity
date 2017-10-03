@@ -258,9 +258,9 @@ namespace Nakama
             });
         }
 
-        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        public void Send(INUncollatedMessage message, bool reliable, Action<bool> callback, Action<INError> errback)
         {
-            _client.Send(message, (bool done) => {
+            _client.Send(message, reliable, (bool done) => {
                 Enqueue(() => callback(done));
             }, (INError error) => {
                 Enqueue(() => errback(error));

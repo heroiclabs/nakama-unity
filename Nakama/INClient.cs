@@ -74,6 +74,6 @@ namespace Nakama
 
         void Send<T>(INCollatedMessage<T> message, Action<T> callback, Action<INError> errback);
 
-        void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback);
+        void Send(INUncollatedMessage message, bool reliable, Action<bool> callback, Action<INError> errback);
     }
 }

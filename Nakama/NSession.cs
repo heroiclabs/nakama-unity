@@ -30,11 +30,14 @@ namespace Nakama
         public byte[] Id { get; private set; }
 
         public string Token { get; private set; }
+        
+        public byte[] UdpToken { get; private set; }
 
-        internal NSession(string token, long createdAt)
+        internal NSession(string token, byte[] udpToken, long createdAt)
         {
             CreatedAt = createdAt;
             Token = token;
+            UdpToken = udpToken;
 
             var decoded = JwtUnpack(Token);
             var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
@@ -58,7 +61,7 @@ namespace Nakama
         public static INSession Restore(string token)
         {
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return new NSession(token, System.Convert.ToInt64(span.TotalMilliseconds));
+            return new NSession(token, new byte[0], System.Convert.ToInt64(span.TotalMilliseconds));
         }
 
         public override string ToString()
