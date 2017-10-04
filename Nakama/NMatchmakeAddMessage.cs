@@ -28,10 +28,9 @@ namespace Nakama
             }
         }
 
-        private NMatchmakeAddMessage(long requiredCount)
+        private NMatchmakeAddMessage()
         {
             payload = new Envelope {MatchmakeAdd = new TMatchmakeAdd()};
-            payload.MatchmakeAdd.RequiredCount = requiredCount;
         }
 
         public void SetCollationId(string id)
@@ -41,13 +40,110 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NMatchmakeAddMessage(RequiredCount={0})";
-            return String.Format(f, payload.MatchmakeAdd.RequiredCount);
+            var f = "NMatchmakeAddMessage(RequiredCount={0}, Filters={1}, Properties={2})";
+            return String.Format(f, payload.MatchmakeAdd.RequiredCount, payload.MatchmakeAdd.Filters, payload.MatchmakeAdd.Properties);
         }
 
         public static NMatchmakeAddMessage Default(long requiredCount)
         {
-            return new NMatchmakeAddMessage(requiredCount);
+            return new Builder(requiredCount).Build();
+        }
+        
+        public class Builder
+        {
+            private NMatchmakeAddMessage message;
+
+            public Builder(long requiredCount)
+            {
+                message = new NMatchmakeAddMessage();
+                message.payload.MatchmakeAdd.RequiredCount = requiredCount;
+            }
+
+            public Builder addTermFilter(string name, string[] terms, bool matchAllTerms)
+            {
+                var f = new MatchmakeFilter()
+                {
+                    Name = name,
+                    Term = new MatchmakeFilter.Types.TermFilter()
+                    {
+                        MatchAllTerms = matchAllTerms
+                    }
+                };
+                f.Term.Terms.AddRange(terms);
+                
+                message.payload.MatchmakeAdd.Filters.Add(f);
+                return this;
+            }
+            
+            public Builder addRangeFilter(string name, long lowerbound, long upperbound)
+            {
+                var f = new MatchmakeFilter()
+                {
+                    Name = name,
+                    Range = new MatchmakeFilter.Types.RangeFilter()
+                    {
+                        LowerBound = lowerbound,
+                        UpperBound = upperbound
+                    }
+                };
+                message.payload.MatchmakeAdd.Filters.Add(f);
+                return this;
+            }
+            
+            public Builder addCheckFilter(string name, bool value)
+            {
+                var f = new MatchmakeFilter()
+                {
+                    Name = name,
+                    Check = value
+                };
+                message.payload.MatchmakeAdd.Filters.Add(f);
+                return this;
+            }
+            
+            public Builder addProperty(string key, bool value)
+            {
+                var property = new PropertyPair()
+                {
+                    Key = key,
+                    BoolValue = value
+                };
+                message.payload.MatchmakeAdd.Properties.Add(property);
+                return this;
+            }
+            
+            public Builder addProperty(string key, long value)
+            {
+                var property = new PropertyPair()
+                {
+                    Key = key,
+                    IntValue = value
+                };
+                message.payload.MatchmakeAdd.Properties.Add(property);
+                return this;
+            }
+            
+            public Builder addProperty(string key, string[] values)
+            {
+                var property = new PropertyPair()
+                {
+                    Key = key,
+                    StringList = new PropertyPair.Types.StringList()
+                };
+                property.StringList.Values.AddRange(values);
+                
+                message.payload.MatchmakeAdd.Properties.Add(property);
+                return this;
+            }
+
+            public NMatchmakeAddMessage Build()
+            {
+                // Clone object so builder now operates on new copy.
+                var original = message;
+                message = new NMatchmakeAddMessage();
+                message.payload.MatchmakeAdd = new TMatchmakeAdd(original.payload.MatchmakeAdd);
+                return original;
+            }
         }
     }
 }

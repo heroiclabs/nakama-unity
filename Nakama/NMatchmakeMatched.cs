@@ -26,6 +26,7 @@ namespace Nakama
         public INMatchToken Token { get; private set; }
         public IList<INUserPresence> Presence { get; private set; }
         public INUserPresence Self { get; private set; }
+        public IList<INMatchmakeUserProperty> UserProperties { get; private set; }
 
         internal NMatchmakeMatched(MatchmakeMatched message)
         {
@@ -37,12 +38,17 @@ namespace Nakama
                 Presence.Add(new NUserPresence(item));
             }
             Self = new NUserPresence(message.Self);
+            UserProperties = new List<INMatchmakeUserProperty>();
+            foreach (var item in message.Properties)
+            {
+                UserProperties.Add(new NMatchmakeUserProperty(item));
+            }
         }
 
         public override string ToString()
         {
-            var f = "NMatchmakeMatched(Ticket={0},Token={1},Presence={2},Self={3})";
-            return String.Format(f, Ticket, Token, Presence, Self);
+            var f = "NMatchmakeMatched(Ticket={0},Token={1},Presence={2},Self={3},UserProperties={4})";
+            return String.Format(f, Ticket, Token, Presence, Self, UserProperties);
         }
     }
 }

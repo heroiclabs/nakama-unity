@@ -5,6 +5,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [0.9.0] - 2017-10-05
+### Added
+- Advanced Matchmaking with custom filters and user properties. 
+
 ## [0.8.0] - 2017-08-01
 ### Added
 - A paging cursor can now be serialized and restored.

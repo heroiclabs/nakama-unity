@@ -25,5 +25,6 @@ namespace Nakama
         INMatchToken Token { get;  }
         IList<INUserPresence> Presence { get; }
         INUserPresence Self { get; }
+        IList<INMatchmakeUserProperty> UserProperties { get; }
     }
 }

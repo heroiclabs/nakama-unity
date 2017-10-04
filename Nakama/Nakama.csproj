@@ -48,8 +48,12 @@
     <Compile Include="INGroupUser.cs" />
     <Compile Include="INLeaderboard.cs" />
     <Compile Include="INLeaderboardRecord.cs" />
+    <Compile Include="INMatchmakeFilter.cs" />
     <Compile Include="INMatchmakeMatched.cs" />
     <Compile Include="INMatchmakeTicket.cs" />
+    <Compile Include="INMatchmakeUserProperty.cs" />
+    <Compile Include="NMatchmakeFilter.cs" />
+    <Compile Include="NMatchmakeUserProperty.cs" />
     <Compile Include="INMatchToken.cs" />
     <Compile Include="INNotification.cs" />
     <Compile Include="INPurchaseRecord.cs" />
