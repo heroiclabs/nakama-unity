@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -122,23 +123,25 @@ namespace Nakama.Tests
                 res2 = matched;
                 evt2.Set();
             };
+            
+            
 
             var b1 = new NMatchmakeAddMessage.Builder(2);
             b1.addProperty("rank", 12);
-            b1.addProperty("modes", new string[] {"tdm", "ffa"});
-            b1.addProperty("divisions", new string[]{"silver1"});
+            b1.addProperty("modes", new HashSet<string> {"tdm", "ffa"});
+            b1.addProperty("divisions", new HashSet<string>{"silver1"});
             b1.addRangeFilter("rank", 10, 15);
-            b1.addTermFilter("modes", new string[]{"tdm", "ffa"}, false);
-            b1.addTermFilter("divisions", new string[]{"bronze3","silver1", "silver2"}, false); // like RocketLeague
+            b1.addTermFilter("modes", new HashSet<string>{"tdm", "ffa"}, false);
+            b1.addTermFilter("divisions", new HashSet<string>{"bronze3","silver1", "silver2"}, false); // like RocketLeague
             client1.Send(b1.Build(), (INMatchmakeTicket ticket1) =>
             {
                 var b2 = new NMatchmakeAddMessage.Builder(2);
                 b2.addProperty("rank", 10);
-                b2.addProperty("modes", new string[] {"tdm", "ffa"});
-                b2.addProperty("divisions", new string[]{"bronze3"});
+                b2.addProperty("modes", new HashSet<string>{"tdm", "ffa"});
+                b2.addProperty("divisions", new HashSet<string>{"bronze3"});
                 b2.addRangeFilter("rank", 8, 12);
-                b2.addTermFilter("modes", new string[]{"tdm", "ffa"}, false);
-                b2.addTermFilter("divisions", new string[]{"bronze2","bronze3", "silver1"}, false);
+                b2.addTermFilter("modes", new HashSet<string>{"tdm", "ffa"}, false);
+                b2.addTermFilter("divisions", new HashSet<string>{"bronze2","bronze3", "silver1"}, false);
                 client2.Send(b2.Build(), (INMatchmakeTicket ticket2) =>
                 {
                     // No action.

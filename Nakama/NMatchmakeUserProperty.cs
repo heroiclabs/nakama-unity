@@ -37,11 +37,11 @@ namespace Nakama
             {
                 switch (item.ValueCase)
                 {
-                    case PropertyPair.ValueOneofCase.StringList:
-                        var terms = new string[item.StringList.Values.Count];
-                        for (var i = 0; i < item.StringList.Values.Count; i++)
+                    case PropertyPair.ValueOneofCase.StringSet:
+                        var terms = new string[item.StringSet.Values.Count];
+                        for (var i = 0; i < item.StringSet.Values.Count; i++)
                         {
-                            terms[i] = item.StringList.Values[i];
+                            terms[i] = item.StringSet.Values[i];
                         }
                         Properties.Add(item.Key, terms);
                         break;

@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 
 namespace Nakama
@@ -59,7 +60,7 @@ namespace Nakama
                 message.payload.MatchmakeAdd.RequiredCount = requiredCount;
             }
 
-            public Builder addTermFilter(string name, string[] terms, bool matchAllTerms)
+            public Builder addTermFilter(string name, HashSet<string> terms, bool matchAllTerms)
             {
                 var f = new MatchmakeFilter()
                 {
@@ -123,14 +124,14 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addProperty(string key, string[] values)
+            public Builder addProperty(string key, HashSet<string> values)
             {
                 var property = new PropertyPair()
                 {
                     Key = key,
-                    StringList = new PropertyPair.Types.StringList()
+                    StringSet = new PropertyPair.Types.StringSet()
                 };
-                property.StringList.Values.AddRange(values);
+                property.StringSet.Values.AddRange(values);
                 
                 message.payload.MatchmakeAdd.Properties.Add(property);
                 return this;
