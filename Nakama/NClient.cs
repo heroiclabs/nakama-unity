@@ -283,7 +283,7 @@ namespace Nakama
                         callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
                         break;
                     case AuthenticateResponse.IdOneofCase.Error:
-                        errback(new NError(authResponse.Error));
+                        errback(new NError(authResponse.Error, authResponse.CollationId));
                         break;
                     case AuthenticateResponse.IdOneofCase.None:
                         Logger.Error("Received invalid response from server");
@@ -366,7 +366,7 @@ namespace Nakama
                     pair.Key(true);
                     break;
                 case Envelope.PayloadOneofCase.Error:
-                    var error = new NError(message.Error);
+                    var error = new NError(message.Error, collationId);
                     if (collationId != null)
                     {
                         pair.Value(error);

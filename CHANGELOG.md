@@ -4,10 +4,9 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
-
-## [0.9.0] - 2017-10-05
 ### Added
-- Advanced Matchmaking with custom filters and user properties. 
+- Advanced Matchmaking with custom filters and user properties.
+- Expose Collation ID when client operations result in an error.
 
 ## [0.8.0] - 2017-08-01
 ### Added
