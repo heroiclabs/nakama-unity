@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
 using Google.Protobuf;
@@ -14,9 +12,9 @@ namespace Nakama
 {
     internal class NTransport : INTransport
     {
-        public event EventHandler<WebSocketCloseEventArgs> OnClose;
-        public event EventHandler<WebSocketErrorEventArgs> OnError;
-        public event EventHandler<WebSocketMessageEventArgs> OnMessage;
+        public event EventHandler<SocketCloseEventArgs> OnClose;
+        public event EventHandler<SocketErrorEventArgs> OnError;
+        public event EventHandler<SocketMessageEventArgs> OnMessage;
         public event EventHandler OnOpen;
 
         public bool Trace { get; set; }
@@ -158,43 +156,43 @@ namespace Nakama
                         case ClientState.ConnectTokenExpired:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connect token expired")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connect token expired")));
                             }
                             break;
                         case ClientState.InvalidConnectToken:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("invalid connect token")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("invalid connect token")));
                             }
                             break;
                         case ClientState.ConnectionTimedOut:
                             isConnected = false;
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection timed out")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection timed out")));
                             }
                             break;
                         case ClientState.ChallengeResponseTimedOut:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection response timed out")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection response timed out")));
                             }
                             break;
                         case ClientState.ConnectionRequestTimedOut:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection request timed out")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection request timed out")));
                             }
                             break;
                         case ClientState.ConnectionDenied:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("connection denied")));
+                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection denied")));
                             }
                             break;
                         case ClientState.Disconnected:
                             isConnected = false;
-                            OnClose.Emit(this, new WebSocketCloseEventArgs(1, "disconnected"));
+                            OnClose.Emit(this, new SocketCloseEventArgs(1, "disconnected"));
                             break;
                         case ClientState.SendingConnectionRequest:
                             break;
@@ -229,7 +227,7 @@ namespace Nakama
                 Array.Copy(payload, 0, payloadCopy, 0, size);
                 if (OnMessage != null)
                 {
-                    OnMessage.Emit(this, new WebSocketMessageEventArgs(payloadCopy));
+                    OnMessage.Emit(this, new SocketMessageEventArgs(payloadCopy));
                 }
             };
         }
@@ -246,8 +244,12 @@ namespace Nakama
             {
                 if (OnError != null)
                 {
-                    OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("client timed out while connecting")));
+                    OnError.Emit(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
                 }
+                isConnected = false;
+                client = null;
+                endpoint = null;
+                connectedEvt = null;
                 return;
             }
             ThreadPool.QueueUserWorkItem(tick);
@@ -262,18 +264,20 @@ namespace Nakama
                 {
                     if (state == ClientState.Connected)
                     {
-//                        client.OnStateChanged -= this;
                         callback(true);
                         ThreadPool.QueueUserWorkItem(tick);
                     }
                     else if (state != ClientState.SendingConnectionRequest &&
                              state != ClientState.SendingChallengeResponse)
                     {
-//                        client.OnStateChanged -= this;
                         if (OnError != null)
                         {
-                            OnError.Emit(client, new WebSocketErrorEventArgs(new Exception("client timed out while connecting")));
+                            OnError.Emit(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
                         }
+                        isConnected = false;
+                        client = null;
+                        endpoint = null;
+                        connectedEvt = null;
                     }
                 };
                 client.Connect(token);
@@ -284,8 +288,10 @@ namespace Nakama
         {
             if (client != null)
             {
+                isConnected = false;
                 client.Disconnect();
                 client = null;
+                endpoint = null;
                 connectedEvt = null;
             }
         }
@@ -294,17 +300,19 @@ namespace Nakama
         {
             if (client != null)
             {
+                isConnected = false;
                 client.Disconnect();
                 client = null;
+                endpoint = null;
                 connectedEvt = null;
             }
         }
 
         public void Send(byte[] data, bool reliable)
         {
-            if (client != null)
+            if (endpoint != null)
             {
-                client.Send(data, data.Length);
+                endpoint.SendMessage(data, data.Length, reliable ? QosType.Reliable : QosType.Unreliable);
             }
         }
 
@@ -312,7 +320,7 @@ namespace Nakama
         {
             if (client != null)
             {
-                client.Send(data, data.Length);
+                endpoint.SendMessage(data, data.Length, reliable ? QosType.Reliable : QosType.Unreliable);
                 completed(true);
             }
         }

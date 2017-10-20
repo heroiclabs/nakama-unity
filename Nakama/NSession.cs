@@ -58,15 +58,23 @@ namespace Nakama
             return (ExpiresAt - TimeSpan.FromTicks(dateTime.Ticks).TotalMilliseconds) < 0L;
         }
 
-        public static INSession Restore(string token)
+        public static INSession Restore(string session)
         {
+            string[] sessionParts = session.Split('|');
+            string token = sessionParts[0];
+            byte[] udpToken = new byte[0];
+            if (sessionParts.Length >= 2)
+            {
+                udpToken = System.Convert.FromBase64String(sessionParts[1]);
+            }
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return new NSession(token, new byte[0], System.Convert.ToInt64(span.TotalMilliseconds));
+            return new NSession(token, udpToken, System.Convert.ToInt64(span.TotalMilliseconds));
         }
 
         public override string ToString()
         {
-            return String.Format("NSession(CreatedAt={0},Token={1})", CreatedAt, Token);
+            return Token + "|" + System.Convert.ToBase64String(UdpToken);
+//            return String.Format("NSession(CreatedAt={0},Token={1},UdpToken={2})", CreatedAt, Token);
         }
 
         private static string JwtUnpack(string jwt)

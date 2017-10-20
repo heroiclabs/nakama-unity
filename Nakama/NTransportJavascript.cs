@@ -41,24 +41,24 @@ namespace Nakama
 
         private static readonly IDictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>> AuthHandlers = new Dictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>>();
 
-        private static readonly IDictionary<string, EventHandler<WebSocketCloseEventArgs>> SocketCloseHandlers = new Dictionary<string, EventHandler<WebSocketCloseEventArgs>>();
-        private static readonly IDictionary<string, EventHandler<WebSocketErrorEventArgs>> SocketErrorHandlers = new Dictionary<string, EventHandler<WebSocketErrorEventArgs>>();
-        private static readonly IDictionary<string, EventHandler<WebSocketMessageEventArgs>> SocketMessageHandlers = new Dictionary<string, EventHandler<WebSocketMessageEventArgs>>();
+        private static readonly IDictionary<string, EventHandler<SocketCloseEventArgs>> SocketCloseHandlers = new Dictionary<string, EventHandler<SocketCloseEventArgs>>();
+        private static readonly IDictionary<string, EventHandler<SocketErrorEventArgs>> SocketErrorHandlers = new Dictionary<string, EventHandler<SocketErrorEventArgs>>();
+        private static readonly IDictionary<string, EventHandler<SocketMessageEventArgs>> SocketMessageHandlers = new Dictionary<string, EventHandler<SocketMessageEventArgs>>();
         private static readonly IDictionary<string, EventHandler> SocketOpenHandlers = new Dictionary<string, EventHandler>();
 
         private static readonly IDictionary<string, Action> SocketCloseCallbacks = new Dictionary<string, Action>();
         private static readonly IDictionary<string, Action<bool>> SocketOpenCallbacks = new Dictionary<string, Action<bool>>();
 
         private readonly string _socketId = Guid.NewGuid().ToString();
-        public event EventHandler<WebSocketCloseEventArgs> OnClose {
+        public event EventHandler<SocketCloseEventArgs> OnClose {
             add { SocketCloseHandlers.Add(_socketId, value); }
             remove { SocketCloseHandlers.Remove(_socketId); }
         }
-        public event EventHandler<WebSocketErrorEventArgs> OnError {
+        public event EventHandler<SocketErrorEventArgs> OnError {
             add { SocketErrorHandlers.Add(_socketId, value); }
             remove { SocketErrorHandlers.Remove(_socketId); }
         }
-        public event EventHandler<WebSocketMessageEventArgs> OnMessage {
+        public event EventHandler<SocketMessageEventArgs> OnMessage {
             add { SocketMessageHandlers.Add(_socketId, value); }
             remove { SocketMessageHandlers.Remove(_socketId); }
         }
@@ -149,7 +149,7 @@ namespace Nakama
 
             if (SocketErrorHandlers.ContainsKey(socketId))
             {
-                SocketErrorHandlers[socketId].Emit(null, new WebSocketErrorEventArgs(new Exception("WebSocket error occured")));
+                SocketErrorHandlers[socketId].Emit(null, new SocketErrorEventArgs(new Exception("WebSocket error occured")));
             }
         }
 
@@ -161,7 +161,7 @@ namespace Nakama
             if (SocketMessageHandlers.ContainsKey(socketId))
             {
                 var dataBytes = Convert.FromBase64String(data);
-                SocketMessageHandlers[socketId].Emit(null, new WebSocketMessageEventArgs(dataBytes));
+                SocketMessageHandlers[socketId].Emit(null, new SocketMessageEventArgs(dataBytes));
             }
         }
 
@@ -173,7 +173,7 @@ namespace Nakama
 
             if (SocketCloseHandlers.ContainsKey(socketId))
             {
-                SocketCloseHandlers[socketId].Emit(null, new WebSocketCloseEventArgs(closeStatusCode, CloseErrorMessages[closeStatusCode]));
+                SocketCloseHandlers[socketId].Emit(null, new SocketCloseEventArgs(closeStatusCode, CloseErrorMessages[closeStatusCode]));
             }
 
             if (SocketCloseCallbacks.ContainsKey(socketId))

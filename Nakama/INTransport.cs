@@ -23,39 +23,39 @@ namespace Nakama
         void Send(byte[] data, bool reliable);
         void SendAsync(byte[] data, bool reliable, Action<bool> completed);
 
-        event EventHandler<WebSocketCloseEventArgs> OnClose;
-        event EventHandler<WebSocketErrorEventArgs> OnError;
-        event EventHandler<WebSocketMessageEventArgs> OnMessage;
+        event EventHandler<SocketCloseEventArgs> OnClose;
+        event EventHandler<SocketErrorEventArgs> OnError;
+        event EventHandler<SocketMessageEventArgs> OnMessage;
         event EventHandler OnOpen;
     }
 
-    public class WebSocketMessageEventArgs : EventArgs
+    public class SocketMessageEventArgs : EventArgs
     {
         public byte[] Data { get ; private set; }
 
-        internal WebSocketMessageEventArgs(byte[] data)
+        internal SocketMessageEventArgs(byte[] data)
         {
             Data = data;
         }
     }
 
-    public class WebSocketCloseEventArgs : EventArgs
+    public class SocketCloseEventArgs : EventArgs
     {
         public int Code { get; private set; }
         public string Reason{ get; private set; }
 
-        internal WebSocketCloseEventArgs(int code, string reason)
+        internal SocketCloseEventArgs(int code, string reason)
         {
             Code = code;
             Reason = reason;
         }
     }
 
-    public class WebSocketErrorEventArgs : EventArgs
+    public class SocketErrorEventArgs : EventArgs
     {
         public Exception Error { get ; private set; }
 
-        internal WebSocketErrorEventArgs(Exception error)
+        internal SocketErrorEventArgs(Exception error)
         {
             Error = error;
         }
