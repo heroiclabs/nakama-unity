@@ -29,6 +29,8 @@ namespace Nakama
 {
     public class NClient : INClient
     {
+        public TransportType TransportType { get; private set; }
+        
         public uint ConnectTimeout { get; private set; }
 
         public string Host { get; private set; }
@@ -90,13 +92,14 @@ namespace Nakama
 
         private INTransport transport;
 
-        private NClient(string serverKey)
+        private NClient(string serverKey, TransportType transportType)
         {
             // Don't send Expect: 100 Continue when sending HTTP requests
             ServicePointManager.Expect100Continue = false;
             // Fix SSL certificate handshake
             ServicePointManager.ServerCertificateValidationCallback += (o, certificate, chain, errors) => true;
 
+            TransportType = transportType;
             ConnectTimeout = 3000;
             Host = "127.0.0.1";
             Port = 7350;
@@ -115,7 +118,15 @@ namespace Nakama
 #if UNITY_WEBGL && !UNITY_EDITOR
             transport = new NTransportJavascript();
 #else
-            transport = new NTransport();
+            if (transportType == TransportType.Udp)
+            {
+                transport = new NTransportUdp();
+            }
+            else
+            {
+                // Default to WebSocket transport.
+                transport = new NTransportWebSocket();
+            }
 #endif
 
             transport.Logger = Logger;
@@ -510,7 +521,12 @@ namespace Nakama
 
             public Builder(string serverKey)
             {
-                client = new NClient(serverKey);
+                client = new NClient(serverKey, TransportType.WebSocket);
+            }
+
+            public Builder(string serverKey, TransportType transportType)
+            {
+                client = new NClient(serverKey, transportType);
             }
 
             public Builder ConnectTimeout(uint connectTimeout)
@@ -567,7 +583,7 @@ namespace Nakama
             {
                 // Clone object so builder now operates on new copy.
                 var original = client;
-                client = new NClient(original.ServerKey);
+                client = new NClient(original.ServerKey, original.TransportType);
                 client.ConnectTimeout = original.ConnectTimeout;
                 client.Host = original.Host;
                 client.Lang = original.Lang;

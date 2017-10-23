@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nakama</RootNamespace>
     <AssemblyName>NakamaUnity</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -177,8 +177,9 @@
     <Compile Include="NTopicMessageSendMessage.cs" />
     <Compile Include="NTopicMessagesListMessage.cs" />
     <Compile Include="NTopicPresence.cs" />
-    <Compile Include="NTransport.cs" />
+    <Compile Include="NTransportUdp.cs" />
     <Compile Include="NTransportJavascript.cs" />
+    <Compile Include="NTransportWebSocket.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />

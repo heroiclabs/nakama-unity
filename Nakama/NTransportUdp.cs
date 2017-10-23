@@ -1,4 +1,20 @@
-﻿using System;
+﻿/**
+ * Copyright 2017 The Nakama Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -6,11 +22,10 @@ using System.Threading;
 using Google.Protobuf;
 using NetcodeIO.NET;
 using ReliableNetcode;
-using WebSocketSharp;
 
 namespace Nakama
 {
-    internal class NTransport : INTransport
+    internal class NTransportUdp : INTransport
     {
         public event EventHandler<SocketCloseEventArgs> OnClose;
         public event EventHandler<SocketErrorEventArgs> OnError;
@@ -156,43 +171,43 @@ namespace Nakama
                         case ClientState.ConnectTokenExpired:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connect token expired")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("connect token expired")));
                             }
                             break;
                         case ClientState.InvalidConnectToken:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("invalid connect token")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("invalid connect token")));
                             }
                             break;
                         case ClientState.ConnectionTimedOut:
                             isConnected = false;
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection timed out")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("connection timed out")));
                             }
                             break;
                         case ClientState.ChallengeResponseTimedOut:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection response timed out")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("connection response timed out")));
                             }
                             break;
                         case ClientState.ConnectionRequestTimedOut:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection request timed out")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("connection request timed out")));
                             }
                             break;
                         case ClientState.ConnectionDenied:
                             if (OnError != null)
                             {
-                                OnError.Emit(client, new SocketErrorEventArgs(new Exception("connection denied")));
+                                OnError(client, new SocketErrorEventArgs(new Exception("connection denied")));
                             }
                             break;
                         case ClientState.Disconnected:
                             isConnected = false;
-                            OnClose.Emit(this, new SocketCloseEventArgs(1, "disconnected"));
+                            OnClose(this, new SocketCloseEventArgs(1, "disconnected"));
                             break;
                         case ClientState.SendingConnectionRequest:
                             break;
@@ -203,7 +218,7 @@ namespace Nakama
                             connectedEvt.Set();
                             if (OnOpen != null)
                             {
-                                OnOpen.Emit(client, new EventArgs());
+                                OnOpen(client, new EventArgs());
                             }
                             break;
                         default:
@@ -219,6 +234,9 @@ namespace Nakama
             
             endpoint.TransmitCallback = (payload, size) =>
             {
+                byte[] pc = new byte[size];
+                Array.Copy(payload, 0, pc, 0, size);
+                Logger.DebugFormat("TRANSMIT {0}", string.Join(", ", pc));
                 client.Send(payload, size);
             };
             endpoint.ReceiveCallback = (payload, size) =>
@@ -227,7 +245,7 @@ namespace Nakama
                 Array.Copy(payload, 0, payloadCopy, 0, size);
                 if (OnMessage != null)
                 {
-                    OnMessage.Emit(this, new SocketMessageEventArgs(payloadCopy));
+                    OnMessage(this, new SocketMessageEventArgs(payloadCopy));
                 }
             };
         }
@@ -244,7 +262,7 @@ namespace Nakama
             {
                 if (OnError != null)
                 {
-                    OnError.Emit(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
+                    OnError(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
                 }
                 isConnected = false;
                 client = null;
@@ -272,7 +290,7 @@ namespace Nakama
                     {
                         if (OnError != null)
                         {
-                            OnError.Emit(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
+                            OnError(client, new SocketErrorEventArgs(new Exception("client timed out while connecting")));
                         }
                         isConnected = false;
                         client = null;
@@ -305,6 +323,7 @@ namespace Nakama
                 client = null;
                 endpoint = null;
                 connectedEvt = null;
+                callback();
             }
         }
 
