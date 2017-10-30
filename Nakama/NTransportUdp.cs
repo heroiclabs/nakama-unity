@@ -234,9 +234,6 @@ namespace Nakama
             
             endpoint.TransmitCallback = (payload, size) =>
             {
-                byte[] pc = new byte[size];
-                Array.Copy(payload, 0, pc, 0, size);
-                Logger.DebugFormat("TRANSMIT {0}", string.Join(", ", pc));
                 client.Send(payload, size);
             };
             endpoint.ReceiveCallback = (payload, size) =>
@@ -337,7 +334,7 @@ namespace Nakama
 
         public void SendAsync(byte[] data, bool reliable, Action<bool> completed)
         {
-            if (client != null)
+            if (endpoint != null)
             {
                 endpoint.SendMessage(data, data.Length, reliable ? QosType.Reliable : QosType.Unreliable);
                 completed(true);

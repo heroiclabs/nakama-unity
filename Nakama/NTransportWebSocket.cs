@@ -17,11 +17,10 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
-using System.Threading;
 using Google.Protobuf;
-using System.Net.WebSockets;
-using System.Text;
+using WebSocketSharp;
 
 namespace Nakama
 {
@@ -34,11 +33,8 @@ namespace Nakama
 
         public bool Trace { get; set; }
         public INLogger Logger { get; set; }
-        
-        private const int ReceiveChunkSize = 1024;
-        private const int SendChunkSize = 1024;
 
-        private ClientWebSocket client;
+        private WebSocket socket;
 
         public void Post(string uri,
             AuthenticateRequest payload,
@@ -155,128 +151,118 @@ namespace Nakama
             }
         }
 
-        private void createClient()
+        private void createWebSocket(string uri)
         {
-            client = new ClientWebSocket();
-            client.Options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-        }
-        
-        private async void listenClient()
-        {
-            var buffer = new byte[ReceiveChunkSize];
-            try
+            socket = new WebSocket(uri);
+            if (Trace)
             {
-                while (client.State == WebSocketState.Open)
-                {
-                    byte[] msg = null;
-                    WebSocketReceiveResult result;
-                    do
-                    {
-                        result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                socket.Log.Level = LogLevel.Debug;
+            }
 
-                        if (result.MessageType == WebSocketMessageType.Close)
-                        {
-                            await client.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                            if (OnClose != null)
-                            {
-                                OnClose(this, new SocketCloseEventArgs(1, "connection closed"));
-                            }
-                            return;
-                        }
-                        else
-                        {
-                            if (msg == null)
-                            {
-                                msg = new byte[result.Count];
-                                Array.Copy(buffer, 0, msg, 0, result.Count);
-                            }
-                            else
-                            {
-                                byte[] newMsg = new byte[msg.Length + result.Count];
-                                Array.Copy(msg, 0, newMsg, 0, msg.Length);
-                                Array.Copy(buffer, 0, newMsg, msg.Length - 1, result.Count);
-                                msg = newMsg;
-                            }
-                        }
-                    } while (!result.EndOfMessage);
-                    
-                    if (OnMessage != null)
-                    {
-                        OnMessage(this, new SocketMessageEventArgs(msg));
-                    }
-                }
-            }
-            catch (Exception e)
+            socket.OnClose += (sender, evt) =>
             {
-                if (OnClose != null)
+                // Release socket handle
+                socket = null;
+                Logger.TraceIf(Trace, String.Format("Socket Closed. Code={0}, Reason={1}", evt.Code, evt.Reason));
+                OnClose.Emit(this, new SocketCloseEventArgs(evt.Code, evt.Reason));
+            };
+            socket.OnMessage += (sender, evt) =>
+            {
+                if (evt.IsPing)
                 {
-                    OnClose(this, new SocketCloseEventArgs(1, e.Message));                    
+                    Logger.TraceIf(Trace, "SocketReceive: WebSocket ping.");
+                    return;
                 }
-                client = null;
-            }
-            finally
+
+                if (evt.IsText)
+                {
+                    Logger.TraceIf(Trace, "SocketReceive: Invalid content (text/plain).");
+                    return;
+                }
+
+                OnMessage.Emit(this, new SocketMessageEventArgs(evt.RawData));
+            };
+            socket.OnError += (sender, evt) =>
             {
-                client.Dispose();
-                client = null;
-            }
+                if (OnError != null)
+                {
+                    OnError.Emit(sender, new SocketErrorEventArgs(evt.Exception));
+                }
+            };
+            socket.OnOpen += (sender, evt) =>
+            {
+                if (OnOpen != null)
+                {
+                    OnOpen.Emit(sender, evt);
+                }
+            };
+
         }
 
         public void Connect(string uri, byte[] token)
         {
-            ConnectAsync(uri, token, b => {});
+            if (socket == null)
+            {
+                createWebSocket(uri);
+            }
+            socket.Connect();
+
+            // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
+            Logger.TraceIf(Trace, "Connect: Enabling NoDelay on socket.");
+            socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+            Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
         }
 
-        public async void ConnectAsync(string uri, byte[] token, Action<bool> callback)
+        public void ConnectAsync(string uri, byte[] token, Action<bool> callback)
         {
-            if (client == null)
+            if (socket == null)
             {
-                createClient();
+                createWebSocket(uri);
+                socket.OnOpen += (sender, _) =>
+                {
+                    // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
+                    Logger.TraceIf(Trace, "ConnectAsync: Enabling NoDelay on socket.");
+                    socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                    Logger.TraceIf(Trace, "ConnectAsync: Enabled NoDelay on socket.");
+
+                    callback(true);
+                };
             }
-            await client.ConnectAsync(new Uri(uri), CancellationToken.None);
-            // TODO enable NoDelay on underlying socket.
-            listenClient();
-            callback(true);
+
+            socket.ConnectAsync();
         }
 
         public void Close()
         {
-            CloseAsync(() => {});
+            if (socket != null)
+            {
+                socket.Close(CloseStatusCode.Normal);
+            }
         }
 
-        public async void CloseAsync(Action callback)
+        public void CloseAsync(Action callback)
         {
-            await client.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+            if (socket != null)
+            {
+                socket.CloseAsync(CloseStatusCode.Normal);
+            }
             callback();
         }
 
         public void Send(byte[] data, bool reliable)
         {
-            SendAsync(data, reliable, b => {});
+            if (socket != null)
+            {
+                socket.Send(data);
+            }
         }
 
-        public async void SendAsync(byte[] data, bool reliable, Action<bool> completed)
+        public void SendAsync(byte[] data, bool reliable, Action<bool> completed)
         {
-            if (client == null || client.State != WebSocketState.Open)
+            if (socket != null)
             {
-                throw new Exception("Connection is not open.");
+                socket.SendAsync(data, completed);
             }
-
-            var messagesCount = (int)Math.Ceiling((double)data.Length / SendChunkSize);
-
-            for (var i = 0; i < messagesCount; i++)
-            {
-                var offset = (SendChunkSize * i);
-                var count = SendChunkSize;
-                var lastMessage = ((i + 1) == messagesCount);
-
-                if ((count * (i + 1)) > data.Length)
-                {
-                    count = data.Length - offset;
-                }
-
-                await client.SendAsync(new ArraySegment<byte>(data, offset, count), WebSocketMessageType.Binary, lastMessage, CancellationToken.None);
-            }
-            completed(true);
         }
     }
 }
