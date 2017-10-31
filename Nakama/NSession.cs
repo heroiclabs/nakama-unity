@@ -30,11 +30,14 @@ namespace Nakama
         public byte[] Id { get; private set; }
 
         public string Token { get; private set; }
+        
+        public byte[] UdpToken { get; private set; }
 
-        internal NSession(string token, long createdAt)
+        internal NSession(string token, byte[] udpToken, long createdAt)
         {
             CreatedAt = createdAt;
             Token = token;
+            UdpToken = udpToken;
 
             var decoded = JwtUnpack(Token);
             var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
@@ -55,15 +58,22 @@ namespace Nakama
             return (ExpiresAt - TimeSpan.FromTicks(dateTime.Ticks).TotalMilliseconds) < 0L;
         }
 
-        public static INSession Restore(string token)
+        public static INSession Restore(string session)
         {
+            string[] sessionParts = session.Split('|');
+            string token = sessionParts[0];
+            byte[] udpToken = new byte[0];
+            if (sessionParts.Length >= 2)
+            {
+                udpToken = System.Convert.FromBase64String(sessionParts[1]);
+            }
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return new NSession(token, System.Convert.ToInt64(span.TotalMilliseconds));
+            return new NSession(token, udpToken, System.Convert.ToInt64(span.TotalMilliseconds));
         }
 
         public override string ToString()
         {
-            return String.Format("NSession(CreatedAt={0},Token={1})", CreatedAt, Token);
+            return Token + "|" + System.Convert.ToBase64String(UdpToken);
         }
 
         private static string JwtUnpack(string jwt)

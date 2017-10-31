@@ -1,4 +1,20 @@
-﻿using System;
+﻿/**
+ * Copyright 2017 The Nakama Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -8,11 +24,11 @@ using WebSocketSharp;
 
 namespace Nakama
 {
-    internal class NTransport : INTransport
+    internal class NTransportWebSocket : INTransport
     {
-        public event EventHandler<WebSocketCloseEventArgs> OnClose;
-        public event EventHandler<WebSocketErrorEventArgs> OnError;
-        public event EventHandler<WebSocketMessageEventArgs> OnMessage;
+        public event EventHandler<SocketCloseEventArgs> OnClose;
+        public event EventHandler<SocketErrorEventArgs> OnError;
+        public event EventHandler<SocketMessageEventArgs> OnMessage;
         public event EventHandler OnOpen;
 
         public bool Trace { get; set; }
@@ -148,7 +164,7 @@ namespace Nakama
                 // Release socket handle
                 socket = null;
                 Logger.TraceIf(Trace, String.Format("Socket Closed. Code={0}, Reason={1}", evt.Code, evt.Reason));
-                OnClose.Emit(this, new WebSocketCloseEventArgs(evt.Code, evt.Reason));
+                OnClose.Emit(this, new SocketCloseEventArgs(evt.Code, evt.Reason));
             };
             socket.OnMessage += (sender, evt) =>
             {
@@ -164,13 +180,13 @@ namespace Nakama
                     return;
                 }
 
-                OnMessage.Emit(this, new WebSocketMessageEventArgs(evt.RawData));
+                OnMessage.Emit(this, new SocketMessageEventArgs(evt.RawData));
             };
             socket.OnError += (sender, evt) =>
             {
                 if (OnError != null)
                 {
-                    OnError.Emit(sender, new WebSocketErrorEventArgs(evt.Exception));
+                    OnError.Emit(sender, new SocketErrorEventArgs(evt.Exception));
                 }
             };
             socket.OnOpen += (sender, evt) =>
@@ -183,7 +199,7 @@ namespace Nakama
 
         }
 
-        public void Connect(string uri, bool noDelay)
+        public void Connect(string uri, byte[] token)
         {
             if (socket == null)
             {
@@ -192,15 +208,12 @@ namespace Nakama
             socket.Connect();
 
             // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
-            if (noDelay)
-            {
-                Logger.TraceIf(Trace, "Connect: Enabling NoDelay on socket.");
-                socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
-            }
+            Logger.TraceIf(Trace, "Connect: Enabling NoDelay on socket.");
+            socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+            Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
         }
 
-        public void ConnectAsync(string uri, bool noDelay, Action<bool> callback)
+        public void ConnectAsync(string uri, byte[] token, Action<bool> callback)
         {
             if (socket == null)
             {
@@ -208,12 +221,10 @@ namespace Nakama
                 socket.OnOpen += (sender, _) =>
                 {
                     // Experimental. Get a reference to the underlying socket and enable TCP_NODELAY.
-                    if (noDelay)
-                    {
-                        Logger.TraceIf(Trace, "ConnectAsync: Enabling NoDelay on socket.");
-                        socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
-                        Logger.TraceIf(Trace, "ConnectAsync: Enabled NoDelay on socket.");
-                    }
+                    Logger.TraceIf(Trace, "ConnectAsync: Enabling NoDelay on socket.");
+                    socket.TcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+                    Logger.TraceIf(Trace, "ConnectAsync: Enabled NoDelay on socket.");
+
                     callback(true);
                 };
             }
@@ -238,7 +249,7 @@ namespace Nakama
             callback();
         }
 
-        public void Send(byte[] data)
+        public void Send(byte[] data, bool reliable)
         {
             if (socket != null)
             {
@@ -246,7 +257,7 @@ namespace Nakama
             }
         }
 
-        public void SendAsync(byte[] data, Action<bool> completed)
+        public void SendAsync(byte[] data, bool reliable, Action<bool> completed)
         {
             if (socket != null)
             {

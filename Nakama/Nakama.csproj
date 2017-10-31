@@ -32,15 +32,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="websocket-sharp">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\websocket-sharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="BCCrypto">
+      <HintPath>..\packages\Netcode.IO.NET\BCCrypto.pdb</HintPath>
+    </Reference>
+    <Reference Include="BCCrypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Netcode.IO.NET\BCCrypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Netcode.IO.NET">
+      <HintPath>..\packages\Netcode.IO.NET\Netcode.IO.NET.pdb</HintPath>
+    </Reference>
+    <Reference Include="Netcode.IO.NET, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Netcode.IO.NET\Netcode.IO.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ReliableNetcode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\ReliableNetcode.NET\ReliableNetcode.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf">
       <HintPath>..\packages\protobuf3-for-unity-v3.0.0_ga_noJIT\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="websocket-sharp, Version=1.0.2.35302, Culture=neutral, PublicKeyToken=5660b08a1845a91e">
+      <HintPath>..\packages\WebSocketSharp\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api.pb.cs" />
@@ -87,7 +101,6 @@
     <Compile Include="INMatch.cs" />
     <Compile Include="INMatchData.cs" />
     <Compile Include="INMatchPresence.cs" />
-    <Compile Include="INMessage.cs" />
     <Compile Include="INResultSet.cs" />
     <Compile Include="INSelf.cs" />
     <Compile Include="INSession.cs" />
@@ -163,8 +176,9 @@
     <Compile Include="NTopicMessageSendMessage.cs" />
     <Compile Include="NTopicMessagesListMessage.cs" />
     <Compile Include="NTopicPresence.cs" />
-    <Compile Include="NTransport.cs" />
+    <Compile Include="NTransportUdp.cs" />
     <Compile Include="NTransportJavascript.cs" />
+    <Compile Include="NTransportWebSocket.cs" />
     <Compile Include="NUser.cs" />
     <Compile Include="NUserPresence.cs" />
     <Compile Include="NUsersFetchMessage.cs" />

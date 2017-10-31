@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+using Google.Protobuf;
+
 namespace Nakama
 {
-    public interface INCollatedMessage<T> : INMessage
+    public interface INCollatedMessage<T>
     {
+        IMessage Payload { get; }
         void SetCollationId(string id);
     }
 }

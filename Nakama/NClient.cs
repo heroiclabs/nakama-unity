@@ -15,20 +15,18 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using System.Threading;
 using Google.Protobuf;
-using WebSocketSharp;
 
 namespace Nakama
 {
     public class NClient : INClient
     {
+        public TransportType TransportType { get; private set; }
+        
         public uint ConnectTimeout { get; private set; }
 
         public string Host { get; private set; }
@@ -81,8 +79,6 @@ namespace Nakama
 
         public uint Timeout { get; private set; }
 
-        public bool NoDelay { get; private set; }
-
         public bool Trace { get; private set; }
 
         private IDictionary<string, KeyValuePair<Action<object>, Action<INError>>> collationIds =
@@ -92,20 +88,20 @@ namespace Nakama
 
         private INTransport transport;
 
-        private NClient(string serverKey)
+        private NClient(string serverKey, TransportType transportType)
         {
             // Don't send Expect: 100 Continue when sending HTTP requests
             ServicePointManager.Expect100Continue = false;
             // Fix SSL certificate handshake
             ServicePointManager.ServerCertificateValidationCallback += (o, certificate, chain, errors) => true;
 
+            TransportType = transportType;
             ConnectTimeout = 3000;
             Host = "127.0.0.1";
             Port = 7350;
             ServerKey = serverKey;
             SSL = false;
             Timeout = 5000;
-            NoDelay = true;
             Trace = false;
             Lang = "en";
 #if UNITY
@@ -118,7 +114,15 @@ namespace Nakama
 #if UNITY_WEBGL && !UNITY_EDITOR
             transport = new NTransportJavascript();
 #else
-            transport = new NTransport();
+            if (transportType == TransportType.Udp)
+            {
+                transport = new NTransportUdp();
+            }
+            else
+            {
+                // Default to WebSocket transport.
+                transport = new NTransportWebSocket();
+            }
 #endif
 
             transport.Logger = Logger;
@@ -163,12 +167,12 @@ namespace Nakama
 
         public void Connect(INSession session)
         {
-            transport.Connect(getWebsocketUri(session), NoDelay);
+            transport.Connect(getWebsocketUri(session), session.UdpToken);
         }
 
         public void Connect(INSession session, Action<bool> callback)
         {
-            transport.ConnectAsync(getWebsocketUri(session), NoDelay, callback);
+            transport.ConnectAsync(getWebsocketUri(session), session.UdpToken, callback);
         }
 
         public static NClient Default(string serverKey)
@@ -191,7 +195,7 @@ namespace Nakama
             var payload = new Envelope {Logout = new Logout()};
             var stream = new MemoryStream();
             payload.WriteTo(stream);
-            transport.Send(stream.ToArray());
+            transport.Send(stream.ToArray(), true);
         }
 
         public void Logout(Action<bool> callback)
@@ -199,7 +203,7 @@ namespace Nakama
             var payload = new Envelope {Logout = new Logout()};
             var stream = new MemoryStream();
             payload.WriteTo(stream);
-            transport.SendAsync(stream.ToArray(), (bool completed) =>
+            transport.SendAsync(stream.ToArray(), true, (bool completed) =>
             {
                 callback(completed);
             });
@@ -221,7 +225,7 @@ namespace Nakama
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
             Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
-            transport.SendAsync(stream.ToArray(), (bool completed) =>
+            transport.SendAsync(stream.ToArray(), true, (bool completed) =>
             {
                 if (!completed)
                 {
@@ -231,12 +235,16 @@ namespace Nakama
             });
         }
 
-        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        public void Send(INUncollatedMessage message, bool reliable, Action<bool> callback, Action<INError> errback)
         {
+            if (!reliable && TransportType == TransportType.WebSocket)
+            {
+                Logger.Warn("Sending unreliable messages is not supported on WebSocket transport, using reliable instead");
+            }
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
             Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
-            transport.SendAsync(stream.ToArray(), (bool completed) =>
+            transport.SendAsync(stream.ToArray(), reliable, (bool completed) =>
             {
                 if (completed)
                 {
@@ -249,10 +257,15 @@ namespace Nakama
             });
         }
 
+        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        {
+            Send(message, true, callback, errback);
+        }
+
         public override string ToString()
         {
-            var f = "NClient(ConnectTimeout={0},Host={1},Lang={2},Port={3},ServerKey={4},SSL={5},Timeout={6},NoDelay={7},Trace={8})";
-            return String.Format(f, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, NoDelay, Trace);
+            var f = "NClient(ConnectTimeout={0},Host={1},Lang={2},Port={3},ServerKey={4},SSL={5},Timeout={6},Trace={8})";
+            return String.Format(f, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, Trace);
         }
 
         private void authenticate(string path,
@@ -280,7 +293,7 @@ namespace Nakama
                 switch (authResponse.IdCase)
                 {
                     case AuthenticateResponse.IdOneofCase.Session:
-                        callback(new NSession(authResponse.Session.Token, System.Convert.ToInt64(span.TotalMilliseconds)));
+                        callback(new NSession(authResponse.Session.Token, authResponse.Session.UdpToken.ToByteArray(), System.Convert.ToInt64(span.TotalMilliseconds)));
                         break;
                     case AuthenticateResponse.IdOneofCase.Error:
                         errback(new NError(authResponse.Error, authResponse.CollationId));
@@ -513,7 +526,12 @@ namespace Nakama
 
             public Builder(string serverKey)
             {
-                client = new NClient(serverKey);
+                client = new NClient(serverKey, TransportType.WebSocket);
+            }
+
+            public Builder(string serverKey, TransportType transportType)
+            {
+                client = new NClient(serverKey, transportType);
             }
 
             public Builder ConnectTimeout(uint connectTimeout)
@@ -559,12 +577,6 @@ namespace Nakama
                 return this;
             }
 
-            public Builder NoDelay(bool enable)
-            {
-                client.NoDelay = enable;
-                return this;
-            }
-
             public Builder Trace(bool enable)
             {
                 client.Trace = enable;
@@ -576,7 +588,7 @@ namespace Nakama
             {
                 // Clone object so builder now operates on new copy.
                 var original = client;
-                client = new NClient(original.ServerKey);
+                client = new NClient(original.ServerKey, original.TransportType);
                 client.ConnectTimeout = original.ConnectTimeout;
                 client.Host = original.Host;
                 client.Lang = original.Lang;
@@ -584,7 +596,6 @@ namespace Nakama
                 client.Port = original.Port;
                 client.SSL = original.SSL;
                 client.Timeout = original.Timeout;
-                client.NoDelay = original.NoDelay;
                 client.Trace = original.Trace;
                 return original;
             }
