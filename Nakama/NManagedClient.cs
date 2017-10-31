@@ -260,11 +260,18 @@ namespace Nakama
 
         public void Send(INUncollatedMessage message, bool reliable, Action<bool> callback, Action<INError> errback)
         {
-            _client.Send(message, reliable, (bool done) => {
+            _client.Send(message, reliable, (bool done) =>
+            {
                 Enqueue(() => callback(done));
-            }, (INError error) => {
+            }, (INError error) =>
+            {
                 Enqueue(() => errback(error));
             });
+        }
+
+        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        {
+            Send(message, true, callback, errback);
         }
 
         private static IEnumerator ActionWrapper(Action action)

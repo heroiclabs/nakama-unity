@@ -237,6 +237,10 @@ namespace Nakama
 
         public void Send(INUncollatedMessage message, bool reliable, Action<bool> callback, Action<INError> errback)
         {
+            if (!reliable && TransportType == TransportType.WebSocket)
+            {
+                Logger.Warn("Sending unreliable messages is not supported on WebSocket transport, using reliable instead");
+            }
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
             Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
@@ -251,6 +255,11 @@ namespace Nakama
                     errback(new NError("Message send error"));
                 }
             });
+        }
+
+        public void Send(INUncollatedMessage message, Action<bool> callback, Action<INError> errback)
+        {
+            Send(message, true, callback, errback);
         }
 
         public override string ToString()

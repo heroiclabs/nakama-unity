@@ -74,7 +74,6 @@ namespace Nakama
         public override string ToString()
         {
             return Token + "|" + System.Convert.ToBase64String(UdpToken);
-//            return String.Format("NSession(CreatedAt={0},Token={1},UdpToken={2})", CreatedAt, Token);
         }
 
         private static string JwtUnpack(string jwt)
