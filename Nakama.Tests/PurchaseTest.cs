@@ -29,7 +29,7 @@ namespace Nakama.Tests
         private static readonly string DeviceId = random.GetString();
         private static readonly string DefaultServerKey = "defaultkey";
         private INClient client;
-        private byte[] userId;
+        private string userId;
 
         [SetUp]
         public void SetUp()

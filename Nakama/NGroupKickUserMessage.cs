@@ -29,7 +29,7 @@ namespace Nakama
             }
         }
 
-        private NGroupKickUserMessage(byte[] groupId, byte[] userId)
+        private NGroupKickUserMessage(string groupId, string userId)
         {
             payload = new Envelope {GroupUsersKick = new TGroupUsersKick { GroupUsers =
             {
@@ -37,8 +37,8 @@ namespace Nakama
                 {
                     new TGroupUsersKick.Types.GroupUserKick
                     {
-                        UserId = ByteString.CopyFrom(userId),
-                        GroupId = ByteString.CopyFrom(groupId)
+                        UserId = userId,
+                        GroupId = groupId
                     }
                 }
             }}};   
@@ -60,7 +60,7 @@ namespace Nakama
             return String.Format("NGroupKickUserMessage({0})", output);
         }
 
-        public static NGroupKickUserMessage Default(byte[] groupId, byte[] userId)
+        public static NGroupKickUserMessage Default(string groupId, string userId)
         {
             return new NGroupKickUserMessage(groupId, userId);
         }

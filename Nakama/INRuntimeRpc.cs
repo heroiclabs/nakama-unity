@@ -19,6 +19,6 @@ namespace Nakama
     public interface INRuntimeRpc
     {
         string Id { get; }
-        byte[] Payload { get; }
+        string Payload { get; }
     }
 }

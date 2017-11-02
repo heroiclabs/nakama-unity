@@ -26,11 +26,11 @@ namespace Nakama
 
         public string Record { get; private set; }
 
-        public byte[] UserId { get; private set; }
+        public string UserId { get; private set; }
 
-        public byte[] Value { get; private set; }
+        public string Value { get; private set; }
 
-        public byte[] Version { get; private set; }
+        public string Version { get; private set; }
 
         public StoragePermissionRead PermissionRead { get; private set; }
 
@@ -47,9 +47,9 @@ namespace Nakama
             Bucket = message.Bucket;
             Collection = message.Collection;
             Record = message.Record;
-            UserId = message.UserId.ToByteArray();
-            Value = message.Value.ToByteArray();
-            Version = message.Version.ToByteArray();
+            UserId = message.UserId;
+            Value = message.Value;
+            Version = message.Version;
             CreatedAt = message.CreatedAt;
             UpdatedAt = message.UpdatedAt;
             ExpiresAt = message.ExpiresAt;

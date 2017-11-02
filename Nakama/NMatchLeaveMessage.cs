@@ -29,11 +29,11 @@ namespace Nakama
             }
         }
 
-        private NMatchLeaveMessage(byte[] matchId)
+        private NMatchLeaveMessage(string matchId)
         {
             payload = new Envelope {MatchesLeave = new TMatchesLeave { MatchIds =
             {
-                new List<ByteString>{ ByteString.CopyFrom(matchId) }
+                new List<string>{ matchId }
             }}};   
         }
 
@@ -52,7 +52,7 @@ namespace Nakama
             return String.Format("NMatchLeaveMessage(GroupIds={0})", output);   
         }
 
-        public static NMatchLeaveMessage Default(byte[] matchId)
+        public static NMatchLeaveMessage Default(string matchId)
         {
             return new NMatchLeaveMessage(matchId);
         }

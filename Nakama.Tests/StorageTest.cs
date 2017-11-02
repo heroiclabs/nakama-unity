@@ -16,7 +16,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -34,11 +33,11 @@ namespace Nakama.Tests
         private static readonly string Bucket = "testBucket";
         private static readonly string Collection = "testCollection";
         private static readonly string Record = "testRecord";
-        private static readonly byte[] StorageValue = Encoding.UTF8.GetBytes("{\"jsonkey\":\"jsonvalue\"}");
-        private static readonly byte[] IfNoneMatchVersion = Encoding.UTF8.GetBytes("*");
-        private static readonly byte[] InvalidVersion = Encoding.UTF8.GetBytes("InvalidIfMatch");
+        private static readonly string StorageValue = "{\"jsonkey\":\"jsonvalue\"}";
+        private static readonly string IfNoneMatchVersion = "*";
+        private static readonly string InvalidVersion = "InvalidIfMatch";
 
-        private static byte[] UserId;
+        private static string UserId;
 
         private INClient client;
 
@@ -410,8 +409,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INStorageKey> res = null;
 
-            var jsonString = "{\"coins\": 100, \"gems\": 10, \"artifacts\": 0}";
-            byte[] json = Encoding.UTF8.GetBytes(jsonString);
+            var json = "{\"coins\": 100, \"gems\": 10, \"artifacts\": 0}";
 
             var message = new NStorageUpdateMessage.Builder()
                 .Update(Bucket, Collection, Record, new NStorageUpdateMessage.StorageUpdateBuilder()

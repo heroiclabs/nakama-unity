@@ -28,10 +28,10 @@ namespace Nakama
             }
         }
 
-        private NGroupUsersListMessage(byte[] groupId)
+        private NGroupUsersListMessage(string groupId)
         {
             payload = new Envelope {GroupUsersList = new TGroupUsersList()};
-            payload.GroupUsersList.GroupId = ByteString.CopyFrom(groupId);
+            payload.GroupUsersList.GroupId = groupId;
         }
 
         public void SetCollationId(string id)
@@ -44,7 +44,7 @@ namespace Nakama
             return String.Format("NGroupUsersListMessage(GroupId={0})", payload.GroupUsersList.GroupId);
         }
 
-        public static NGroupUsersListMessage Default(byte[] groupId)
+        public static NGroupUsersListMessage Default(string groupId)
         {
             return new NGroupUsersListMessage(groupId);
         }

@@ -43,7 +43,7 @@ namespace Nakama
             string output = "";
             foreach (var key in payload.StorageRemove.Keys)
             {
-                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, Version={3}),", key.Bucket, key.Collection, key.Record, key.Version.ToBase64());
+                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, Version={3}),", key.Bucket, key.Collection, key.Record, key.Version);
             }
             return String.Format("NStorageRemoveMessage(Keys={0})", output);
         }
@@ -67,14 +67,14 @@ namespace Nakama
                 return original;
             }
 
-            public Builder Remove(string bucket, string collection, string record, byte[] version)
+            public Builder Remove(string bucket, string collection, string record, string version)
             {
                 var storageKey = new TStorageRemove.Types.StorageKey
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Version = ByteString.CopyFrom(version)
+                    Version = version
                 };
                 message.payload.StorageRemove.Keys.Add(storageKey);
 

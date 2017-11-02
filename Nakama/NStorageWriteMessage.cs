@@ -68,14 +68,14 @@ namespace Nakama
                 return original;
             }
 
-            public Builder Write(string bucket, string collection, string record, byte[] value)
+            public Builder Write(string bucket, string collection, string record, string value)
             {
                 var data = new TStorageWrite.Types.StorageData
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Value = ByteString.CopyFrom(value),
+                    Value = value,
                     PermissionRead = GetReadPermission(StoragePermissionRead.OwnerRead),
                     PermissionWrite = GetWritePermission(StoragePermissionWrite.OwnerWrite)
                 };
@@ -84,15 +84,15 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Write(string bucket, string collection, string record, byte[] value, byte[] version)
+            public Builder Write(string bucket, string collection, string record, string value, string version)
             {
                 var data = new TStorageWrite.Types.StorageData
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Value = ByteString.CopyFrom(value),
-                    Version = ByteString.CopyFrom(version),
+                    Value = value,
+                    Version = version,
                     PermissionRead = GetReadPermission(StoragePermissionRead.OwnerRead),
                     PermissionWrite = GetWritePermission(StoragePermissionWrite.OwnerWrite)
                 };
@@ -101,14 +101,14 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Write(string bucket, string collection, string record, byte[] value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission)
+            public Builder Write(string bucket, string collection, string record, string value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission)
             {
                 var data = new TStorageWrite.Types.StorageData
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Value = ByteString.CopyFrom(value),
+                    Value = value,
                     PermissionRead = GetReadPermission(readPermission),
                     PermissionWrite = GetWritePermission(writePermission)
                 };
@@ -117,15 +117,15 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Write(string bucket, string collection, string record, byte[] value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission, byte[] version)
+            public Builder Write(string bucket, string collection, string record, string value, StoragePermissionRead readPermission, StoragePermissionWrite writePermission, string version)
             {
                 var data = new TStorageWrite.Types.StorageData
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    Value = ByteString.CopyFrom(value),
-                    Version = ByteString.CopyFrom(version),
+                    Value = value,
+                    Version = version,
                     PermissionRead = GetReadPermission(readPermission),
                     PermissionWrite = GetWritePermission(writePermission)
                 };

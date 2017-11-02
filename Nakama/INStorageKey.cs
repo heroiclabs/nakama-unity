@@ -24,6 +24,6 @@ namespace Nakama
 
         string Record { get; }
 
-        byte[] Version { get; }
+        string Version { get; }
     }
 }

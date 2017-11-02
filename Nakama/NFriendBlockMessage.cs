@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NFriendBlockMessage(byte[] id)
+        private NFriendBlockMessage(string id)
         {
             payload = new Envelope {FriendsBlock = new TFriendsBlock { UserIds =
             {
-                new List<ByteString>
+                new List<string>
                 {
-                    ByteString.CopyFrom(id)
+                    id
                 }
             }}};
         }
@@ -56,7 +56,7 @@ namespace Nakama
             return String.Format("NFriendsBlockMessage(UserIds={0)", ids);   
         }
 
-        public static NFriendBlockMessage Default(byte[] id)
+        public static NFriendBlockMessage Default(string id)
         {
             return new NFriendBlockMessage(id);
         }

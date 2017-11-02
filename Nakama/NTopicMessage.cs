@@ -22,9 +22,9 @@ namespace Nakama
     {
         public INTopicId Topic { get; private set; }
 
-        public byte[] UserId { get; private set; }
+        public string UserId { get; private set; }
 
-        public byte[] MessageId { get; private set; }
+        public string MessageId { get; private set; }
 
         public long CreatedAt { get; private set; }
 
@@ -34,13 +34,13 @@ namespace Nakama
 
         public TopicMessageType Type { get; private set; }
 
-        public byte[] Data { get; private set; }
+        public string Data { get; private set; }
 
         internal NTopicMessage(TopicMessage message)
         {
             Topic = new NTopicId(message.Topic);
-            UserId = message.UserId.ToByteArray();
-            MessageId = message.MessageId.ToByteArray();
+            UserId = message.UserId;
+            MessageId = message.MessageId;
             CreatedAt = message.CreatedAt;
             ExpiresAt = message.ExpiresAt;
             Handle = message.Handle;
@@ -67,7 +67,7 @@ namespace Nakama
                     break;
             }
 
-            Data = message.Data.ToByteArray();
+            Data = message.Data;
         }
 
         public override string ToString()

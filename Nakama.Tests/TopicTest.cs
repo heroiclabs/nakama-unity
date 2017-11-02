@@ -16,7 +16,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -32,7 +31,7 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId2;
+        private static string userId2;
 
         [SetUp]
         public void SetUp()
@@ -82,7 +81,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
+            var message = new NTopicJoinMessage.Builder().TopicRoom("test-room").Build();
             client1.Send(message, (INResultSet<INTopic> topics) =>
             {
                 evt.Set();
@@ -102,7 +101,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError error = null;
 
-            var message = new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build();
+            var message = new NTopicJoinMessage.Builder().TopicRoom("test-room").Build();
             client1.Send(message, (INResultSet<INTopic> topics) =>
             {
                 var topic = topics.Results[0];
@@ -129,7 +128,7 @@ namespace Nakama.Tests
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            byte[] room = Encoding.UTF8.GetBytes("test-room");
+            string room = "test-room";
             var message = new NTopicJoinMessage.Builder().TopicRoom(room).Build();
             client1.Send(message, (INResultSet<INTopic> topics) =>
             {
@@ -142,7 +141,7 @@ namespace Nakama.Tests
             evt1.WaitOne(5000, false);
             Assert.IsNull(error);
 
-            byte[] joinUserId = null;
+            string joinUserId = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
             client1.OnTopicPresence = (INTopicPresence presence) =>
             {
@@ -168,7 +167,7 @@ namespace Nakama.Tests
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            byte[] room = Encoding.UTF8.GetBytes("test-room");
+            string room = "test-room";
             INTopic topic = null;
             client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>
             {
@@ -190,7 +189,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.IsNotNull(topic);
 
-            byte[] leaveUserId = null;
+            string leaveUserId = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
             client1.OnTopicPresence = (INTopicPresence presence) =>
             {
@@ -218,7 +217,7 @@ namespace Nakama.Tests
 
             INTopic topic = null;
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            client1.Send(new NTopicJoinMessage.Builder().TopicRoom(Encoding.UTF8.GetBytes("test-room")).Build(), (INResultSet<INTopic> topics) =>
+            client1.Send(new NTopicJoinMessage.Builder().TopicRoom("test-room").Build(), (INResultSet<INTopic> topics) =>
             {
                 topic = topics.Results[0];
                 client1.Send(NTopicLeaveMessage.Default(topic.Topic), (bool complete) =>
@@ -239,7 +238,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(topic);
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            client1.Send(NTopicMessageSendMessage.Default(topic.Topic, Encoding.UTF8.GetBytes("{\"some\":\"data\"}")), (INTopicMessageAck ack) =>
+            client1.Send(NTopicMessageSendMessage.Default(topic.Topic, "{\"some\":\"data\"}"), (INTopicMessageAck ack) =>
             {
                 evt2.Set();
             }, (INError err) =>
@@ -257,7 +256,7 @@ namespace Nakama.Tests
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            byte[] room = Encoding.UTF8.GetBytes("test-room");
+            string room = "test-room";
             INTopic topic = null;
             client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>
             {
@@ -279,7 +278,7 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.IsNotNull(topic);
 
-            byte[] data = Encoding.UTF8.GetBytes("{\"some\":\"data\"}");
+            string data = "{\"some\":\"data\"}";
             INTopicMessage message = null;
             INTopicMessageAck messageAck = null;
             ManualResetEvent evt2 = new ManualResetEvent(false);
@@ -322,7 +321,7 @@ namespace Nakama.Tests
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            byte[] room = Encoding.UTF8.GetBytes("history-room");
+            string room = "history-room";
             INTopic t = null;
             client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics) =>
             {
@@ -337,8 +336,8 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.IsNotNull(t);
 
-            byte[] data = Encoding.UTF8.GetBytes("{\"some\":\"history data " +
-                System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(random.GetString())) + "\"}");
+            string data = "{\"some\":\"history data " +
+                System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(random.GetString())) + "\"}";
             for (int i = 0; i < 10; i++)
             {
                 ManualResetEvent evtFor = new ManualResetEvent(false);
@@ -386,7 +385,7 @@ namespace Nakama.Tests
             INError error = null;
 
             ManualResetEvent evt1 = new ManualResetEvent(false);
-            byte[] room = Encoding.UTF8.GetBytes("test-room-handle-update");
+            string room = "test-room-handle-update";
             INTopic topic = null;
 
             client1.Send(new NTopicJoinMessage.Builder().TopicRoom(room).Build(), (INResultSet<INTopic> topics1) =>

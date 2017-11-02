@@ -28,23 +28,23 @@ namespace Nakama
             }
         }
 
-        private NTopicMessageSendMessage(INTopicId topic, byte[] data)
+        private NTopicMessageSendMessage(INTopicId topic, string data)
         {
             payload = new Envelope {TopicMessageSend = new TTopicMessageSend()};
             payload.TopicMessageSend.Topic = new TopicId();
             switch (topic.Type)
             {
                 case TopicType.DirectMessage:
-                    payload.TopicMessageSend.Topic.Dm = ByteString.CopyFrom(topic.Id);
+                    payload.TopicMessageSend.Topic.Dm = topic.Id;
                     break;
                 case TopicType.Room:
-                    payload.TopicMessageSend.Topic.Room = ByteString.CopyFrom(topic.Id);
+                    payload.TopicMessageSend.Topic.Room = topic.Id;
                     break;
                 case TopicType.Group:
-                    payload.TopicMessageSend.Topic.GroupId = ByteString.CopyFrom(topic.Id);
+                    payload.TopicMessageSend.Topic.GroupId = topic.Id;
                     break;
             }
-            payload.TopicMessageSend.Data = ByteString.CopyFrom(data);
+            payload.TopicMessageSend.Data = data;
         }
 
         public void SetCollationId(string id)
@@ -58,7 +58,7 @@ namespace Nakama
             return String.Format(f, payload.TopicMessageSend.Topic, payload.TopicMessageSend.Data);
         }
 
-        public static NTopicMessageSendMessage Default(INTopicId topic, byte[] data)
+        public static NTopicMessageSendMessage Default(INTopicId topic, string data)
         {
             return new NTopicMessageSendMessage(topic, data);
         }

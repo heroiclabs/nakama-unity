@@ -18,8 +18,8 @@ namespace Nakama
 {
     public interface INUserPresence
     {
-        byte[] UserId { get; }
-        byte[] SessionId { get; }
+        string UserId { get; }
+        string SessionId { get; }
         string Handle { get; }
     }
 }

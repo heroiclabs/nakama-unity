@@ -26,10 +26,10 @@ namespace Nakama
 {
     internal class NTransportWebSocket : INTransport
     {
-        public event EventHandler<SocketCloseEventArgs> OnClose;
-        public event EventHandler<SocketErrorEventArgs> OnError;
-        public event EventHandler<SocketMessageEventArgs> OnMessage;
-        public event EventHandler OnOpen;
+        public Action<SocketCloseEventArgs> OnClose;
+        public Action<SocketErrorEventArgs> OnError;
+        public Action<SocketMessageEventArgs> OnMessage;
+        public Action OnOpen;
 
         public bool Trace { get; set; }
         public INLogger Logger { get; set; }
@@ -164,7 +164,10 @@ namespace Nakama
                 // Release socket handle
                 socket = null;
                 Logger.TraceIf(Trace, String.Format("Socket Closed. Code={0}, Reason={1}", evt.Code, evt.Reason));
-                OnClose.Emit(this, new SocketCloseEventArgs(evt.Code, evt.Reason));
+                if (OnClose != null)
+                {
+                    OnClose(new SocketCloseEventArgs(evt.Code, evt.Reason));
+                }
             };
             socket.OnMessage += (sender, evt) =>
             {
@@ -180,26 +183,29 @@ namespace Nakama
                     return;
                 }
 
-                OnMessage.Emit(this, new SocketMessageEventArgs(evt.RawData));
+                if (OnMessage != null)
+                {
+                    OnMessage(new SocketMessageEventArgs(evt.RawData));
+                }
             };
             socket.OnError += (sender, evt) =>
             {
                 if (OnError != null)
                 {
-                    OnError.Emit(sender, new SocketErrorEventArgs(evt.Exception));
+                    OnError(new SocketErrorEventArgs(evt.Exception));
                 }
             };
             socket.OnOpen += (sender, evt) =>
             {
                 if (OnOpen != null)
                 {
-                    OnOpen.Emit(sender, evt);
+                    OnOpen();
                 }
             };
 
         }
 
-        public void Connect(string uri, byte[] token)
+        public void Connect(string uri, string token)
         {
             if (socket == null)
             {
@@ -213,7 +219,7 @@ namespace Nakama
             Logger.TraceIf(Trace, "Connect: Enabled NoDelay on socket.");
         }
 
-        public void ConnectAsync(string uri, byte[] token, Action<bool> callback)
+        public void ConnectAsync(string uri, string token, Action<bool> callback)
         {
             if (socket == null)
             {
@@ -255,6 +261,10 @@ namespace Nakama
             {
                 socket.Send(data);
             }
+            else
+            {
+                Logger.Warn("Send: Failed to send message. Client not connected.");
+            }
         }
 
         public void SendAsync(byte[] data, bool reliable, Action<bool> completed)
@@ -263,6 +273,31 @@ namespace Nakama
             {
                 socket.SendAsync(data, completed);
             }
+            else
+            {
+                Logger.Warn("SendAsync: Failed to send message. Client not connected.");
+                completed(false);
+            }
+        }
+
+        public void SetOnClose(Action<SocketCloseEventArgs> OnClose)
+        {
+            this.OnClose = OnClose;
+        }
+
+        public void SetOnError(Action<SocketErrorEventArgs> OnError)
+        {
+            this.OnError = OnError;
+        }
+
+        public void SetOnMessage(Action<SocketMessageEventArgs> OnMessage)
+        {
+            this.OnMessage = OnMessage;
+        }
+
+        public void SetOnOpen(Action OnOpen)
+        {
+            this.OnOpen = OnOpen;
         }
     }
 }

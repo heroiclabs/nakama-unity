@@ -26,7 +26,7 @@ namespace Nakama
 
         string Handle { get; }
 
-        byte[] Id { get; }
+        string Id { get; }
 
         string Lang { get; }
 
@@ -34,7 +34,7 @@ namespace Nakama
 
         string Location { get; }
 
-        byte[] Metadata { get; }
+        string Metadata { get; }
 
         string Timezone { get; }
 

@@ -20,21 +20,21 @@ namespace Nakama
 {
     internal class NCursor : INCursor
     {
-        public byte[] Value { get; private set; }
+        public string Value { get; private set; }
 
-        internal NCursor(byte[] cursor)
+        internal NCursor(string cursor)
         {
             Value = cursor;
         }
 
         public string Serialise()
         {
-            return Convert.ToBase64String(Value);
+            return Value;
         }
 
         public void Restore(string cursor)
         {
-            Value = Convert.FromBase64String(cursor);
+            Value = cursor;
         }
 
         public override string ToString()

@@ -20,7 +20,7 @@ namespace Nakama
 {
     public class NTopicId : INTopicId
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public TopicType Type { get; private set; }
 
@@ -29,15 +29,15 @@ namespace Nakama
             switch (message.IdCase)
             {
                 case TopicId.IdOneofCase.Dm:
-                    Id = message.Dm.ToByteArray();
+                    Id = message.Dm;
                     Type = TopicType.DirectMessage;
                     break;
                 case TopicId.IdOneofCase.Room:
-                    Id = message.Room.ToByteArray();
+                    Id = message.Room;
                     Type = TopicType.Room;
                     break;
                 case TopicId.IdOneofCase.GroupId:
-                    Id = message.GroupId.ToByteArray();
+                    Id = message.GroupId;
                     Type = TopicType.Group;
                     break;
                 default:

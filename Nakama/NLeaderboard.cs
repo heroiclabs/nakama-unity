@@ -20,25 +20,25 @@ namespace Nakama
 {
     public class NLeaderboard : INLeaderboard
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public bool Authoritative { get; private set; }
         public long Sort { get; private set; }
         public long Count { get; private set; }
         public string ResetSchedule { get; private set; }
-        public byte[] Metadata { get; private set; }
-        public byte[] NextId { get; private set; }
-        public byte[] PrevId { get; private set; }
+        public string Metadata { get; private set; }
+        public string NextId { get; private set; }
+        public string PrevId { get; private set; }
 
         internal NLeaderboard(Leaderboard message)
         {
-            Id = message.Id.ToByteArray();
+            Id = message.Id;
             Authoritative = message.Authoritative;
             Sort = message.Sort;
             Count = message.Count;
             ResetSchedule = message.ResetSchedule;
-            Metadata = message.Metadata.ToByteArray();
-            NextId = message.NextId.ToByteArray();
-            PrevId = message.PrevId.ToByteArray();
+            Metadata = message.Metadata;
+            NextId = message.NextId;
+            PrevId = message.PrevId;
         }
 
         public override string ToString()

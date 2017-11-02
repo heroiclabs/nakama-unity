@@ -27,28 +27,23 @@ namespace Nakama
 
         public string Handle { get; private set; }
 
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public string Token { get; private set; }
         
-        public byte[] UdpToken { get; private set; }
+        public string UdpToken { get; private set; }
 
-        internal NSession(string token, byte[] udpToken, long createdAt)
+        internal NSession(string token, string udpToken, long createdAt)
         {
             CreatedAt = createdAt;
             Token = token;
             UdpToken = udpToken;
 
             var decoded = JwtUnpack(Token);
-            var guid = new Guid(decoded.Split('"')[9]).ToByteArray();
-            // NOTE http://stackoverflow.com/a/16722909
-            Array.Reverse(guid, 6, 2);
-            Array.Reverse(guid, 4, 2);
-            Array.Reverse(guid, 0, 4);
 
             // Set computed fields
             Handle = decoded.Split('"')[5];
-            Id = guid;
+            Id = decoded.Split('"')[9];
             var expiresAt = Convert.ToInt64(decoded.Split('"')[2].TrimStart(':').TrimEnd(','));
             ExpiresAt = Convert.ToInt64(TimeSpan.FromSeconds(expiresAt).TotalMilliseconds);
         }
@@ -62,10 +57,10 @@ namespace Nakama
         {
             string[] sessionParts = session.Split('|');
             string token = sessionParts[0];
-            byte[] udpToken = new byte[0];
+            string udpToken = "";
             if (sessionParts.Length >= 2)
             {
-                udpToken = System.Convert.FromBase64String(sessionParts[1]);
+                udpToken = sessionParts[1];
             }
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return new NSession(token, udpToken, System.Convert.ToInt64(span.TotalMilliseconds));
@@ -73,7 +68,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            return Token + "|" + System.Convert.ToBase64String(UdpToken);
+            return Token + "|" + UdpToken;
         }
 
         private static string JwtUnpack(string jwt)

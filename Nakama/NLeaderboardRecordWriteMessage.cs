@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -39,13 +38,13 @@ namespace Nakama
             }}};  
         }
 
-        private NLeaderboardRecordWriteMessage(byte[] leaderboardId)
+        private NLeaderboardRecordWriteMessage(string leaderboardId)
         {
             payload = new Envelope {LeaderboardRecordsWrite = new TLeaderboardRecordsWrite { Records =
             {
                 new List<TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite>
                 {
-                    new TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite {LeaderboardId = ByteString.CopyFrom(leaderboardId)}
+                    new TLeaderboardRecordsWrite.Types.LeaderboardRecordWrite {LeaderboardId = leaderboardId}
                 }
             }}};
         }
@@ -70,7 +69,7 @@ namespace Nakama
         {
             private NLeaderboardRecordWriteMessage message;
 
-            public Builder(byte[] leaderboardId)
+            public Builder(string leaderboardId)
             {
                 message = new NLeaderboardRecordWriteMessage(leaderboardId);
             }
@@ -87,9 +86,9 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Metadata(byte[] metadata)
+            public Builder Metadata(string metadata)
             {
-                message.payload.LeaderboardRecordsWrite.Records[0].Metadata = ByteString.CopyFrom(metadata);
+                message.payload.LeaderboardRecordsWrite.Records[0].Metadata = metadata;
                 return this;
             }
 

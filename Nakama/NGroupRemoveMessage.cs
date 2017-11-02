@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NGroupRemoveMessage(byte[] id)
+        private NGroupRemoveMessage(string id)
         {
             payload = new Envelope {GroupsRemove = new TGroupsRemove { GroupIds =
             {
-                new List<ByteString>
+                new List<string>
                 {
-                    ByteString.CopyFrom(id)
+                    id
                 }
             }}}; 
         }
@@ -55,7 +55,7 @@ namespace Nakama
             return String.Format("NGroupRemoveMessage(GroupIds={0})", output);
         }
 
-        public static NGroupRemoveMessage Default(byte[] id)
+        public static NGroupRemoveMessage Default(string id)
         {
             return new NGroupRemoveMessage(id);
         }

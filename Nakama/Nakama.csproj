@@ -118,7 +118,6 @@
     <Compile Include="NConsoleLogger.cs" />
     <Compile Include="NDisconnectEvent.cs" />
     <Compile Include="NError.cs" />
-    <Compile Include="NExtensionMethods.cs" />
     <Compile Include="NGroup.cs" />
     <Compile Include="NGroupAddUserMessage.cs" />
     <Compile Include="NGroupCreateMessage.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="NGroupUpdateMessage.cs" />
     <Compile Include="NGroupUser.cs" />
     <Compile Include="NGroupUsersListMessage.cs" />
-    <Compile Include="NIds.cs" />
     <Compile Include="NLeaderboard.cs" />
     <Compile Include="NLeaderboardRecord.cs" />
     <Compile Include="NLeaderboardRecordsFetchMessage.cs" />

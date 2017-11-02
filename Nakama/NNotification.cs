@@ -20,21 +20,21 @@ namespace Nakama
 {
     internal class NNotification : INNotification
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public string Subject { get; private set; }
-        public byte[] Content { get; private set; }
+        public string Content { get; private set; }
         public long Code { get; private set; }
-        public byte[] SenderId { get; private set; }
+        public string SenderId { get; private set; }
         public long CreatedAt { get; private set; }
         public long ExpiresAt { get; private set; }
         public bool Persistent { get; private set; }
         internal NNotification(Notification n)
         {
-            Id = n.Id.ToByteArray();
+            Id = n.Id;
             Subject = n.Subject;
-            Content = n.Content.ToByteArray();
+            Content = n.Content;
             Code = n.Code;
-            SenderId = n.SenderId.ToByteArray();
+            SenderId = n.SenderId;
             CreatedAt = n.CreatedAt;
             ExpiresAt = n.ExpiresAt;
             Persistent = n.Persistent;

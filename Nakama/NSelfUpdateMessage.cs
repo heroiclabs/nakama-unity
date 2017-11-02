@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -85,9 +84,9 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Metadata(byte[] metadata)
+            public Builder Metadata(string metadata)
             {
-                message.payload.SelfUpdate.Metadata = ByteString.CopyFrom(metadata);
+                message.payload.SelfUpdate.Metadata = metadata;
                 return this;
             }
 

@@ -60,9 +60,9 @@ namespace Nakama
                 message.payload.NotificationsList.Limit = limit;
             }
 
-            public Builder Cursor(byte[] resumableCursor)
+            public Builder Cursor(string resumableCursor)
             {
-                message.payload.NotificationsList.ResumableCursor = ByteString.CopyFrom(resumableCursor);
+                message.payload.NotificationsList.ResumableCursor = resumableCursor;
                 return this;
             }
 

@@ -29,29 +29,6 @@ namespace Nakama
             }
         }
 
-        private NUsersFetchMessage(params byte[][] ids)
-        {
-            var uf = new List<TUsersFetch.Types.UsersFetch>();
-            foreach (var id in ids)
-            {
-                var u = new TUsersFetch.Types.UsersFetch();
-                u.UserId = ByteString.CopyFrom(id);
-                uf.Add(u);
-            }
-            payload = new Envelope {UsersFetch = new TUsersFetch { Users = {uf}}};   
-        }
-        private NUsersFetchMessage(params string[] handles)
-        {
-            var uf = new List<TUsersFetch.Types.UsersFetch>();
-            foreach (var h in handles)
-            {
-                var u = new TUsersFetch.Types.UsersFetch();
-                u.Handle = h;
-                uf.Add(u);
-            }
-            payload = new Envelope {UsersFetch = new TUsersFetch { Users = {uf}}};
-        }
-
         private NUsersFetchMessage()
         {
             payload = new Envelope {UsersFetch = new TUsersFetch()};
@@ -82,14 +59,14 @@ namespace Nakama
             return String.Format("NUsersFetchMessage(UserIds={0}, Handles={1})", ids, handles);
         }
 
-        public static NUsersFetchMessage Default(params byte[] ids)
+        public static NUsersFetchMessage ById(params string[] ids)
         {
-            return new NUsersFetchMessage.Builder(ids).Build();
+            return new NUsersFetchMessage.Builder().Add(ids).Build();
         }
         
-        public static NUsersFetchMessage Default(params string[] handles)
+        public static NUsersFetchMessage ByHandle(params string[] handles)
         {
-            return new NUsersFetchMessage.Builder(handles).Build();
+            return new NUsersFetchMessage.Builder().AddHandles(handles).Build();
         }
 
         public class Builder
@@ -100,29 +77,19 @@ namespace Nakama
             {
                 message = new NUsersFetchMessage();
             }
-            
-            public Builder(params byte[] ids)
-            {
-                message = new NUsersFetchMessage(ids);
-            }
-            
-            public Builder(params string[] handles)
-            {
-                message = new NUsersFetchMessage(handles);
-            }
 
-            public Builder Add(params byte[][] ids)
+            public Builder Add(params string[] ids)
             { 
-                return Add(new List<byte[]>(ids));
+                return Add(new List<string>(ids));
             }
 
-            public Builder Add(IEnumerable<byte[]> ids)
+            public Builder Add(IEnumerable<string> ids)
             {
                 foreach (var id in ids)
                 {
                     message.payload.UsersFetch.Users.Add(new TUsersFetch.Types.UsersFetch
                     {
-                        UserId = ByteString.CopyFrom(id)
+                        UserId = id
                     }); 
                 }
                 

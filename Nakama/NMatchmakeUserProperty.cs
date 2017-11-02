@@ -21,7 +21,7 @@ namespace Nakama
 {
     internal class NMatchmakeUserProperty : INMatchmakeUserProperty
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public IDictionary<string, object> Properties { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Nakama
 
         internal NMatchmakeUserProperty(MatchmakeMatched.Types.UserProperty message)
         {
-            Id = message.UserId.ToByteArray();
+            Id = message.UserId;
             Properties = new Dictionary<string, object>();
             Filters = new Dictionary<string, INMatchmakeFilter>();
 

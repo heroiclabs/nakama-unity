@@ -18,7 +18,7 @@ namespace Nakama
 {
     public interface INCursor
     {
-        byte[] Value { get; }
+        string Value { get; }
         string Serialise();
         void Restore(string cursor);
     }

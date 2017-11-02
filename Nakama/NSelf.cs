@@ -41,7 +41,7 @@ namespace Nakama
 
         public string Handle { get; private set; }
 
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public string Lang { get; private set; }
 
@@ -49,7 +49,7 @@ namespace Nakama
 
         public string Location { get; private set; }
 
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
 
         public string SteamId { get; private set; }
 
@@ -71,11 +71,11 @@ namespace Nakama
             GameCenterId = message.GamecenterId;
             GoogleId = message.GoogleId;
             Handle = message.User.Handle;
-            Id = message.User.Id.ToByteArray();
+            Id = message.User.Id;
             Lang = message.User.Lang;
             LastOnlineAt = message.User.LastOnlineAt;
             Location = message.User.Location;
-            Metadata = message.User.Metadata.ToByteArray();
+            Metadata = message.User.Metadata;
             SteamId = message.SteamId;
             Timezone = message.User.Timezone;
             UpdatedAt = message.User.UpdatedAt;

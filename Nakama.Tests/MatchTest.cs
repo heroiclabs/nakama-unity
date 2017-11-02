@@ -32,8 +32,8 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId1;
-        private static byte[] userId2;
+        private static string userId1;
+        private static string userId2;
 
         [SetUp]
         public void SetUp()
@@ -170,7 +170,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(m);
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            byte[] joinedUserId = null;
+            string joinedUserId = null;
             client1.OnMatchPresence = (INMatchPresence presence) =>
             {
                 joinedUserId = presence.Join[0].UserId;
@@ -217,7 +217,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(m);
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            byte[] leftUserId = null;
+            string leftUserId = null;
             client1.OnMatchPresence = (INMatchPresence presence) =>
             {
                 leftUserId = presence.Leave[0].UserId;

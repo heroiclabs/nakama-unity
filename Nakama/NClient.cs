@@ -127,28 +127,28 @@ namespace Nakama
 
             transport.Logger = Logger;
             transport.Trace = Trace;
-            transport.OnClose += (sender, args) =>
+            transport.SetOnClose((args) =>
             {
                 collationIds.Clear();
                 if (OnDisconnect != null)
                 {
                     OnDisconnect(new NDisconnectEvent(args.Code, args.Reason));
                 }
-            };
-            transport.OnMessage += (sender, m) =>
+            });
+            transport.SetOnMessage((m) =>
             {
                 var message = Envelope.Parser.ParseFrom(m.Data);
                 Logger.TraceFormatIf(Trace, "SocketDecoded: {0}", message);
                 onMessage(message);
-            };
-            transport.OnError += (sender, m) =>
+            });
+            transport.SetOnError((m) =>
             {
                 if (OnError != null)
                 {
                     var message = (m.Error != null) ? m.Error.Message : "A transport error occured.";
                     OnError(new NError(message));
                 }
-            };
+            });
         }
 
         public void Register(INAuthenticateMessage message,
@@ -240,10 +240,16 @@ namespace Nakama
             if (!reliable && TransportType == TransportType.WebSocket)
             {
                 Logger.Warn("Sending unreliable messages is not supported on WebSocket transport, using reliable instead");
+                reliable = true;
             }
             var stream = new MemoryStream();
             message.Payload.WriteTo(stream);
             Logger.TraceFormatIf(Trace, "SocketWrite: {0}", message.Payload);
+            if (!reliable && stream.Length > 1024)
+            {
+                errback(new NError("Cannot send unreliable messages larger than 1024 bytes"));
+                return;
+            }
             transport.SendAsync(stream.ToArray(), reliable, (bool completed) =>
             {
                 if (completed)
@@ -264,8 +270,8 @@ namespace Nakama
 
         public override string ToString()
         {
-            var f = "NClient(ConnectTimeout={0},Host={1},Lang={2},Port={3},ServerKey={4},SSL={5},Timeout={6},Trace={8})";
-            return String.Format(f, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, Trace);
+            var f = "NClient(TransportType={0},ConnectTimeout={1},Host={2},Lang={3},Port={4},ServerKey={5},SSL={6},Timeout={7},Trace={8})";
+            return String.Format(f, TransportType, ConnectTimeout, Host, Lang, Port, ServerKey, SSL, Timeout, Trace);
         }
 
         private void authenticate(string path,
@@ -293,7 +299,7 @@ namespace Nakama
                 switch (authResponse.IdCase)
                 {
                     case AuthenticateResponse.IdOneofCase.Session:
-                        callback(new NSession(authResponse.Session.Token, authResponse.Session.UdpToken.ToByteArray(), System.Convert.ToInt64(span.TotalMilliseconds)));
+                        callback(new NSession(authResponse.Session.Token, authResponse.Session.UdpToken, System.Convert.ToInt64(span.TotalMilliseconds)));
                         break;
                     case AuthenticateResponse.IdOneofCase.Error:
                         errback(new NError(authResponse.Error, authResponse.CollationId));
@@ -414,7 +420,7 @@ namespace Nakama
                     {
                         groups.Add(new NGroup(group));
                     }
-                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor.ToByteArray())));
+                    pair.Key(new NResultSet<INGroup>(groups, new NCursor(message.Groups.Cursor)));
                     break;
                 case Envelope.PayloadOneofCase.GroupsSelf:
                     var groupsSelf = new List<INGroupSelf>();
@@ -475,7 +481,7 @@ namespace Nakama
                         topicMessages.Add(new NTopicMessage(topicMessage));
                     }
                     pair.Key(new NResultSet<INTopicMessage>(topicMessages,
-                        new NCursor(message.TopicMessages.Cursor.ToByteArray())));
+                        new NCursor(message.TopicMessages.Cursor)));
                     break;
                 case Envelope.PayloadOneofCase.Users:
                     var users = new List<INUser>();
@@ -491,7 +497,7 @@ namespace Nakama
                     {
                         leaderboards.Add(new NLeaderboard(leaderboard));
                     }
-                    pair.Key(new NResultSet<INLeaderboard>(leaderboards, new NCursor(message.Leaderboards.Cursor.ToByteArray())));
+                    pair.Key(new NResultSet<INLeaderboard>(leaderboards, new NCursor(message.Leaderboards.Cursor)));
                     break;
                 case Envelope.PayloadOneofCase.LeaderboardRecords:
                     var leaderboardRecords = new List<INLeaderboardRecord>();
@@ -499,7 +505,7 @@ namespace Nakama
                     {
                         leaderboardRecords.Add(new NLeaderboardRecord(leaderboardRecord));
                     }
-                    var cursor = message.LeaderboardRecords.Cursor == null ? null : new NCursor(message.LeaderboardRecords.Cursor.ToByteArray());
+                    var cursor = message.LeaderboardRecords.Cursor == null ? null : new NCursor(message.LeaderboardRecords.Cursor);
                     pair.Key(new NResultSet<INLeaderboardRecord>(leaderboardRecords, cursor));
                     break;
                 case Envelope.PayloadOneofCase.Rpc:
@@ -511,7 +517,7 @@ namespace Nakama
                     {
                         notifications.Add(new NNotification(n));
                     }
-                    var resumableCursor = message.Notifications.ResumableCursor == null ? null : new NCursor(message.Notifications.ResumableCursor.ToByteArray());
+                    var resumableCursor = message.Notifications.ResumableCursor == null ? null : new NCursor(message.Notifications.ResumableCursor);
                     pair.Key(new NResultSet<INNotification>(notifications, resumableCursor));
                     break;
                 default:

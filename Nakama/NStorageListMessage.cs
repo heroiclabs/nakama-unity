@@ -42,7 +42,7 @@ namespace Nakama
         {
             string output = "";
             var key = payload.StorageList;
-            output += String.Format("(Bucket={0}, Collection={1}, UserId={2}, Limit={3}, Cursor={4}),", key.Bucket, key.Collection, key.UserId.ToBase64(), key.Limit, key.Cursor.ToBase64());
+            output += String.Format("(Bucket={0}, Collection={1}, UserId={2}, Limit={3}, Cursor={4}),", key.Bucket, key.Collection, key.UserId, key.Limit, key.Cursor);
             return String.Format("NStorageListMessage({0})", output);
         }
 
@@ -77,9 +77,9 @@ namespace Nakama
                 return this;
             }
 
-            public Builder UserId(byte[] userId)
+            public Builder UserId(string userId)
             {
-                message.payload.StorageList.UserId = ByteString.CopyFrom(userId);
+                message.payload.StorageList.UserId = userId;
                 return this;
             }
 
@@ -89,9 +89,9 @@ namespace Nakama
                 return this;
             }
             
-            public Builder Cursor(byte[] cursor)
+            public Builder Cursor(INCursor cursor)
             {
-                message.payload.StorageList.Cursor = ByteString.CopyFrom(cursor);
+                message.payload.StorageList.Cursor = cursor.Value;
                 return this;
             }
         }

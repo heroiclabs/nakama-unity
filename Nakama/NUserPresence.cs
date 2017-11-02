@@ -20,14 +20,14 @@ namespace Nakama
 {
     internal class NUserPresence : INUserPresence
     {
-        public byte[] UserId { get; private set; }
-        public byte[] SessionId { get; private set; }
+        public string UserId { get; private set; }
+        public string SessionId { get; private set; }
         public string Handle { get; private set; }
 
         internal NUserPresence(UserPresence message)
         {
-            UserId = message.UserId.ToByteArray();
-            SessionId = message.SessionId.ToByteArray();
+            UserId = message.UserId;
+            SessionId = message.SessionId;
             Handle = message.Handle;
         }
 
