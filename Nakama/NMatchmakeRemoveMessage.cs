@@ -31,7 +31,7 @@ namespace Nakama
         private NMatchmakeRemoveMessage(INMatchmakeTicket ticket)
         {
             payload = new Envelope {MatchmakeRemove = new TMatchmakeRemove()};
-            payload.MatchmakeRemove.Ticket = ByteString.CopyFrom(ticket.Ticket);
+            payload.MatchmakeRemove.Ticket = ticket.Ticket;
         }
 
         public void SetCollationId(string id)

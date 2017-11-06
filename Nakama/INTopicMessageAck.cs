@@ -18,7 +18,7 @@ namespace Nakama
 {
     public interface INTopicMessageAck
     {
-        byte[] MessageId { get; }
+        string MessageId { get; }
         long CreatedAt { get; }
         long ExpiresAt { get; }
         string Handle { get; }

@@ -33,7 +33,7 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId2;
+        private static string userId2;
 
         [SetUp]
         public void SetUp()
@@ -166,7 +166,7 @@ namespace Nakama.Tests
             Assert.AreEqual(res1.Token.Token, res2.Token.Token);
 
             var c1Props = res1.UserProperties[0]; 
-            if (!NIds.Equals(res1.Self.UserId,res1.UserProperties[0].Id))
+            if (res1.Self.UserId != res1.UserProperties[0].Id)
             {
                 c1Props = res1.UserProperties[1];
             }

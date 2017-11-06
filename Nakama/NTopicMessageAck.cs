@@ -20,14 +20,14 @@ namespace Nakama
 {
     public class NTopicMessageAck : INTopicMessageAck
     {
-        public byte[] MessageId { get; private set; }
+        public string MessageId { get; private set; }
         public long CreatedAt { get; private set; }
         public long ExpiresAt { get; private set; }
         public string Handle { get; private set; }
 
         internal NTopicMessageAck(TTopicMessageAck message)
         {
-            MessageId = message.MessageId.ToByteArray();
+            MessageId = message.MessageId;
             CreatedAt = message.CreatedAt;
             ExpiresAt = message.ExpiresAt;
             Handle = message.Handle;

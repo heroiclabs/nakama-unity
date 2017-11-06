@@ -18,14 +18,14 @@ namespace Nakama
 {
     public interface INGroup
     {
-        byte[] Id { get; }
+        string Id { get; }
         bool Private { get; }
-        byte[] CreatorId { get; }
+        string CreatorId { get; }
         string Name { get; }
         string Description { get; }
         string AvatarUrl { get; }
         string Lang { get; }
-        byte[] Metadata { get; }
+        string Metadata { get; }
         long Count { get; }
         long CreatedAt { get; }
         long UpdatedAt { get; }

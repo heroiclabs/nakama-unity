@@ -18,6 +18,6 @@ namespace Nakama
 {
     public interface INMatchmakeTicket
     {
-        byte[] Ticket { get; }
+        string Ticket { get; }
     }
 }

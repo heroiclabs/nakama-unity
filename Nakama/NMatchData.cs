@@ -15,7 +15,6 @@
  */
 
 using System;
-using Google.Protobuf;
 
 namespace Nakama
 {
@@ -23,7 +22,7 @@ namespace Nakama
     {
         public byte[] Data { get; private set; }
 
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public long OpCode { get; private set; }
 
@@ -32,7 +31,7 @@ namespace Nakama
         internal NMatchData(MatchData message)
         {
             Data = message.Data.ToByteArray();
-            Id = message.MatchId.ToByteArray();
+            Id = message.MatchId;
             OpCode = message.OpCode;
             Presence = new NUserPresence(message.Presence);
         }

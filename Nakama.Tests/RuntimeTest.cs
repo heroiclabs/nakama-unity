@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 
@@ -65,7 +64,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INRuntimeRpc rpc = null;
 
-            byte[] payload = Encoding.ASCII.GetBytes("payload-data");
+            string payload = "payload-data";
             var message = new NRuntimeRpcMessage.Builder("loopback").Payload(payload).Build();
             client.Send(message, (INRuntimeRpc result) =>
             {

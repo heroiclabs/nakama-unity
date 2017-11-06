@@ -26,11 +26,11 @@ namespace Nakama
 
         string Handle { get; }
 
-        byte[] Id { get; }
+        string Id { get; }
 
         string Token { get; }
         
-        byte[] UdpToken { get; }
+        string UdpToken { get; }
 
         bool HasExpired(DateTime dateTime);
     }

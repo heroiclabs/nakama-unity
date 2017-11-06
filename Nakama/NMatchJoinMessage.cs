@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NMatchJoinMessage(byte[] matchId)
+        private NMatchJoinMessage(string matchId)
         {
             payload = new Envelope {MatchesJoin = new TMatchesJoin { Matches =
             {
                 new List<TMatchesJoin.Types.MatchJoin>
                 {
-                    new TMatchesJoin.Types.MatchJoin{ MatchId = ByteString.CopyFrom(matchId) }
+                    new TMatchesJoin.Types.MatchJoin{ MatchId = matchId }
                 }
             }}};   
         }
@@ -46,7 +46,7 @@ namespace Nakama
             {
                 new List<TMatchesJoin.Types.MatchJoin>
                 {
-                    new TMatchesJoin.Types.MatchJoin{ Token = ByteString.CopyFrom(token.Token) }
+                    new TMatchesJoin.Types.MatchJoin{ Token = token.Token }
                 }
             }}};   
         }
@@ -62,7 +62,7 @@ namespace Nakama
             return String.Format(f, payload.MatchesJoin.Matches[0].MatchId, payload.MatchesJoin.Matches[0].Token);
         }
 
-        public static NMatchJoinMessage Default(byte[] matchId)
+        public static NMatchJoinMessage Default(string matchId)
         {
             return new NMatchJoinMessage(matchId);
         }

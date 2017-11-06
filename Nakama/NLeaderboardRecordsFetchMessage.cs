@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -45,7 +44,7 @@ namespace Nakama
             string output = "";
             foreach (var id in p.LeaderboardIds)
             {
-                output += id.ToBase64() + ",";
+                output += id + ",";
             }
             return String.Format("NLeaderboardRecordsFetchMessage(LeaderboardIds={0},Limit={1},Cursor={2})", output, p.Limit, p.Cursor);
         }
@@ -54,15 +53,15 @@ namespace Nakama
         {
             private NLeaderboardRecordsFetchMessage message;
 
-            public Builder(byte[] leaderboardId)
+            public Builder(string leaderboardId)
             {
                 message = new NLeaderboardRecordsFetchMessage();
-                message.payload.LeaderboardRecordsFetch.LeaderboardIds.Add(ByteString.CopyFrom(leaderboardId));
+                message.payload.LeaderboardRecordsFetch.LeaderboardIds.Add(leaderboardId);
             }
 
-            public Builder Fetch(byte[] leaderboardId)
+            public Builder Fetch(string leaderboardId)
             {
-                message.payload.LeaderboardRecordsFetch.LeaderboardIds.Add(ByteString.CopyFrom(leaderboardId));
+                message.payload.LeaderboardRecordsFetch.LeaderboardIds.Add(leaderboardId);
                 return this;
             }
 
@@ -74,7 +73,7 @@ namespace Nakama
 
             public Builder Cursor(INCursor cursor)
             {
-                message.payload.LeaderboardRecordsFetch.Cursor = ByteString.CopyFrom(cursor.Value);
+                message.payload.LeaderboardRecordsFetch.Cursor = cursor.Value;
                 return this;
             }
 

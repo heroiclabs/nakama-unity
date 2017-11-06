@@ -21,7 +21,7 @@ namespace Nakama
 {
     internal class NMatchPresence : INMatchPresence
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public IList<INUserPresence> Join { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Nakama
 
         internal NMatchPresence(MatchPresence message)
         {
-            Id = message.MatchId.ToByteArray();
+            Id = message.MatchId;
             Join = new List<INUserPresence>();
             Leave = new List<INUserPresence>();
 

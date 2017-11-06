@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -35,10 +34,10 @@ namespace Nakama
             payload = new Envelope {LeaderboardRecordsList = new TLeaderboardRecordsList()};
         }
 
-        private NLeaderboardRecordsListMessage(byte[] leaderboardId)
+        private NLeaderboardRecordsListMessage(string leaderboardId)
         {
             var request = new TLeaderboardRecordsList();
-            request.LeaderboardId = ByteString.CopyFrom(leaderboardId);
+            request.LeaderboardId = leaderboardId;
             payload = new Envelope {LeaderboardRecordsList = request};
         }
 
@@ -58,26 +57,23 @@ namespace Nakama
         {
             private NLeaderboardRecordsListMessage message;
 
-            public Builder(byte[] leaderboardId)
+            public Builder(string leaderboardId)
             {
                 message = new NLeaderboardRecordsListMessage(leaderboardId);
             }
 
-            public Builder FilterByPagingToOwnerId(byte[] ownerId)
+            public Builder FilterByPagingToOwnerId(string ownerId)
             {
                 message.payload.LeaderboardRecordsList.ClearFilter();
-                message.payload.LeaderboardRecordsList.OwnerId = ByteString.CopyFrom(ownerId);
+                message.payload.LeaderboardRecordsList.OwnerId = ownerId;
                 return this;
             }
 
-            public Builder FilterByOwnerIds(IList<byte[]> ownerIds)
+            public Builder FilterByOwnerIds(IList<string> ownerIds)
             {
                 message.payload.LeaderboardRecordsList.ClearFilter();
                 message.payload.LeaderboardRecordsList.OwnerIds = new TLeaderboardRecordsList.Types.Owners();
-                foreach (var id in ownerIds)
-                {
-                    message.payload.LeaderboardRecordsList.OwnerIds.OwnerIds.Add(ByteString.CopyFrom(id));
-                }
+                message.payload.LeaderboardRecordsList.OwnerIds.OwnerIds.Add(ownerIds);
                 return this;
             }
 
@@ -110,7 +106,7 @@ namespace Nakama
 
             public Builder Cursor(INCursor cursor)
             {
-                message.payload.LeaderboardRecordsList.Cursor = ByteString.CopyFrom(cursor.Value);
+                message.payload.LeaderboardRecordsList.Cursor = cursor.Value;
                 return this;
             }
 

@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NFriendRemoveMessage(byte[] id)
+        private NFriendRemoveMessage(string id)
         {
             payload = new Envelope {FriendsRemove = new TFriendsRemove { UserIds =
             {
-                new List<ByteString>
+                new List<string>
                 {
-                    ByteString.CopyFrom(id)
+                    id
                 }
             }}};
         }
@@ -56,7 +56,7 @@ namespace Nakama
             return String.Format("NFriendsBlockMessage(UserIds={0)", ids);   
         }
 
-        public static NFriendRemoveMessage Default(byte[] id)
+        public static NFriendRemoveMessage Default(string id)
         {
             return new NFriendRemoveMessage(id);
         }

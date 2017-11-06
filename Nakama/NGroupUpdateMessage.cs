@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -38,13 +37,13 @@ namespace Nakama
             }}};
         }
 
-        private NGroupUpdateMessage(byte[] groupId)
+        private NGroupUpdateMessage(string groupId)
         {
             payload = new Envelope {GroupsUpdate = new TGroupsUpdate { Groups =
             {
                 new List<TGroupsUpdate.Types.GroupUpdate>
                 {
-                    new TGroupsUpdate.Types.GroupUpdate {GroupId = ByteString.CopyFrom(groupId)}
+                    new TGroupsUpdate.Types.GroupUpdate {GroupId = groupId}
                 }
             }}};
         }
@@ -69,7 +68,7 @@ namespace Nakama
         {
             private NGroupUpdateMessage message;
 
-            public Builder(byte[] groupId)
+            public Builder(string groupId)
             {
                 message = new NGroupUpdateMessage(groupId);
             }
@@ -98,9 +97,9 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Metadata(byte[] metadata)
+            public Builder Metadata(string metadata)
             {
-                message.payload.GroupsUpdate.Groups[0].Metadata = ByteString.CopyFrom(metadata);
+                message.payload.GroupsUpdate.Groups[0].Metadata = metadata;
                 return this;
             }
 

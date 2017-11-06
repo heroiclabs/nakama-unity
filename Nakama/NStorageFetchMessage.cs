@@ -43,7 +43,7 @@ namespace Nakama
             string output = "";
             foreach (var key in payload.StorageFetch.Keys)
             {
-                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, UserId={3}),", key.Bucket, key.Collection, key.Record, key.UserId.ToBase64());
+                output += String.Format("(Bucket={0}, Collection={1}, Record={2}, UserId={3}),", key.Bucket, key.Collection, key.Record, key.UserId);
             }
             return String.Format("NStorageFetchMessage(Keys={0})", output);
         }
@@ -67,14 +67,14 @@ namespace Nakama
                 return original;
             }
 
-            public Builder Fetch(string bucket, string collection, string record, byte[] userId)
+            public Builder Fetch(string bucket, string collection, string record, string userId)
             {
                 var storageKey = new TStorageFetch.Types.StorageKey
                 {
                     Bucket = bucket,
                     Collection = collection,
                     Record = record,
-                    UserId = userId != null ? ByteString.CopyFrom(userId) : null
+                    UserId = userId
                 };
                 message.payload.StorageFetch.Keys.Add(storageKey);
 

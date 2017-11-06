@@ -21,7 +21,7 @@ namespace Nakama
 {
     public interface INMatchmakeUserProperty
     {
-        byte[] Id { get; }
+        string Id { get; }
 
         IDictionary<string, object> Properties { get; }
 

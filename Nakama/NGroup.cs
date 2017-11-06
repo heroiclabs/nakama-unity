@@ -20,28 +20,28 @@ namespace Nakama
 {
     public class NGroup : INGroup
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public bool Private { get; private set; }
-        public byte[] CreatorId { get; private set; }
+        public string CreatorId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public string AvatarUrl { get; private set; }
         public string Lang { get; private set; }
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
         public long Count { get; private set; }
         public long CreatedAt { get; private set; }
         public long UpdatedAt { get; private set; }
 
         internal NGroup(Group message)
         {
-            Id = message.Id.ToByteArray();
+            Id = message.Id;
             Private = message.Private;
-            CreatorId = message.CreatorId.ToByteArray();
+            CreatorId = message.CreatorId;
             Name = message.Name;
             Description = message.Description;
             AvatarUrl = message.AvatarUrl;
             Lang = message.Lang;
-            Metadata = message.Metadata.ToByteArray();
+            Metadata = message.Metadata;
             Count = message.Count;
             CreatedAt = message.CreatedAt;
             UpdatedAt = message.UpdatedAt;

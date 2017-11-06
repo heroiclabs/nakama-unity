@@ -18,9 +18,9 @@ namespace Nakama
 {
     public interface INStorageData : INStorageKey
     {
-        byte[] UserId { get; }
+        string UserId { get; }
 
-        byte[] Value { get; }
+        string Value { get; }
 
         StoragePermissionRead PermissionRead { get; }
 

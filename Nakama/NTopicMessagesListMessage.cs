@@ -42,17 +42,17 @@ namespace Nakama
         {
             var f = "NTopicMessagesListMessage(Id={0},IdCase={1},Cursor={2},Forward={3},Limit={4})";
             var p = payload.TopicMessagesList;
-            byte[] id = null;
+            string id = null;
             switch (p.IdCase)
             {
                 case TTopicMessagesList.IdOneofCase.UserId:
-                    id = p.UserId.ToByteArray();
+                    id = p.UserId;
                     break;
                 case TTopicMessagesList.IdOneofCase.Room:
-                    id = p.Room.ToByteArray();
+                    id = p.Room;
                     break;
                 case TTopicMessagesList.IdOneofCase.GroupId:
-                    id = p.GroupId.ToByteArray();
+                    id = p.GroupId;
                     break;
             }
             return String.Format(f, id, p.IdCase, p.Cursor, p.Forward, p.Limit);
@@ -75,7 +75,7 @@ namespace Nakama
 
             public Builder Cursor(INCursor cursor)
             {
-                message.payload.TopicMessagesList.Cursor = ByteString.CopyFrom(cursor.Value);
+                message.payload.TopicMessagesList.Cursor = cursor.Value;
                 return this;
             }
 
@@ -85,24 +85,24 @@ namespace Nakama
                 return this;
             }
 
-            public Builder TopicDirectMessage(byte[] userId)
+            public Builder TopicDirectMessage(string userId)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.UserId = ByteString.CopyFrom(userId);
+                message.payload.TopicMessagesList.UserId = userId;
                 return this;
             }
 
-            public Builder TopicRoom(byte[] room)
+            public Builder TopicRoom(string room)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.Room = ByteString.CopyFrom(room);
+                message.payload.TopicMessagesList.Room = room;
                 return this;
             }
 
-            public Builder TopicGroup(byte[] groupId)
+            public Builder TopicGroup(string groupId)
             {
                 message.payload.TopicMessagesList.ClearId();
-                message.payload.TopicMessagesList.GroupId = ByteString.CopyFrom(groupId);
+                message.payload.TopicMessagesList.GroupId = groupId;
                 return this;
             }
 

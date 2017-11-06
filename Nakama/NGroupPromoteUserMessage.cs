@@ -29,7 +29,7 @@ namespace Nakama
             }
         }
 
-        private NGroupPromoteUserMessage(byte[] groupId, byte[] userId)
+        private NGroupPromoteUserMessage(string groupId, string userId)
         {
             payload = new Envelope {GroupUsersPromote = new TGroupUsersPromote { GroupUsers =
             {
@@ -37,8 +37,8 @@ namespace Nakama
                 {
                     new TGroupUsersPromote.Types.GroupUserPromote
                     {
-                        UserId = ByteString.CopyFrom(userId),
-                        GroupId = ByteString.CopyFrom(groupId)
+                        UserId = userId,
+                        GroupId = groupId
                     }
                 }
             }}};     
@@ -60,7 +60,7 @@ namespace Nakama
             return String.Format("NGroupPromoteUserMessage({0})", output);
         }
 
-        public static NGroupPromoteUserMessage Default(byte[] groupId, byte[] userId)
+        public static NGroupPromoteUserMessage Default(string groupId, string userId)
         {
             return new NGroupPromoteUserMessage(groupId, userId);
         }

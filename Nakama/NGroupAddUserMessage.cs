@@ -29,7 +29,7 @@ namespace Nakama
             }
         }
 
-        private NGroupAddUserMessage(byte[] groupId, byte[] userId)
+        private NGroupAddUserMessage(string groupId, string userId)
         {
             payload = new Envelope {GroupUsersAdd = new TGroupUsersAdd { GroupUsers =
             {
@@ -37,8 +37,8 @@ namespace Nakama
                 {
                     new TGroupUsersAdd.Types.GroupUserAdd
                     {
-                        UserId = ByteString.CopyFrom(userId),
-                        GroupId = ByteString.CopyFrom(groupId)
+                        UserId = userId,
+                        GroupId = groupId
                     }
                 }
             }}};
@@ -60,7 +60,7 @@ namespace Nakama
             return String.Format("NFriendsAddMessage({0})", output);
         }
 
-        public static NGroupAddUserMessage Default(byte[] groupId, byte[] userId)
+        public static NGroupAddUserMessage Default(string groupId, string userId)
         {
             return new NGroupAddUserMessage(groupId, userId);
         }

@@ -20,8 +20,8 @@ namespace Nakama
 {
     public class NLeaderboardRecord : INLeaderboardRecord
     {
-        public byte[] LeaderboardId { get; private set; }
-        public byte[] OwnerId { get; private set; }
+        public string LeaderboardId { get; private set; }
+        public string OwnerId { get; private set; }
         public string Handle { get; private set; }
         public string Lang { get; private set; }
         public string Location { get; private set; }
@@ -29,15 +29,15 @@ namespace Nakama
         public long Rank { get; private set; }
         public long Score { get; private set; }
         public long NumScore { get; private set; }
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
         public long RankedAt { get; private set; }
         public long UpdatedAt { get; private set; }
         public long ExpiresAt { get; private set; }
 
         internal NLeaderboardRecord(LeaderboardRecord message)
         {
-            LeaderboardId = message.LeaderboardId.ToByteArray();
-            OwnerId = message.OwnerId.ToByteArray();
+            LeaderboardId = message.LeaderboardId;
+            OwnerId = message.OwnerId;
             Handle = message.Handle;
             Lang = message.Lang;
             Location = message.Location;
@@ -45,7 +45,7 @@ namespace Nakama
             Rank = message.Rank;
             Score = message.Score;
             NumScore = message.NumScore;
-            Metadata = message.Metadata.ToByteArray();
+            Metadata = message.Metadata;
             RankedAt = message.RankedAt;
             UpdatedAt = message.UpdatedAt;
             ExpiresAt = message.ExpiresAt;

@@ -35,13 +35,13 @@ namespace Nakama
             switch (topic.Type)
             {
                 case TopicType.DirectMessage:
-                    topicId.Dm = ByteString.CopyFrom(topic.Id);
+                    topicId.Dm = topic.Id;
                     break;
                 case TopicType.Room:
-                    topicId.Room = ByteString.CopyFrom(topic.Id);
+                    topicId.Room = topic.Id;
                     break;
                 case TopicType.Group:
-                    topicId.GroupId = ByteString.CopyFrom(topic.Id);
+                    topicId.GroupId = topic.Id;
                     break;
             }
             payload = new Envelope {TopicsLeave = new TTopicsLeave { Topics =

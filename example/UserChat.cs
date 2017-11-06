@@ -71,7 +71,7 @@ public class UserChat : MonoBehaviour {
 			.Build();
 
 		client1.OnTopicMessage = (INTopicMessage message) => {
-			outputText = Encoding.UTF8.GetString(message.Data);
+			outputText = message.Data;
 		};
 		client1.OnTopicPresence = (INTopicPresence presences) => {
 			foreach (var presence in presences.Join) {
@@ -83,7 +83,7 @@ public class UserChat : MonoBehaviour {
 		};
 
 		client2.OnTopicMessage = (INTopicMessage message) => {
-			outputText = Encoding.UTF8.GetString(message.Data);
+			outputText = message.Data;
 		};
 		client2.OnTopicPresence = (INTopicPresence presences) => {
 			foreach (var presence in presences.Join) {
@@ -222,7 +222,7 @@ public class UserChat : MonoBehaviour {
 
 	public void Player1SendChatMessage() {
 		string chatMessage = "{\"data\": \"Player 1 says: Current time is " + DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss\\Z") + "\"}";
-		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default(topicPlayer1, Encoding.UTF8.GetBytes(chatMessage));
+		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default(topicPlayer1, chatMessage);
 		client1.Send(msg, (INTopicMessageAck ack) => {
 			Debug.Log ("Sent message to Player 2");
 		}, (INError error) =>
@@ -233,7 +233,7 @@ public class UserChat : MonoBehaviour {
 
 	public void Player2SendChatMessage() {
 		string chatMessage = "{\"data\": \"Player 2 says: Current time is " + DateTime.Now.ToString ("yyyy-MM-dd\\THH:mm:ss\\Z") + "\"}";
-		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default (topicPlayer2, Encoding.UTF8.GetBytes (chatMessage));
+		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default (topicPlayer2, chatMessage);
 		client2.Send (msg, (INTopicMessageAck ack) => {
 			Debug.Log ("Sent message to Player 1");
 		}, (INError error) => {

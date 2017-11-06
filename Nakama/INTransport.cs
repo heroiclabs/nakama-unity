@@ -40,17 +40,17 @@ namespace Nakama
             Action<byte[]> successAction,
             Action<Exception> errorAction);
 
-        void Connect(string uri, byte[] token);
-        void ConnectAsync(string uri, byte[] token, Action<bool> callback);
+        void Connect(string uri, string token);
+        void ConnectAsync(string uri, string token, Action<bool> callback);
         void Close();
         void CloseAsync(Action callback);
         void Send(byte[] data, bool reliable);
         void SendAsync(byte[] data, bool reliable, Action<bool> completed);
 
-        event EventHandler<SocketCloseEventArgs> OnClose;
-        event EventHandler<SocketErrorEventArgs> OnError;
-        event EventHandler<SocketMessageEventArgs> OnMessage;
-        event EventHandler OnOpen;
+        void SetOnClose(Action<SocketCloseEventArgs> OnClose);
+        void SetOnError(Action<SocketErrorEventArgs> OnError);
+        void SetOnMessage(Action<SocketMessageEventArgs> OnMessage);
+        void SetOnOpen(Action OnOpen);
     }
 
     public class SocketMessageEventArgs : EventArgs

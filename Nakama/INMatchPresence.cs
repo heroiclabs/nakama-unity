@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace Nakama
 {
     public interface INMatchPresence
     {
-        byte[] Id { get; }
+        string Id { get; }
 
         IList<INUserPresence> Join { get; }
 

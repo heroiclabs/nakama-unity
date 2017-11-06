@@ -29,24 +29,13 @@ namespace Nakama
             }
         }
 
-        private NFriendAddMessage(byte[] id)
+        private NFriendAddMessage(TFriendsAdd.Types.FriendsAdd add)
         {
             payload = new Envelope {FriendsAdd = new TFriendsAdd { Friends =
             {
                 new List<TFriendsAdd.Types.FriendsAdd>
                 {
-                    new TFriendsAdd.Types.FriendsAdd {UserId = ByteString.CopyFrom(id)}
-                }
-            }}};
-        }
-        
-        private NFriendAddMessage(string handle)
-        {
-            payload = new Envelope {FriendsAdd = new TFriendsAdd { Friends =
-            {
-                new List<TFriendsAdd.Types.FriendsAdd>
-                {
-                    new TFriendsAdd.Types.FriendsAdd {Handle = handle}
+                    add
                 }
             }}};
         }
@@ -76,14 +65,14 @@ namespace Nakama
             return String.Format("NFriendsAddMessage(UserIds={0}, Handles={1})", ids, handles);
         }
 
-        public static NFriendAddMessage Default(byte[] id)
+        public static NFriendAddMessage ById(string id)
         {
-            return new NFriendAddMessage(id);
+            return new NFriendAddMessage(new TFriendsAdd.Types.FriendsAdd {UserId = id});
         }
         
-        public static NFriendAddMessage Default(string handle)
+        public static NFriendAddMessage ByHandle(string handle)
         {
-            return new NFriendAddMessage(handle);
+            return new NFriendAddMessage(new TFriendsAdd.Types.FriendsAdd {Handle = handle});
         }
     }
 }

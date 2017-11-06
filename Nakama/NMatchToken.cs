@@ -15,17 +15,16 @@
  */
 
 using System;
-using Google.Protobuf;
 
 namespace Nakama
 {
     internal class NMatchToken : INMatchToken
     {
-        public byte[] Token { get; private set; }
+        public string Token { get; private set; }
 
-        internal NMatchToken(ByteString token)
+        internal NMatchToken(string token)
         {
-            Token = token.ToByteArray();
+            Token = token;
         }
 
         public override string ToString()

@@ -22,7 +22,7 @@ namespace Nakama
     {
         byte[] Data { get; }
 
-        byte[] Id { get; }
+        string Id { get; }
 
         long OpCode { get; }
 

@@ -16,13 +16,12 @@
 
 using System;
 using System.Collections.Generic;
-using Google.Protobuf;
 
 namespace Nakama
 {
     internal class NMatch : INMatch
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public IList<INUserPresence> Presence { get; private set; }
         public INUserPresence Self { get; private set; }
 
@@ -30,7 +29,7 @@ namespace Nakama
         
         internal NMatch(Match message)
         {
-            Id = message.MatchId.ToByteArray();
+            Id = message.MatchId;
             Presence = new List<INUserPresence>();
             foreach (var item in message.Presences)
             {
