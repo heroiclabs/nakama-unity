@@ -110,6 +110,8 @@ task unityPackage(type: Exec) {
       into "$unityprojectDir/Assets/Nakama/Plugins"
       include 'Google.Protobuf.dll'
       include 'websocket-sharp.dll'
+      include 'Netcode.IO.NET.dll'
+      include 'ReliableNetcode.dll'
     }
 
     copy {

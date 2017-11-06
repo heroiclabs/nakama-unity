@@ -3,9 +3,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.10.0] - 2017-11-06
 ### Added
-- RUDP transport option.
+- New experimental rUDP socket protocol option.
+
+### Changed
+- Use string identifiers instead of byte arrays for compatibility across Lua, JSON, and client representations.
 
 ## [0.9.0] - 2017-10-17
 ### Added
