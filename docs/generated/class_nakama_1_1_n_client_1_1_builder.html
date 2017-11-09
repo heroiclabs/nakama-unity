@@ -88,6 +88,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a27c7c66601d5a89e4c64be02e3c544c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#a27c7c66601d5a89e4c64be02e3c544c5">Builder</a> (string serverKey)</td></tr>
 <tr class="separator:a27c7c66601d5a89e4c64be02e3c544c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2953e9bc02af559b010184b75fe0dd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#ae2953e9bc02af559b010184b75fe0dd4">Builder</a> (string serverKey, <a class="el" href="namespace_nakama.html#ad8a5e4a9b618115a432ff0b806571a1b">TransportType</a> transportType)</td></tr>
+<tr class="separator:ae2953e9bc02af559b010184b75fe0dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad89b02d9345f401e640bd6aba2bff75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#aad89b02d9345f401e640bd6aba2bff75">ConnectTimeout</a> (uint connectTimeout)</td></tr>
 <tr class="separator:aad89b02d9345f401e640bd6aba2bff75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af56f015b648cb48b10eea4f090448996"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#af56f015b648cb48b10eea4f090448996">Host</a> (string host)</td></tr>
@@ -102,8 +104,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1d19f38a08f731647fbafa45a78dc705"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5a600204476fe2691acaf834aed9194"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#ac5a600204476fe2691acaf834aed9194">Timeout</a> (uint timeout)</td></tr>
 <tr class="separator:ac5a600204476fe2691acaf834aed9194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38a75127bfaa58d00e90a263334d9e43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#a38a75127bfaa58d00e90a263334d9e43">NoDelay</a> (bool enable)</td></tr>
-<tr class="separator:a38a75127bfaa58d00e90a263334d9e43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a355b15231a8f0f62357b7e8dd9380494"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#a355b15231a8f0f62357b7e8dd9380494">Trace</a> (bool enable)</td></tr>
 <tr class="separator:a355b15231a8f0f62357b7e8dd9380494"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a239f786316a02097fe20d62a77c5e291"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_nakama_1_1_n_client.html">NClient</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#a239f786316a02097fe20d62a77c5e291">Build</a> ()</td></tr>
@@ -111,10 +111,10 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00458">458</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00529">529</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a27c7c66601d5a89e4c64be02e3c544c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27c7c66601d5a89e4c64be02e3c544c5">&#9670;&nbsp;</a></span>Builder()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a27c7c66601d5a89e4c64be02e3c544c5">&#9670;&nbsp;</a></span>Builder() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,7 +129,37 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00462">462</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00533">533</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae2953e9bc02af559b010184b75fe0dd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2953e9bc02af559b010184b75fe0dd4">&#9670;&nbsp;</a></span>Builder() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Nakama.NClient.Builder.Builder </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>serverKey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_nakama.html#ad8a5e4a9b618115a432ff0b806571a1b">TransportType</a>&#160;</td>
+          <td class="paramname"><em>transportType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00538">538</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -149,7 +179,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00523">523</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00593">593</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -169,7 +199,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00467">467</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00543">543</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -189,7 +219,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00473">473</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00549">549</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -209,7 +239,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00479">479</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00555">555</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -229,27 +259,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00485">485</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
-
-</div>
-</div>
-<a id="a38a75127bfaa58d00e90a263334d9e43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38a75127bfaa58d00e90a263334d9e43">&#9670;&nbsp;</a></span>NoDelay()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_nakama_1_1_n_client_1_1_builder.html">Builder</a> Nakama.NClient.Builder.NoDelay </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enable</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00510">510</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00561">561</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -269,7 +279,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00492">492</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00568">568</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -289,7 +299,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00498">498</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00574">574</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -309,7 +319,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00504">504</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00580">580</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
@@ -329,7 +339,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00516">516</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n_client_8cs_source.html#l00586">586</a> of file <a class="el" href="_n_client_8cs_source.html">NClient.cs</a>.</p>
 
 </div>
 </div>
