@@ -3,7 +3,9 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.10.1] - 2017-11-11
+### Fixed
+- Build system now includes `BCCrypto.dll` in `.unitypackage`.
 
 ## [0.10.0] - 2017-11-06
 ### Added

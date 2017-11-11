@@ -22,7 +22,7 @@ plugins {
   id 'com.ullink.nunit' version '1.9'
 }
 
-version = '0.11.0'
+version = '0.10.1'
 
 assemblyInfoPatcher {
   version = "${project.version}.0"
@@ -108,10 +108,11 @@ task unityPackage(type: Exec) {
     copy {
       from "$buildDir/msbuild/bin"
       into "$unityprojectDir/Assets/Nakama/Plugins"
+      include 'BCCrypto.dll'
       include 'Google.Protobuf.dll'
-      include 'websocket-sharp.dll'
       include 'Netcode.IO.NET.dll'
       include 'ReliableNetcode.dll'
+      include 'websocket-sharp.dll'
     }
 
     copy {
