@@ -60,7 +60,7 @@ namespace Nakama
                 message.payload.MatchmakeAdd.RequiredCount = requiredCount;
             }
 
-            public Builder addTermFilter(string name, HashSet<string> terms, bool matchAllTerms)
+            public Builder AddTermFilter(string name, HashSet<string> terms, bool matchAllTerms)
             {
                 var f = new MatchmakeFilter()
                 {
@@ -76,7 +76,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addRangeFilter(string name, long lowerbound, long upperbound)
+            public Builder AddRangeFilter(string name, long lowerbound, long upperbound)
             {
                 var f = new MatchmakeFilter()
                 {
@@ -91,7 +91,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addCheckFilter(string name, bool value)
+            public Builder AddCheckFilter(string name, bool value)
             {
                 var f = new MatchmakeFilter()
                 {
@@ -102,7 +102,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addProperty(string key, bool value)
+            public Builder AddProperty(string key, bool value)
             {
                 var property = new PropertyPair()
                 {
@@ -113,7 +113,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addProperty(string key, long value)
+            public Builder AddProperty(string key, long value)
             {
                 var property = new PropertyPair()
                 {
@@ -124,7 +124,7 @@ namespace Nakama
                 return this;
             }
             
-            public Builder addProperty(string key, HashSet<string> values)
+            public Builder AddProperty(string key, HashSet<string> values)
             {
                 var property = new PropertyPair()
                 {

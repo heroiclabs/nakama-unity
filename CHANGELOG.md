@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- MatchmakeAddMessage correctly follows C# naming scheme.
+
 ## [0.10.1] - 2017-11-11
 ### Fixed
 - Build system now includes `BCCrypto.dll` in `.unitypackage`.
