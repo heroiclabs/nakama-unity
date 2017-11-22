@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2017 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,22 @@
 
 namespace Nakama
 {
-    /// <summary>
-    ///  A collection of extension methods to make it easier to work with some
-    ///  data types.
-    /// </summary>
-    public static class NExtensionMethods
+    public interface INMatchmakeFilter {}
+
+    public interface INMatchmakeTermFilter : INMatchmakeFilter
     {
-        /// <summary>
-        ///  An extension for byte array which makes it easy to compare them for
-        ///  equality by value.
-        /// </summary>
-        /// <seealso cref="Nakama.NIds.Equals"/>
-        public static bool Equals(this byte[] id, byte[] other)
-        {
-            return NIds.Equals(id, other);
-        }
+        string[] Terms { get; }
+        bool MatchAllTerms { get; }
+    }
+    
+    public interface INMatchmakeRangeFilter : INMatchmakeFilter
+    {
+        long Lowerbound { get; }
+        long Upperbound { get; }
+    }
+    
+    public interface INMatchmakeCheckFilter : INMatchmakeFilter
+    {
+        bool Value { get; }
     }
 }

@@ -155,6 +155,10 @@ public class Matchmake : MonoBehaviour {
                 Debug.Log("Successfully joined matches.");
 
                 _match = matches.Results[0];
+                foreach (var presence in _match.Presence) {
+                    Debug.LogFormat("Presence initial state: User handle '{0}' is in the match.", presence.Handle);
+                }
+
                 // Lets enable the button now that we've joined a match.
                 _matchSendDataButtonEnable = true;
             }, (INError error) => {
@@ -170,10 +174,10 @@ public class Matchmake : MonoBehaviour {
             // `args.MatchPresence.Join` and `args.MatchPresence.Leave` for lists of
             // presences that have joined/left since the last update for this match.
             foreach (var presence in presences.Join) {
-                Debug.LogFormat("User handle '{0}' joined the match.", presence.Handle);
+                Debug.LogFormat("Presence update: User handle '{0}' joined the match.", presence.Handle);
             }
             foreach (var presence in presences.Leave) {
-                Debug.LogFormat("User handle '{0}' left the match.", presence.Handle);
+                Debug.LogFormat("Presence update: User handle '{0}' left the match.", presence.Handle);
             }
         };
     }

@@ -29,7 +29,7 @@ namespace Nakama.Tests
         private static readonly string DefaultServerKey = "defaultkey";
         private static readonly string DeviceId = random.GetString();
 
-        private static byte[] FriendUserId;
+        private static string FriendUserId;
         private static string FriendHandle = "";
         private INClient client;
 
@@ -108,7 +108,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             var committed = false;
 
-            var message = NFriendAddMessage.Default(FriendUserId);
+            var message = NFriendAddMessage.ById(FriendUserId);
             client.Send(message, (bool completed) => {
                 committed = completed;
                 evt.Set();

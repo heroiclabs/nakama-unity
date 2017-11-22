@@ -32,7 +32,7 @@ namespace Nakama.Tests
         private static readonly string LeaderboardIdName = "testLeaderboard";
         private static readonly string LeaderboardId = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(LeaderboardIdName));
 
-        private byte[] serverLeaderboardId;
+        private string serverLeaderboardId;
         private INSelf self;
         private INClient client;
 
@@ -58,7 +58,7 @@ namespace Nakama.Tests
                         bool found = false;
                         foreach (var leaderboard in results.Results)
                         {
-                            if (LeaderboardId.Equals(Convert.ToBase64String(leaderboard.Id)))
+                            if (LeaderboardId.Equals(leaderboard.Id))
                             {
                                 serverLeaderboardId = leaderboard.Id;
                                 found = true;
@@ -118,7 +118,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INLeaderboard> res = null;
 
-            var message= new NLeaderboardsListMessage.Builder().Add(Encoding.UTF8.GetBytes(LeaderboardIdName)).Build();
+            var message= new NLeaderboardsListMessage.Builder().Add(LeaderboardIdName).Build();
             client.Send(message, (INResultSet<INLeaderboard> results) =>
             {
                 res = results;
@@ -130,7 +130,7 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsNotNull(res);
             Assert.IsNotEmpty(res.Results);
-            Assert.AreEqual(Convert.ToBase64String(res.Results[0].Id), LeaderboardId);
+            Assert.AreEqual(res.Results[0].Id, LeaderboardId);
             Assert.GreaterOrEqual(res.Results[0].Count, 0);
         }
 

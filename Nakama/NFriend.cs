@@ -24,11 +24,11 @@ namespace Nakama
         public long CreatedAt { get; private set; }
         public string Fullname { get; private set; }
         public string Handle { get; private set; }
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public string Lang { get; private set; }
         public long LastOnlineAt { get; private set; }
         public string Location { get; private set; }
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
         public string Timezone { get; private set; }
         public long UpdatedAt { get; private set; }
         public FriendState State { get; private set; }
@@ -39,11 +39,11 @@ namespace Nakama
             CreatedAt = message.User.CreatedAt;
             Fullname = message.User.Fullname;
             Handle = message.User.Handle;
-            Id = message.User.Id.ToByteArray();
+            Id = message.User.Id;
             Lang = message.User.Lang;
             LastOnlineAt = message.User.LastOnlineAt;
             Location = message.User.Location;
-            Metadata = message.User.Metadata.ToByteArray();
+            Metadata = message.User.Metadata;
             Timezone = message.User.Timezone;
             UpdatedAt = message.User.UpdatedAt;
 

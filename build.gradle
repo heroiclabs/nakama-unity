@@ -22,7 +22,7 @@ plugins {
   id 'com.ullink.nunit' version '1.9'
 }
 
-version = '0.9.0'
+version = '0.10.1'
 
 assemblyInfoPatcher {
   version = "${project.version}.0"
@@ -54,8 +54,10 @@ msbuild {
   doFirst {
     copy {
       from 'packages/NUnit.3.5.0/lib/net20'
-      from 'packages/WebSocketSharp.1.0.3-rc11'
+      from 'packages/WebSocketSharp'
       from 'packages/protobuf3-for-unity-v3.0.0_ga_noJIT'
+      from 'packages/Netcode.IO.NET'
+      from 'packages/ReliableNetcode.NET'
       into destinationDir
     }
   }
@@ -106,7 +108,10 @@ task unityPackage(type: Exec) {
     copy {
       from "$buildDir/msbuild/bin"
       into "$unityprojectDir/Assets/Nakama/Plugins"
+      include 'BCCrypto.dll'
       include 'Google.Protobuf.dll'
+      include 'Netcode.IO.NET.dll'
+      include 'ReliableNetcode.dll'
       include 'websocket-sharp.dll'
     }
 

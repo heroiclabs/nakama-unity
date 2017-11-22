@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -32,7 +33,7 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId2;
+        private static string userId2;
 
         [SetUp]
         public void SetUp()
@@ -122,10 +123,26 @@ namespace Nakama.Tests
                 res2 = matched;
                 evt2.Set();
             };
+            
+            
 
-            client1.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket1) =>
+            var b1 = new NMatchmakeAddMessage.Builder(2);
+            b1.AddProperty("rank", 12);
+            b1.AddProperty("modes", new HashSet<string> {"tdm", "ffa"});
+            b1.AddProperty("divisions", new HashSet<string>{"silver1"});
+            b1.AddRangeFilter("rank", 10, 15);
+            b1.AddTermFilter("modes", new HashSet<string>{"tdm", "ffa"}, false);
+            b1.AddTermFilter("divisions", new HashSet<string>{"bronze3","silver1", "silver2"}, false); // like RocketLeague
+            client1.Send(b1.Build(), (INMatchmakeTicket ticket1) =>
             {
-                client2.Send(NMatchmakeAddMessage.Default(2), (INMatchmakeTicket ticket2) =>
+                var b2 = new NMatchmakeAddMessage.Builder(2);
+                b2.AddProperty("rank", 10);
+                b2.AddProperty("modes", new HashSet<string>{"tdm", "ffa"});
+                b2.AddProperty("divisions", new HashSet<string>{"bronze3"});
+                b2.AddRangeFilter("rank", 8, 12);
+                b2.AddTermFilter("modes", new HashSet<string>{"tdm", "ffa"}, false);
+                b2.AddTermFilter("divisions", new HashSet<string>{"bronze2","bronze3", "silver1"}, false);
+                client2.Send(b2.Build(), (INMatchmakeTicket ticket2) =>
                 {
                     // No action.
                 }, (INError err) =>
@@ -142,7 +159,20 @@ namespace Nakama.Tests
             Assert.IsNull(error);
             Assert.IsNull(error1);
             Assert.IsNull(error2);
+            Assert.IsNotNull(res1);
+            Assert.IsNotNull(res2);
+            Assert.IsNotNull(res1.Token);
+            Assert.IsNotNull(res2.Token);
             Assert.AreEqual(res1.Token.Token, res2.Token.Token);
+
+            var c1Props = res1.UserProperties[0]; 
+            if (res1.Self.UserId != res1.UserProperties[0].Id)
+            {
+                c1Props = res1.UserProperties[1];
+            }
+            
+            Assert.AreEqual(((long)c1Props.Properties["rank"]), 12);
+            Assert.AreEqual(((INMatchmakeRangeFilter)c1Props.Filters["rank"]).Lowerbound, 10);
         }
 
         [Test, Order(3)]

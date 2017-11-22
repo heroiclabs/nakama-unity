@@ -33,8 +33,8 @@ namespace Nakama.Tests
         private static readonly string GroupDescription = "testGroupDescription";
         private static readonly bool PrivateGroup = true;
 
-        private static byte[] FriendUserId;
-        private static byte[] MyUserId;
+        private static string FriendUserId;
+        private static string MyUserId;
         private static INGroup FriendGroup;
         private INClient client;
         private INGroup myGroup;
@@ -247,7 +247,7 @@ namespace Nakama.Tests
             INError error = null;
             INResultSet<INGroup> groups = null;
 
-            var message = new NGroupsFetchMessage.Builder(FriendGroup.Id).Build();
+            var message = NGroupsFetchMessage.Builder.ById(FriendGroup.Id).Build();
             client.Send(message, (INResultSet<INGroup> results) =>
             {
                 groups = results;

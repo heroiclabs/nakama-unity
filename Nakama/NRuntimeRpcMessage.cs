@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -62,9 +61,9 @@ namespace Nakama
                 message = new NRuntimeRpcMessage(id);
             }
 
-            public Builder Payload(byte[] payload)
+            public Builder Payload(string payload)
             {
-                message.payload.Rpc.Payload = ByteString.CopyFrom(payload);
+                message.payload.Rpc.Payload = payload;
                 return this;
             }
 

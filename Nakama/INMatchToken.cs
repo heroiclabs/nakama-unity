@@ -18,6 +18,6 @@ namespace Nakama
 {
     public interface INMatchToken
     {
-        byte[] Token { get; }
+        string Token { get; }
     }
 }

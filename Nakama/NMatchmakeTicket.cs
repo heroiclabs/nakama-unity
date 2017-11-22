@@ -15,22 +15,21 @@
  */
 
 using System;
-using Google.Protobuf;
 
 namespace Nakama
 {
     internal class NMatchmakeTicket : INMatchmakeTicket
     {
-        public byte[] Ticket { get; private set; }
+        public string Ticket { get; private set; }
 
-        internal NMatchmakeTicket(ByteString ticket)
+        internal NMatchmakeTicket(string ticket)
         {
-            Ticket = ticket.ToByteArray();
+            Ticket = ticket;
         }
 
         internal NMatchmakeTicket(TMatchmakeTicket ticket)
         {
-            Ticket = ticket.Ticket.ToByteArray();
+            Ticket = ticket.Ticket;
         }
 
         public override string ToString()

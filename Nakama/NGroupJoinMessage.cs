@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NGroupJoinMessage(byte[] groupId)
+        private NGroupJoinMessage(string groupId)
         {
             payload = new Envelope {GroupsJoin = new TGroupsJoin {GroupIds =
             {
-                new List<ByteString>
+                new List<string>
                 {
-                    ByteString.CopyFrom(groupId)
+                    groupId
                 }
             }}};
         }
@@ -55,7 +55,7 @@ namespace Nakama
             return String.Format("NGroupJoinMessage(GroupIds={0})", output);
         }
 
-        public static NGroupJoinMessage Default(byte[] groupId)
+        public static NGroupJoinMessage Default(string groupId)
         {
             return new NGroupJoinMessage(groupId);
         }

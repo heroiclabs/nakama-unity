@@ -18,13 +18,13 @@ namespace Nakama
 {
     public interface INLeaderboard
     {
-        byte[] Id { get; }
+        string Id { get; }
         bool Authoritative { get; }
         long Sort { get; }
         long Count { get; }
         string ResetSchedule { get; }
-        byte[] Metadata { get; }
-        byte[] NextId { get; }
-        byte[] PrevId { get; }
+        string Metadata { get; }
+        string NextId { get; }
+        string PrevId { get; }
     }
 }

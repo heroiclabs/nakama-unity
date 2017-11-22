@@ -51,13 +51,13 @@ namespace Nakama
                 switch (j.IdCase)
                 {
                     case TTopicsJoin.Types.TopicJoin.IdOneofCase.UserId:
-                        output += String.Format("(Id={0},IdCase={1}),", j.UserId.ToByteArray(), j.IdCase);
+                        output += String.Format("(Id={0},IdCase={1}),", j.UserId, j.IdCase);
                         break;
                     case TTopicsJoin.Types.TopicJoin.IdOneofCase.Room:
-                        output += String.Format("(Id={0},IdCase={1}),", j.Room.ToByteArray(), j.IdCase);
+                        output += String.Format("(Id={0},IdCase={1}),", j.Room, j.IdCase);
                         break;
                     case TTopicsJoin.Types.TopicJoin.IdOneofCase.GroupId:
-                        output += String.Format("(Id={0},IdCase={1}),", j.GroupId.ToByteArray(), j.IdCase);
+                        output += String.Format("(Id={0},IdCase={1}),", j.GroupId, j.IdCase);
                         break;
                 }
             }
@@ -73,29 +73,29 @@ namespace Nakama
                 message = new NTopicJoinMessage();
             }
 
-            public Builder TopicDirectMessage(byte[] userId)
+            public Builder TopicDirectMessage(string userId)
             {
                 message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
                 {
-                    UserId = ByteString.CopyFrom(userId)
+                    UserId = userId
                 });
                 return this;
             }
 
-            public Builder TopicRoom(byte[] room)
+            public Builder TopicRoom(string room)
             {
                 message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
                 {
-                    Room = ByteString.CopyFrom(room)
+                    Room = room
                 });
                 return this;
             }
 
-            public Builder TopicGroup(byte[] groupId)
+            public Builder TopicGroup(string groupId)
             {
                 message.payload.TopicsJoin.Joins.Add(new TTopicsJoin.Types.TopicJoin
                 {
-                    GroupId= ByteString.CopyFrom(groupId)
+                    GroupId = groupId
                 });
                 return this;
             }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 
@@ -83,7 +82,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INUser> users = null;
 
-            var message = NUsersFetchMessage.Default(session.Id);
+            var message = NUsersFetchMessage.ById(session.Id);
             client.Send(message, (INResultSet<INUser> results) => {
                 users = results;
                 evt.Set();
@@ -109,7 +108,7 @@ namespace Nakama.Tests
                     .Handle(Handle)
                     .Lang("en")
                     .Location("San Francisco")
-                    .Metadata(Encoding.UTF8.GetBytes("{}"))
+                    .Metadata("{}")
                     .Timezone("Pacific Time")
                     .Build();
             client.Send(message, (bool completed) => {
@@ -129,7 +128,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INResultSet<INUser> users = null;
 
-            var message = NUsersFetchMessage.Default(Handle);
+            var message = NUsersFetchMessage.ByHandle(Handle);
             client.Send(message, (INResultSet<INUser> results) => {
                 users = results;
                 evt.Set();

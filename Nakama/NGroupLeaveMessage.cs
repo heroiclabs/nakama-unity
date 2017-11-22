@@ -29,13 +29,13 @@ namespace Nakama
             }
         }
 
-        private NGroupLeaveMessage(byte[] groupId)
+        private NGroupLeaveMessage(string groupId)
         {
             payload = new Envelope {GroupsLeave = new TGroupsLeave { GroupIds =
             {
-                new List<ByteString>
+                new List<string>
                 {
-                    ByteString.CopyFrom(groupId)
+                    groupId
                 }
             }}};   
         }
@@ -55,7 +55,7 @@ namespace Nakama
             return String.Format("NGroupLeaveMessage(GroupIds={0})", output);
         }
 
-        public static NGroupLeaveMessage Default(byte[] groupId)
+        public static NGroupLeaveMessage Default(string groupId)
         {
             return new NGroupLeaveMessage(groupId);
         }

@@ -29,30 +29,6 @@ namespace Nakama
             }
         }
 
-        private NGroupsFetchMessage(params byte[][] ids)
-        {
-            var groups = new List<TGroupsFetch.Types.GroupFetch>();
-            foreach (var id in ids)
-            {
-                var g = new TGroupsFetch.Types.GroupFetch();
-                g.GroupId = ByteString.CopyFrom(id);
-                groups.Add(g);
-            }
-            payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}};    
-        }
-
-        private NGroupsFetchMessage(params string[] names)
-        {
-            var groups = new List<TGroupsFetch.Types.GroupFetch>();
-            foreach (var name in names)
-            {
-                var g = new TGroupsFetch.Types.GroupFetch();
-                g.Name = name;
-                groups.Add(g);
-            }
-            payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}};
-        }
-
         private NGroupsFetchMessage()
         {
             payload = new Envelope {GroupsFetch = new TGroupsFetch()};
@@ -83,23 +59,23 @@ namespace Nakama
             return String.Format("NGroupsFetchMessage(GroupIds={0}, Names={1})", ids, names);
         }
 
-        public static NGroupsFetchMessage Default(params byte[][] ids)
+        public static NGroupsFetchMessage Default(params string[] ids)
         {
-            return new NGroupsFetchMessage.Builder(ids).Build();
+            return new NGroupsFetchMessage.Builder().SetGroupIds(ids).Build();
         }
 
         public class Builder
         {
             private NGroupsFetchMessage message;
 
-            public Builder(params byte[][] ids)
+            public static Builder ById(params string[] ids)
             {
-                message = new NGroupsFetchMessage(ids);
+                return new Builder().SetGroupIds(ids);
             }
 
-            public Builder(params string[] names)
+            public static Builder ByName(params string[] names)
             {
-                message = new NGroupsFetchMessage(names);
+                return new Builder().SetNames(names);
             }
 
             public Builder()
@@ -107,18 +83,18 @@ namespace Nakama
                 message = new NGroupsFetchMessage();
             }
 
-            public Builder SetGroupIds(params byte[][] ids)
+            public Builder SetGroupIds(params string[] ids)
             {
-                return SetGroupIds(new List<byte[]>(ids));
+                return SetGroupIds(new List<string>(ids));
             }
 
-            public Builder SetGroupIds(IEnumerable<byte[]> ids)
+            public Builder SetGroupIds(IEnumerable<string> ids)
             {
                 var groups = new List<TGroupsFetch.Types.GroupFetch>();
                 foreach (var id in ids)
                 {
                     var g = new TGroupsFetch.Types.GroupFetch();
-                    g.GroupId = ByteString.CopyFrom(id);
+                    g.GroupId = id;
                     groups.Add(g);
                 }
                 message.payload = new Envelope {GroupsFetch = new TGroupsFetch { Groups = {groups}}}; 

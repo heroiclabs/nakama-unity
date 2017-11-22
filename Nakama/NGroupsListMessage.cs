@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -69,7 +68,7 @@ namespace Nakama
 
             public Builder Cursor(INCursor cursor)
             {
-                message.payload.GroupsList.Cursor = ByteString.CopyFrom(cursor.Value);
+                message.payload.GroupsList.Cursor = cursor.Value;
                 return this;
             }
 

@@ -41,5 +41,6 @@ namespace Nakama
     {
         ErrorCode Code { get; }
         string Message { get; }
+        string CollationId { get; }
     }
 }

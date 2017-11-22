@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+using Google.Protobuf;
+
 namespace Nakama
 {
-    public interface INUncollatedMessage : INMessage
+    public interface INUncollatedMessage
     {
+        IMessage Payload { get; }
     }
 }

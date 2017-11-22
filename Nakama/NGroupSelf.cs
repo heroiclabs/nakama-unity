@@ -20,14 +20,14 @@ namespace Nakama
 {
     internal class NGroupSelf : INGroupSelf
     {
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
         public bool Private { get; private set; }
-        public byte[] CreatorId { get; private set; }
+        public string CreatorId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public string AvatarUrl { get; private set; }
         public string Lang { get; private set; }
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
         public long Count { get; private set; }
         public long CreatedAt { get; private set; }
         public long UpdatedAt { get; private set; }
@@ -35,14 +35,14 @@ namespace Nakama
 
         internal NGroupSelf(TGroupsSelf.Types.GroupSelf message)
         {
-            Id = message.Group.Id.ToByteArray();
+            Id = message.Group.Id;
             Private = message.Group.Private;
-            CreatorId = message.Group.CreatorId.ToByteArray();
+            CreatorId = message.Group.CreatorId;
             Name = message.Group.Name;
             Description = message.Group.Description;
             AvatarUrl = message.Group.AvatarUrl;
             Lang = message.Group.Lang;
-            Metadata = message.Group.Metadata.ToByteArray();
+            Metadata = message.Group.Metadata;
             Count = message.Group.Count;
             CreatedAt = message.Group.CreatedAt;
             UpdatedAt = message.Group.UpdatedAt;

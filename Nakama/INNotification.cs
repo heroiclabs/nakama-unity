@@ -18,11 +18,11 @@ namespace Nakama
 {
     public interface INNotification
     {
-        byte[] Id { get; }
+        string Id { get; }
         string Subject { get; }
-        byte[] Content { get; }
+        string Content { get; }
         long Code { get; }
-        byte[] SenderId { get; }
+        string SenderId { get; }
         long CreatedAt { get; }
         long ExpiresAt { get; }
         bool Persistent { get; }

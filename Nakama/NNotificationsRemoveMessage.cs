@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
-using Google.Protobuf.Collections;
 
 namespace Nakama
 {
@@ -55,24 +54,18 @@ namespace Nakama
             return String.Format("NNotificationsRemoveMessage(NotificationIds={0})", output);
         }
 
-        public static NNotificationsRemoveMessage Default(params byte[][] notificationIds)
+        public static NNotificationsRemoveMessage Default(params string[] notificationIds)
         {
             var message = new NNotificationsRemoveMessage();
-            foreach (var n in notificationIds)
-            {
-                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
-            }
+            message.payload.NotificationsRemove.NotificationIds.Add(notificationIds);   
 
             return message;
         }
         
-        public static NNotificationsRemoveMessage Default(IEnumerable<byte[]> notificationIds)
+        public static NNotificationsRemoveMessage Default(IEnumerable<string> notificationIds)
         {
             var message = new NNotificationsRemoveMessage();
-            foreach (var n in notificationIds)
-            {
-                message.payload.NotificationsRemove.NotificationIds.Add(ByteString.CopyFrom(n));   
-            }
+            message.payload.NotificationsRemove.NotificationIds.Add(notificationIds);   
 
             return message;
         }

@@ -21,7 +21,7 @@ namespace Nakama
 {
     public interface INMatch
     {
-        byte[] Id { get; }
+        string Id { get; }
         IList<INUserPresence> Presence { get; }
         INUserPresence Self { get; }
     }

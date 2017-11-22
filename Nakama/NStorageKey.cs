@@ -26,14 +26,14 @@ namespace Nakama
 
         public string Record { get; private set; }
 
-        public byte[] Version { get; private set; }
+        public string Version { get; private set; }
 
         internal NStorageKey(TStorageKeys.Types.StorageKey message)
         {
             Bucket = message.Bucket;
             Collection = message.Collection;
             Record = message.Record;
-            Version = message.Version.ToByteArray();
+            Version = message.Version;
         }
 
         public override string ToString()

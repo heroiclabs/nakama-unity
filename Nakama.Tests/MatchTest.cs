@@ -32,8 +32,8 @@ namespace Nakama.Tests
         private static INClient client1;
         private static INClient client2;
 
-        private static byte[] userId1;
-        private static byte[] userId2;
+        private static string userId1;
+        private static string userId2;
 
         [SetUp]
         public void SetUp()
@@ -170,7 +170,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(m);
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            byte[] joinedUserId = null;
+            string joinedUserId = null;
             client1.OnMatchPresence = (INMatchPresence presence) =>
             {
                 joinedUserId = presence.Join[0].UserId;
@@ -217,7 +217,7 @@ namespace Nakama.Tests
             Assert.IsNotNull(m);
 
             ManualResetEvent evt2 = new ManualResetEvent(false);
-            byte[] leftUserId = null;
+            string leftUserId = null;
             client1.OnMatchPresence = (INMatchPresence presence) =>
             {
                 leftUserId = presence.Leave[0].UserId;
@@ -272,7 +272,7 @@ namespace Nakama.Tests
                 d = matchData;
                 evt2.Set();
             };
-            client1.Send(NMatchDataSendMessage.Default(m.Id, opCode, data), (bool completed) =>
+            client1.Send(NMatchDataSendMessage.Default(m.Id, opCode, data), false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {
@@ -314,7 +314,7 @@ namespace Nakama.Tests
                 d = data;
                 evt2.Set();
             };
-            client1.Send(NMatchDataSendMessage.Default(m.Id, 9, Encoding.ASCII.GetBytes("test-data")), (bool completed) =>
+            client1.Send(NMatchDataSendMessage.Default(m.Id, 9, Encoding.ASCII.GetBytes("test-data")), false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {
@@ -374,7 +374,7 @@ namespace Nakama.Tests
                 evt2.Set();
             };
             var msg = new NMatchDataSendMessage.Builder(m.Id, opCode, data).Presences(new INUserPresence[]{p}).Build();
-            client2.Send(msg, (bool completed) =>
+            client2.Send(msg, false, (bool completed) =>
             {
                 // No action.
             }, (INError err) => {

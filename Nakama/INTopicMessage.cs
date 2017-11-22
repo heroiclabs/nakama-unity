@@ -21,12 +21,12 @@ namespace Nakama
     public interface INTopicMessage
     {
         INTopicId Topic { get; }
-        byte[] UserId { get; }
-        byte[] MessageId { get; }
+        string UserId { get; }
+        string MessageId { get; }
         long CreatedAt { get; }
         long ExpiresAt { get; }
         string Handle { get; }
         TopicMessageType Type { get; }
-        byte[] Data { get; }
+        string Data { get; }
     }
 }

@@ -23,8 +23,9 @@ namespace Nakama
     {
         public ErrorCode Code { get; private set; }
         public string Message { get; private set; }
+        public string CollationId { get; private set; }
 
-        internal NError(AuthenticateResponse.Types.Error error)
+        internal NError(AuthenticateResponse.Types.Error error, String collationId)
         {
             if (Enum.IsDefined(typeof(ErrorCode), Convert.ToUInt32(error.Code + 1)))
             {
@@ -35,9 +36,10 @@ namespace Nakama
                 Code = ErrorCode.Unknown;
             }
             Message = error.Message;
+            CollationId = collationId;
         }
 
-        internal NError(Error error)
+        internal NError(Error error, String collationId)
         {
             if (Enum.IsDefined(typeof(ErrorCode), Convert.ToUInt32(error.Code + 1)))
             {
@@ -48,17 +50,19 @@ namespace Nakama
                 Code = ErrorCode.Unknown;
             }
             Message = error.Message;
+            CollationId = collationId;
         }
 
         internal NError(string message)
         {
             Code = ErrorCode.Unknown;
             Message = message;
+            CollationId = null;
         }
 
         public override string ToString()
         {
-            return String.Format("NError(Code={0},Message={1})", Code, Message);
+            return String.Format("NError(Code={0},Message={1},CollationId={2})", Code, Message, CollationId);
         }
     }
 }

@@ -21,12 +21,12 @@ namespace Nakama
     public class NRuntimeRpc : INRuntimeRpc
     {
         public string Id { get; set; }
-        public byte[] Payload { get; set; }
+        public string Payload { get; set; }
 
         internal NRuntimeRpc(TRpc message)
         {
             Id = message.Id;
-            Payload = message.Payload.ToByteArray();
+            Payload = message.Payload;
         }
 
         public override string ToString()

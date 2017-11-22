@@ -33,10 +33,10 @@ namespace Nakama
             payload = new Envelope {MatchDataSend = new MatchDataSend()};
         }
 
-        private NMatchDataSendMessage(byte[] matchId, long opCode, byte[] data)
+        private NMatchDataSendMessage(string matchId, long opCode, byte[] data)
         {
             payload = new Envelope {MatchDataSend = new MatchDataSend()};
-            payload.MatchDataSend.MatchId = ByteString.CopyFrom(matchId);
+            payload.MatchDataSend.MatchId = matchId;
             payload.MatchDataSend.OpCode = opCode;
             payload.MatchDataSend.Data = ByteString.CopyFrom(data);
         }
@@ -48,7 +48,7 @@ namespace Nakama
             return String.Format(f, p.MatchId, p.OpCode, p.Data, p.Presences);
         }
 
-        public static NMatchDataSendMessage Default(byte[] matchId, long opCode, byte[] data)
+        public static NMatchDataSendMessage Default(string matchId, long opCode, byte[] data)
         {
             return new NMatchDataSendMessage(matchId, opCode, data);
         }
@@ -57,14 +57,14 @@ namespace Nakama
         {
             private NMatchDataSendMessage message;
 
-            public Builder(byte[] matchId, long opCode, byte[] data)
+            public Builder(string matchId, long opCode, byte[] data)
             {
                 message = new NMatchDataSendMessage(matchId, opCode, data);
             }
 
-            public Builder MatchId(byte[] matchId)
+            public Builder MatchId(string matchId)
             {
-                message.payload.MatchDataSend.MatchId = ByteString.CopyFrom(matchId);
+                message.payload.MatchDataSend.MatchId = matchId;
                 return this;
             }
 
@@ -86,8 +86,8 @@ namespace Nakama
                 foreach (var presence in presences)
                 {
                     UserPresence userPresence = new UserPresence();
-                    userPresence.UserId = ByteString.CopyFrom(presence.UserId);
-                    userPresence.SessionId = ByteString.CopyFrom(presence.SessionId);
+                    userPresence.UserId = presence.UserId;
+                    userPresence.SessionId = presence.SessionId;
                     message.payload.MatchDataSend.Presences.Add(userPresence);
                 }
                 return this;

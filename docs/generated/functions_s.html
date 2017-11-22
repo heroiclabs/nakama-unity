@@ -79,6 +79,9 @@ $(function() {
 : <a class="el" href="interface_nakama_1_1_i_n_leaderboard_record.html#aa984a1b38df420341094d61b1289d7b7">Nakama.INLeaderboardRecord</a>
 , <a class="el" href="class_nakama_1_1_n_leaderboard_record.html#af04f0724806e98870cbb0b5f3dc0558d">Nakama.NLeaderboardRecord</a>
 </li>
+<li>SeenBefore
+: <a class="el" href="interface_nakama_1_1_i_n_purchase_record.html#ac89aa03cf09853ca226645d48480bb75">Nakama.INPurchaseRecord</a>
+</li>
 <li>Self
 : <a class="el" href="interface_nakama_1_1_i_n_match.html#a16a229f4fa219626981f31459fcdf65b">Nakama.INMatch</a>
 , <a class="el" href="interface_nakama_1_1_i_n_matchmake_matched.html#ab121dfafe8421887953c63ed2c9242cd">Nakama.INMatchmakeMatched</a>
@@ -86,23 +89,33 @@ $(function() {
 , <a class="el" href="class_nakama_1_1_n_topic.html#a33656766fd20b482a5030ae9ab716a36">Nakama.NTopic</a>
 </li>
 <li>Send()
-: <a class="el" href="interface_nakama_1_1_i_n_client.html#a40fa2f2eefb96170c408ea03726245d8">Nakama.INClient</a>
-, <a class="el" href="class_nakama_1_1_n_client.html#aa6ce39e519603779767bd3301e192b96">Nakama.NClient</a>
+: <a class="el" href="interface_nakama_1_1_i_n_client.html#a6619e49cdd308c5d3f91092b4a61bfb3">Nakama.INClient</a>
+, <a class="el" href="class_nakama_1_1_n_client.html#af51a2bba0db0c93fc368cf97b85030bc">Nakama.NClient</a>
+, <a class="el" href="class_nakama_1_1_n_managed_client.html#a3e2b49624f05701a3f4df8a04d173e78">Nakama.NManagedClient</a>
 </li>
 <li>Send&lt; T &gt;()
 : <a class="el" href="interface_nakama_1_1_i_n_client.html#a9eae1a0174f6c1cfbc8068d52bff74ec">Nakama.INClient</a>
 , <a class="el" href="class_nakama_1_1_n_client.html#afaeb7a6e574df4df30896583d830414c">Nakama.NClient</a>
+, <a class="el" href="class_nakama_1_1_n_managed_client.html#a969cbbaa2818e04cb249b3d2dba2f5b8">Nakama.NManagedClient</a>
+</li>
+<li>SenderId
+: <a class="el" href="interface_nakama_1_1_i_n_notification.html#a74b92232c6f30d178bc179cc2bca27a7">Nakama.INNotification</a>
+</li>
+<li>Serialise()
+: <a class="el" href="interface_nakama_1_1_i_n_cursor.html#ae9146ce3fcba81c74743f3c5e756f88e">Nakama.INCursor</a>
 </li>
 <li>ServerKey
 : <a class="el" href="interface_nakama_1_1_i_n_client.html#a6e59181213d4f60f81b1f154c252b55a">Nakama.INClient</a>
 , <a class="el" href="class_nakama_1_1_n_client.html#a32c5d9a8a95727c1ac1e287e0f2ebaad">Nakama.NClient</a>
+, <a class="el" href="class_nakama_1_1_n_managed_client.html#abf55f4e7f71df4ab5ca17a38e2813b2d">Nakama.NManagedClient</a>
 </li>
 <li>ServerTime
 : <a class="el" href="interface_nakama_1_1_i_n_client.html#a492520a11a34d9c6847e950c8cb48284">Nakama.INClient</a>
 , <a class="el" href="class_nakama_1_1_n_client.html#ae8a81fb172ee00f91c3760503eded085">Nakama.NClient</a>
+, <a class="el" href="class_nakama_1_1_n_managed_client.html#ac46866b31dd231382ae39094fc7ad813">Nakama.NManagedClient</a>
 </li>
 <li>SessionId
-: <a class="el" href="interface_nakama_1_1_i_n_user_presence.html#a1016a2659f0b03685b720db12d5d66ee">Nakama.INUserPresence</a>
+: <a class="el" href="interface_nakama_1_1_i_n_user_presence.html#ae445db22fd93e468e669148005189377">Nakama.INUserPresence</a>
 </li>
 <li>Set()
 : <a class="el" href="class_nakama_1_1_n_leaderboard_record_write_message_1_1_builder.html#a76aaab623d69dc8b5792e032596b784c">Nakama.NLeaderboardRecordWriteMessage.Builder</a>
@@ -134,13 +147,18 @@ $(function() {
 , <a class="el" href="class_nakama_1_1_n_match_leave_message.html#ae7341856a4b6ce41fe72f321b705b1b2">Nakama.NMatchLeaveMessage</a>
 , <a class="el" href="class_nakama_1_1_n_matchmake_add_message.html#a084fe26e2f79b17afa35c1117fef13fb">Nakama.NMatchmakeAddMessage</a>
 , <a class="el" href="class_nakama_1_1_n_matchmake_remove_message.html#a4f29b92285322d4585a5dac603e12cf1">Nakama.NMatchmakeRemoveMessage</a>
+, <a class="el" href="class_nakama_1_1_n_notifications_list_message.html#aea9392a8958217b06035d20dfe561236">Nakama.NNotificationsListMessage</a>
+, <a class="el" href="class_nakama_1_1_n_notifications_remove_message.html#acd2546ba3edab8594db3a10208460356">Nakama.NNotificationsRemoveMessage</a>
+, <a class="el" href="class_nakama_1_1_n_purchase_validate_message.html#aeea14638a22e337a80ac11005ab38ee0">Nakama.NPurchaseValidateMessage</a>
 , <a class="el" href="class_nakama_1_1_n_runtime_rpc_message.html#a62b5d29227426f541ea8df9da5b1257d">Nakama.NRuntimeRpcMessage</a>
 , <a class="el" href="class_nakama_1_1_n_self_fetch_message.html#af881622607737368b2fdac98f6f48ed2">Nakama.NSelfFetchMessage</a>
 , <a class="el" href="class_nakama_1_1_n_self_link_message.html#ae49d0d2498a7455d28f12c34ca7a9561">Nakama.NSelfLinkMessage</a>
 , <a class="el" href="class_nakama_1_1_n_self_unlink_message.html#ac1bc4e937dbc3605050cf344ae2f23d4">Nakama.NSelfUnlinkMessage</a>
 , <a class="el" href="class_nakama_1_1_n_self_update_message.html#aaf6c45ac0dcaae1650d9b8f66f68ad51">Nakama.NSelfUpdateMessage</a>
 , <a class="el" href="class_nakama_1_1_n_storage_fetch_message.html#a16b687d680d6415adb094c738eae1230">Nakama.NStorageFetchMessage</a>
+, <a class="el" href="class_nakama_1_1_n_storage_list_message.html#a90391f2fdfc3930a8121e6feb8167eb6">Nakama.NStorageListMessage</a>
 , <a class="el" href="class_nakama_1_1_n_storage_remove_message.html#a2873e1d9f6c9952ee3e7d826d92819e5">Nakama.NStorageRemoveMessage</a>
+, <a class="el" href="class_nakama_1_1_n_storage_update_message.html#a9acfde5b66b2a78661f3330b7caf420e">Nakama.NStorageUpdateMessage</a>
 , <a class="el" href="class_nakama_1_1_n_storage_write_message.html#aeb7e77f00d1c0f2e94b257dc491992f9">Nakama.NStorageWriteMessage</a>
 , <a class="el" href="class_nakama_1_1_n_topic_join_message.html#a6c74f0459644ef37cc6aa20a2abef5ae">Nakama.NTopicJoinMessage</a>
 , <a class="el" href="class_nakama_1_1_n_topic_leave_message.html#a0288cc822a494f71564939a607739656">Nakama.NTopicLeaveMessage</a>
@@ -149,7 +167,7 @@ $(function() {
 , <a class="el" href="class_nakama_1_1_n_users_fetch_message.html#a89ead1a8c43657ed8c32936ebc23d85a">Nakama.NUsersFetchMessage</a>
 </li>
 <li>SetGroupIds()
-: <a class="el" href="class_nakama_1_1_n_groups_fetch_message_1_1_builder.html#a7aa5028354ce026f8dc68facbde2eda3">Nakama.NGroupsFetchMessage.Builder</a>
+: <a class="el" href="class_nakama_1_1_n_groups_fetch_message_1_1_builder.html#a039b22d06dbb919c8edbe07118b3c539">Nakama.NGroupsFetchMessage.Builder</a>
 </li>
 <li>SetNames()
 : <a class="el" href="class_nakama_1_1_n_groups_fetch_message_1_1_builder.html#a84e0a41155b5127f4e6d35850fa011da">Nakama.NGroupsFetchMessage.Builder</a>
@@ -162,9 +180,13 @@ $(function() {
 : <a class="el" href="interface_nakama_1_1_i_n_client.html#a151316cad8ea9e873f4a36b8f24f14ea">Nakama.INClient</a>
 , <a class="el" href="class_nakama_1_1_n_client_1_1_builder.html#a1d19f38a08f731647fbafa45a78dc705">Nakama.NClient.Builder</a>
 , <a class="el" href="class_nakama_1_1_n_client.html#a745b921dac5aa3c7869444cbe5cd9a24">Nakama.NClient</a>
+, <a class="el" href="class_nakama_1_1_n_managed_client.html#a3adb07fd0edbbcb6d9bbf3afce647ce7">Nakama.NManagedClient</a>
 </li>
 <li>State
 : <a class="el" href="interface_nakama_1_1_i_n_friend.html#a1ac6cbb88107a896fcc8759d34be12de">Nakama.INFriend</a>
+, <a class="el" href="interface_nakama_1_1_i_n_group_self.html#a56a637465297b82b968e0426971166bf">Nakama.INGroupSelf</a>
+, <a class="el" href="interface_nakama_1_1_i_n_group_user.html#a72686819cbaec3e6ff39250da30280c1">Nakama.INGroupUser</a>
+, <a class="el" href="class_nakama_1_1_n_group_user.html#a0a36561b741cfd35e34ba5c4c71430a8">Nakama.NGroupUser</a>
 </li>
 <li>Steam()
 : <a class="el" href="class_nakama_1_1_n_authenticate_message.html#aa0e995ef93e0553963c3ad06beafb76e">Nakama.NAuthenticateMessage</a>
@@ -173,6 +195,15 @@ $(function() {
 </li>
 <li>SteamId
 : <a class="el" href="interface_nakama_1_1_i_n_self.html#ac6149c5db10d7278f0ccc37acaaa2790">Nakama.INSelf</a>
+</li>
+<li>StorageUpdateBuilder()
+: <a class="el" href="class_nakama_1_1_n_storage_update_message_1_1_storage_update_builder.html#a1639c87dca105fad55bac4e1d4ec98ac">Nakama.NStorageUpdateMessage.StorageUpdateBuilder</a>
+</li>
+<li>Subject
+: <a class="el" href="interface_nakama_1_1_i_n_notification.html#a6e612c3632f88c9e737b7df034009409">Nakama.INNotification</a>
+</li>
+<li>Success
+: <a class="el" href="interface_nakama_1_1_i_n_purchase_record.html#abaff365e7d8ba94830ead396c7f86106">Nakama.INPurchaseRecord</a>
 </li>
 </ul>
 </div><!-- contents -->

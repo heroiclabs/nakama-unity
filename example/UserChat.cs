@@ -71,11 +71,27 @@ public class UserChat : MonoBehaviour {
 			.Build();
 
 		client1.OnTopicMessage = (INTopicMessage message) => {
-			outputText = Encoding.UTF8.GetString(message.Data);
+			outputText = message.Data;
+		};
+		client1.OnTopicPresence = (INTopicPresence presences) => {
+			foreach (var presence in presences.Join) {
+				Debug.LogFormat("Presence update received by Player 1: User handle '{0}' joined the topic.", presence.Handle);
+			}
+			foreach (var presence in presences.Leave) {
+				Debug.LogFormat("Presence update received by Player 1: User handle '{0}' left the topic.", presence.Handle);
+			}
 		};
 
 		client2.OnTopicMessage = (INTopicMessage message) => {
-			outputText = Encoding.UTF8.GetString(message.Data);
+			outputText = message.Data;
+		};
+		client2.OnTopicPresence = (INTopicPresence presences) => {
+			foreach (var presence in presences.Join) {
+				Debug.LogFormat("Presence update received by Player 2: User handle '{0}' joined the topic.", presence.Handle);
+			}
+			foreach (var presence in presences.Leave) {
+				Debug.LogFormat("Presence update received by Player 2: User handle '{0}' left the topic.", presence.Handle);
+			}
 		};
 	}
 
@@ -176,6 +192,9 @@ public class UserChat : MonoBehaviour {
 	public void Player1JoinTopic() {
 		NTopicJoinMessage topicJoin = new NTopicJoinMessage.Builder ().TopicDirectMessage (session2.Id).Build ();
 		client1.Send (topicJoin, (INResultSet<INTopic> topics) => {
+			foreach (var presence in topics.Results[0].Presences) {
+				Debug.LogFormat("Presence initial state received by Player 1: User handle '{0}' is in the topic.", presence.Handle);
+			}
 			topicPlayer1 = topics.Results[0].Topic;
 			JoinTopicPlayer1Enable = false;
 			JoinTopicPlayer2Enable = true;
@@ -187,6 +206,9 @@ public class UserChat : MonoBehaviour {
 	public void Player2JoinTopic() {
 		NTopicJoinMessage topicJoin = new NTopicJoinMessage.Builder ().TopicDirectMessage (session1.Id).Build ();
 		client2.Send (topicJoin, (INResultSet<INTopic> topics) => {
+			foreach (var presence in topics.Results[0].Presences) {
+				Debug.LogFormat("Presence initial state received by Player 2: User handle '{0}' is in the topic.", presence.Handle);
+			}
 			topicPlayer2 = topics.Results[0].Topic;
 			Player2SendChatMessage ();
 			JoinTopicPlayer2Enable = false;
@@ -200,7 +222,7 @@ public class UserChat : MonoBehaviour {
 
 	public void Player1SendChatMessage() {
 		string chatMessage = "{\"data\": \"Player 1 says: Current time is " + DateTime.Now.ToString("yyyy-MM-dd\\THH:mm:ss\\Z") + "\"}";
-		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default(topicPlayer1, Encoding.UTF8.GetBytes(chatMessage));
+		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default(topicPlayer1, chatMessage);
 		client1.Send(msg, (INTopicMessageAck ack) => {
 			Debug.Log ("Sent message to Player 2");
 		}, (INError error) =>
@@ -211,7 +233,7 @@ public class UserChat : MonoBehaviour {
 
 	public void Player2SendChatMessage() {
 		string chatMessage = "{\"data\": \"Player 2 says: Current time is " + DateTime.Now.ToString ("yyyy-MM-dd\\THH:mm:ss\\Z") + "\"}";
-		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default (topicPlayer2, Encoding.UTF8.GetBytes (chatMessage));
+		NTopicMessageSendMessage msg = NTopicMessageSendMessage.Default (topicPlayer2, chatMessage);
 		client2.Send (msg, (INTopicMessageAck ack) => {
 			Debug.Log ("Sent message to Player 1");
 		}, (INError error) => {

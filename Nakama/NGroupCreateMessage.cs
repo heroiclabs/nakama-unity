@@ -16,8 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security;
-using System.Text;
 using Google.Protobuf;
 
 namespace Nakama
@@ -93,9 +91,9 @@ namespace Nakama
                 return this;
             }
 
-            public Builder Metadata(byte[] metadata)
+            public Builder Metadata(string metadata)
             {
-                message.payload.GroupsCreate.Groups[0].Metadata = ByteString.CopyFrom(metadata);
+                message.payload.GroupsCreate.Groups[0].Metadata = metadata;
                 return this;
             }
 

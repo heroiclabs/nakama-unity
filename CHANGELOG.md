@@ -5,6 +5,25 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Changed
+- MatchmakeAddMessage correctly follows C# naming scheme.
+
+## [0.10.1] - 2017-11-11
+### Fixed
+- Build system now includes `BCCrypto.dll` in `.unitypackage`.
+
+## [0.10.0] - 2017-11-06
+### Added
+- New experimental rUDP socket protocol option.
+
+### Changed
+- Use string identifiers instead of byte arrays for compatibility across Lua, JSON, and client representations.
+
+## [0.9.0] - 2017-10-17
+### Added
+- Advanced Matchmaking with custom filters and user properties.
+- Expose Collation ID when client operations result in an error.
+
 ## [0.8.0] - 2017-08-01
 ### Added
 - A paging cursor can now be serialized and restored.

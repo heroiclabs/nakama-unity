@@ -86,7 +86,12 @@ $(function() {
 <p>You can download the client directly from the <a href="https://www.assetstore.unity3d.com/en/#!/content/81338">Asset Store</a>.</p>
 <p>Have a look at the <a href="https://heroiclabs.com/docs/clients/unity/">quickstart guide</a> for a full introduction on how to get started with the client in development and/or production.</p>
 <p>To create a client and connect to the <a class="el" href="namespace_nakama.html">Nakama</a> server with the default settings:</p>
-<div class="fragment"><div class="line">using UnityEngine;</div><div class="line">using System.Collections;</div><div class="line">using Nakama;</div><div class="line"></div><div class="line">public class NewBehaviourScript : MonoBehaviour {</div><div class="line">  void Start() {</div><div class="line">    INClient client = NClient.Default(&quot;defaultkey&quot;);</div><div class="line">  }</div><div class="line"></div><div class="line">  void Update() {</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><h3>Contribute</h3>
+<div class="fragment"><div class="line">using UnityEngine;</div><div class="line">using System.Collections;</div><div class="line">using Nakama;</div><div class="line"></div><div class="line">public class NewBehaviourScript : MonoBehaviour {</div><div class="line">  void Start() {</div><div class="line">    INClient client = NClient.Default(&quot;defaultkey&quot;);</div><div class="line">  }</div><div class="line"></div><div class="line">  void Update() {</div><div class="line">  }</div><div class="line">}</div></div><!-- fragment --><h3>Build Settings for Android</h3>
+<p><a class="el" href="namespace_nakama.html">Nakama</a> Unity Client requires the full .Net 2.0 runtime. In Unity Build Settings window, change API Compatibility Level to .Net 2.0.</p>
+<p>In addition to above, you'll need to change Stripping Level to either "Disabled" or "Strip Assemblies". Alternatively you can add the <code>link.xml</code> to the Assets folder of your project which configures how the Linker strips down the generated code.</p>
+<h3>Build Settings for iOS</h3>
+<p><a class="el" href="namespace_nakama.html">Nakama</a> Unity Client requires the full .Net 2.0 runtime. In Unity Build Settings window, change API Compatibility Level to .Net 2.0.</p>
+<h3>Contribute</h3>
 <p>To build the codebase you will need to install these dependencies:</p>
 <ul>
 <li><b>unity</b> The Unity editor/compiler toolchain.</li>

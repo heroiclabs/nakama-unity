@@ -30,7 +30,7 @@ namespace Nakama.Tests
         private static readonly string DeviceId = random.GetString();
         private static readonly string DefaultServerKey = "defaultkey";
         private INClient client;
-        private byte[] userId;
+        private string userId;
 
         private static IList<INNotification> notifications;
 
@@ -120,7 +120,7 @@ namespace Nakama.Tests
             ManualResetEvent evt = new ManualResetEvent(false);
             INError err = null;
 
-            var ids = new List<byte[]>();
+            var ids = new List<string>();
             foreach (var n in notifications)
             {
                 ids.Add(n.Id);

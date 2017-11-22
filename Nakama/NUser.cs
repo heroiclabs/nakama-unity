@@ -28,7 +28,7 @@ namespace Nakama
 
         public string Handle { get; private set; }
 
-        public byte[] Id { get; private set; }
+        public string Id { get; private set; }
 
         public string Lang { get; private set; }
 
@@ -36,7 +36,7 @@ namespace Nakama
 
         public string Location { get; private set; }
 
-        public byte[] Metadata { get; private set; }
+        public string Metadata { get; private set; }
 
         public string Timezone { get; private set; }
 
@@ -48,11 +48,11 @@ namespace Nakama
             CreatedAt = message.CreatedAt;
             Fullname = message.Fullname;
             Handle = message.Handle;
-            Id = message.Id.ToByteArray();
+            Id = message.Id;
             Lang = message.Lang;
             LastOnlineAt = message.LastOnlineAt;
             Location = message.Location;
-            Metadata = message.Metadata.ToByteArray();
+            Metadata = message.Metadata;
             Timezone = message.Timezone;
             UpdatedAt = message.UpdatedAt;
         }

@@ -20,7 +20,7 @@ namespace Nakama
 
     public interface INTopicId
     {
-        byte[] Id { get; }
+        string Id { get; }
         TopicType Type { get; }
     }
 }

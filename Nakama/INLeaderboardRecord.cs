@@ -18,8 +18,8 @@ namespace Nakama
 {
     public interface INLeaderboardRecord
     {
-        byte[] LeaderboardId { get; }
-        byte[] OwnerId { get; }
+        string LeaderboardId { get; }
+        string OwnerId { get; }
         string Handle { get; }
         string Lang { get; }
         string Location { get; }
@@ -27,7 +27,7 @@ namespace Nakama
         long Rank { get; }
         long Score { get; }
         long NumScore { get; }
-        byte[] Metadata { get; }
+        string Metadata { get; }
         long RankedAt { get; }
         long UpdatedAt { get; }
         long ExpiresAt { get; }
