@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
 using Google.Protobuf;
-using WebSocketSharp;
 
 namespace Nakama
 {
@@ -41,31 +40,15 @@ namespace Nakama
 
         private static readonly IDictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>> AuthHandlers = new Dictionary<string, KeyValuePair<Action<byte[]>, Action<Exception>>>();
 
-        private static readonly IDictionary<string, EventHandler<SocketCloseEventArgs>> SocketCloseHandlers = new Dictionary<string, EventHandler<SocketCloseEventArgs>>();
-        private static readonly IDictionary<string, EventHandler<SocketErrorEventArgs>> SocketErrorHandlers = new Dictionary<string, EventHandler<SocketErrorEventArgs>>();
-        private static readonly IDictionary<string, EventHandler<SocketMessageEventArgs>> SocketMessageHandlers = new Dictionary<string, EventHandler<SocketMessageEventArgs>>();
-        private static readonly IDictionary<string, EventHandler> SocketOpenHandlers = new Dictionary<string, EventHandler>();
+        private static readonly IDictionary<string, Action<SocketCloseEventArgs>> SocketCloseHandlers = new Dictionary<string, Action<SocketCloseEventArgs>>();
+        private static readonly IDictionary<string, Action<SocketErrorEventArgs>> SocketErrorHandlers = new Dictionary<string, Action<SocketErrorEventArgs>>();
+        private static readonly IDictionary<string, Action<SocketMessageEventArgs>> SocketMessageHandlers = new Dictionary<string, Action<SocketMessageEventArgs>>();
+        private static readonly IDictionary<string, Action> SocketOpenHandlers = new Dictionary<string, Action>();
 
         private static readonly IDictionary<string, Action> SocketCloseCallbacks = new Dictionary<string, Action>();
         private static readonly IDictionary<string, Action<bool>> SocketOpenCallbacks = new Dictionary<string, Action<bool>>();
 
         private readonly string _socketId = Guid.NewGuid().ToString();
-        public event EventHandler<SocketCloseEventArgs> OnClose {
-            add { SocketCloseHandlers.Add(_socketId, value); }
-            remove { SocketCloseHandlers.Remove(_socketId); }
-        }
-        public event EventHandler<SocketErrorEventArgs> OnError {
-            add { SocketErrorHandlers.Add(_socketId, value); }
-            remove { SocketErrorHandlers.Remove(_socketId); }
-        }
-        public event EventHandler<SocketMessageEventArgs> OnMessage {
-            add { SocketMessageHandlers.Add(_socketId, value); }
-            remove { SocketMessageHandlers.Remove(_socketId); }
-        }
-        public event EventHandler OnOpen {
-            add { SocketOpenHandlers.Add(_socketId, value); }
-            remove { SocketOpenHandlers.Remove(_socketId); }
-        }
 
         private int _socketNativeRef = -1;
 
@@ -133,7 +116,7 @@ namespace Nakama
 
             if (SocketOpenHandlers.ContainsKey(socketId))
             {
-                SocketOpenHandlers[socketId].Emit(null, EventArgs.Empty);
+                SocketOpenHandlers[socketId]();
             }
 
             if (SocketOpenCallbacks.ContainsKey(socketId))
@@ -149,7 +132,7 @@ namespace Nakama
 
             if (SocketErrorHandlers.ContainsKey(socketId))
             {
-                SocketErrorHandlers[socketId].Emit(null, new SocketErrorEventArgs(new Exception("WebSocket error occured")));
+                SocketErrorHandlers[socketId](new SocketErrorEventArgs(new Exception("WebSocket error occured")));
             }
         }
 
@@ -161,7 +144,7 @@ namespace Nakama
             if (SocketMessageHandlers.ContainsKey(socketId))
             {
                 var dataBytes = Convert.FromBase64String(data);
-                SocketMessageHandlers[socketId].Emit(null, new SocketMessageEventArgs(dataBytes));
+                SocketMessageHandlers[socketId](new SocketMessageEventArgs(dataBytes));
             }
         }
 
@@ -173,7 +156,7 @@ namespace Nakama
 
             if (SocketCloseHandlers.ContainsKey(socketId))
             {
-                SocketCloseHandlers[socketId].Emit(null, new SocketCloseEventArgs(closeStatusCode, CloseErrorMessages[closeStatusCode]));
+                SocketCloseHandlers[socketId](new SocketCloseEventArgs(closeStatusCode, CloseErrorMessages[closeStatusCode]));
             }
 
             if (SocketCloseCallbacks.ContainsKey(socketId))
@@ -228,6 +211,26 @@ namespace Nakama
             var base64Payload = Convert.ToBase64String(data);
             SendData(_socketNativeRef, base64Payload);
             callback(true);
+        }
+        
+        public void SetOnClose(Action<SocketCloseEventArgs> OnClose)
+        {
+            SocketCloseHandlers.Add(_socketId, OnClose);
+        }
+
+        public void SetOnError(Action<SocketErrorEventArgs> OnError)
+        {
+            SocketErrorHandlers.Add(_socketId, OnError);
+        }
+
+        public void SetOnMessage(Action<SocketMessageEventArgs> OnMessage)
+        {
+            SocketMessageHandlers.Add(_socketId, OnMessage);
+        }
+
+        public void SetOnOpen(Action OnOpen)
+        {
+            SocketOpenHandlers.Add(_socketId, OnOpen);
         }
     }
 }
