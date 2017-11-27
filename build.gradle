@@ -22,7 +22,7 @@ plugins {
   id 'com.ullink.nunit' version '1.9'
 }
 
-version = '0.10.2'
+version = '0.10.3'
 
 assemblyInfoPatcher {
   version = "${project.version}.0"
