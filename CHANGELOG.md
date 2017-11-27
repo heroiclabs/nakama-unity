@@ -4,11 +4,15 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.10.2] - 2017-11-27
 ### Fixed
 - Use correct JS transport listener bindings.
+- Correctly calculate session expiry client-side.
 
 ### Changed
 - MatchmakeAddMessage correctly follows C# naming scheme.
+- Improve memory allocation profile when using UDP transport.
 
 ## [0.10.1] - 2017-11-11
 ### Fixed
