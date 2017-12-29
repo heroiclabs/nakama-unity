@@ -520,6 +520,9 @@ namespace Nakama
                     var resumableCursor = message.Notifications.ResumableCursor == null ? null : new NCursor(message.Notifications.ResumableCursor);
                     pair.Key(new NResultSet<INNotification>(notifications, resumableCursor));
                     break;
+                case Envelope.PayloadOneofCase.PurchaseRecord:
+                    pair.Key(new NPurchaseRecord(message.PurchaseRecord));
+                    break;
                 default:
                     Logger.TraceFormatIf(Trace, "Unrecognized protocol message: {0}", message);
                     break;
