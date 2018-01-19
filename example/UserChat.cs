@@ -93,6 +93,18 @@ public class UserChat : MonoBehaviour {
 				Debug.LogFormat("Presence update received by Player 2: User handle '{0}' left the topic.", presence.Handle);
 			}
 		};
+
+		// Add button handlers
+		RegisterButtonPlayer1.onClick.AddListener(Player1RegisterClick);
+		LoginButtonPlayer1.onClick.AddListener(Player1LoginClick);
+		ConnectPlayer1.onClick.AddListener(Player1Connect);
+		RegisterButtonPlayer2.onClick.AddListener(Player2RegisterClick);
+		LoginButtonPlayer2.onClick.AddListener(Player2LoginClick);
+		ConnectPlayer2.onClick.AddListener(Player2Connect);
+		JoinTopicPlayer1.onClick.AddListener(Player1JoinTopic);
+		JoinTopicPlayer2.onClick.AddListener(Player2JoinTopic);
+		SendChatPlayer1.onClick.AddListener(Player1SendChatMessage);
+		SendChatPlayer2.onClick.AddListener(Player2SendChatMessage);
 	}
 
 	void Update () {
@@ -121,6 +133,18 @@ public class UserChat : MonoBehaviour {
 		if (client2Connected) {
 			client2.Disconnect ();
 		}
+
+		// Release button handlers
+		RegisterButtonPlayer1.onClick.RemoveListener(Player1RegisterClick);
+		LoginButtonPlayer1.onClick.RemoveListener(Player1LoginClick);
+		ConnectPlayer1.onClick.RemoveListener(Player1Connect);
+		RegisterButtonPlayer2.onClick.RemoveListener(Player2RegisterClick);
+		LoginButtonPlayer2.onClick.RemoveListener(Player2LoginClick);
+		ConnectPlayer2.onClick.RemoveListener(Player2Connect);
+		JoinTopicPlayer1.onClick.RemoveListener(Player1JoinTopic);
+		JoinTopicPlayer2.onClick.RemoveListener(Player2JoinTopic);
+		SendChatPlayer1.onClick.RemoveListener(Player1SendChatMessage);
+		SendChatPlayer2.onClick.RemoveListener(Player2SendChatMessage);
 	}
 
 	public void Player1RegisterClick() {
