@@ -112,11 +112,6 @@ namespace Nakama
                     }
                     catch (WebException e)
                     {
-                        if (e.Response is HttpWebResponse)
-                        {
-                            successAction(e.Response as HttpWebResponse);
-                            return;
-                        }
                         errorAction(e);
                     }
                 }, request);
