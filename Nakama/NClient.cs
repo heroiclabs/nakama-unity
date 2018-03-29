@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Google.Protobuf;
 
@@ -77,6 +79,21 @@ namespace Nakama
 
         public bool SSL { get; private set; }
 
+        /// <summary>
+        ///  Option to accept all self-signed certificates. This defaults to
+        ///  true to preserve previous behaviour, but it is HIGHLY recommended
+        ///  to set this to false and instead use SSLValidKeyFingerprints.
+        /// </summary>
+        public bool SSLAcceptAllCertificates { get; private set; }
+
+        /// <summary>
+        ///  SHA-1 Key Fingerprints for self-signed certs which should be accepted
+        ///  so long as they are not expired. SHA-1 rather than SHA-256 because
+        ///  .Net 2.0 compatibility, but this is just the fingerprint, the
+        ///  cert itself can (and should) be SHA-256
+        /// </summary>
+        public string[] SSLValidKeyFingerprints { get; private set; }
+
         public uint Timeout { get; private set; }
 
         public bool Trace { get; private set; }
@@ -92,8 +109,7 @@ namespace Nakama
         {
             // Don't send Expect: 100 Continue when sending HTTP requests
             ServicePointManager.Expect100Continue = false;
-            // Fix SSL certificate handshake
-            ServicePointManager.ServerCertificateValidationCallback += (o, certificate, chain, errors) => true;
+            ServicePointManager.ServerCertificateValidationCallback += ValidateCertificate;
 
             TransportType = transportType;
             ConnectTimeout = 3000;
@@ -101,6 +117,8 @@ namespace Nakama
             Port = 7350;
             ServerKey = serverKey;
             SSL = false;
+            // Although this setting is not recommended, default to previous behaviour
+            SSLAcceptAllCertificates = true;
             Timeout = 5000;
             Trace = false;
             Lang = "en";
@@ -149,6 +167,25 @@ namespace Nakama
                     OnError(new NError(message));
                 }
             });
+        }
+
+        private bool ValidateCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+
+            if (SSLAcceptAllCertificates)
+                return true;
+
+            foreach (string fingerprint in SSLValidKeyFingerprints)
+            {
+                if (fingerprint == certificate.GetCertHashString()) {
+                    Logger.DebugFormat("Accepting certificate '{0}' with fingerprint {1}",
+                        certificate.Subject, fingerprint);
+                    return true;
+                }
+            }
+
+            return false;
+
         }
 
         public void Register(INAuthenticateMessage message,
@@ -580,6 +617,29 @@ namespace Nakama
                 return this;
             }
 
+            /// <summary>
+            ///  Option to accept all self-signed certificates. This defaults to
+            ///  true to preserve previous behaviour, but it is HIGHLY recommended
+            ///  to set this to false and instead use SSLValidKeyFingerprints.
+            /// </summary>
+            public Builder SSLAcceptAllCertificates(bool enable)
+            {
+                client.SSLAcceptAllCertificates = enable;
+                return this;
+            }
+
+            /// <summary>
+            ///  SHA-1 Key Fingerprints for self-signed certs which should be accepted
+            ///  so long as they are not expired. SHA-1 rather than SHA-256 because
+            ///  .Net 2.0 compatibility, but this is just the fingerprint, the
+            ///  cert itself can (and should) be SHA-256
+            /// </summary>
+            public Builder SSLValidKeyFingerprints(string[] fps)
+            {
+                client.SSLValidKeyFingerprints = fps;
+                return this;
+            }
+
             public Builder Timeout(uint timeout)
             {
                 client.Timeout = timeout;
@@ -604,6 +664,8 @@ namespace Nakama
                 client.Logger = original.Logger;
                 client.Port = original.Port;
                 client.SSL = original.SSL;
+                client.SSLAcceptAllCertificates = original.SSLAcceptAllCertificates;
+                client.SSLValidKeyFingerprints = original.SSLValidKeyFingerprints;
                 client.Timeout = original.Timeout;
                 client.Trace = original.Trace;
                 return original;
