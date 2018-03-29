@@ -119,8 +119,26 @@ namespace Nakama.Tests
             evt.WaitOne(1000, false);
             Assert.IsTrue(committed);
         }
-
+        
         [Test, Order(2)]
+        public void AddFriendAgain()
+        {
+            ManualResetEvent evt = new ManualResetEvent(false);
+            var committed = false;
+
+            var message = NFriendAddMessage.ById(FriendUserId);
+            client.Send(message, (bool completed) => {
+                committed = completed;
+                evt.Set();
+            }, _ => {
+                evt.Set();
+            });
+
+            evt.WaitOne(1000, false);
+            Assert.IsTrue(committed);
+        }
+
+        [Test, Order(3)]
         public void ListFriends()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -147,7 +165,7 @@ namespace Nakama.Tests
             Assert.IsTrue(friends.Results[0].Handle == FriendHandle);
         }
 
-        [Test, Order(3)]
+        [Test, Order(4)]
         public void BlockFriend()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
@@ -165,7 +183,7 @@ namespace Nakama.Tests
             Assert.IsTrue(committed);
         }
 
-        [Test, Order(4)]
+        [Test, Order(5)]
         public void RemoveFriend()
         {
             ManualResetEvent evt = new ManualResetEvent(false);
