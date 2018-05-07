@@ -293,23 +293,30 @@ namespace Nakama
             TimeSpan span = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             transport.Post(uri.ToString(), payload, authHeader, langHeader, Timeout, ConnectTimeout, (data) =>
             {
-                AuthenticateResponse authResponse = AuthenticateResponse.Parser.ParseFrom(data);
-                Logger.TraceFormatIf(Trace, "DecodedResponse={0}", authResponse);
-
-                switch (authResponse.IdCase)
+                try
                 {
-                    case AuthenticateResponse.IdOneofCase.Session:
-                        callback(new NSession(authResponse.Session.Token, authResponse.Session.UdpToken, System.Convert.ToInt64(span.TotalMilliseconds)));
-                        break;
-                    case AuthenticateResponse.IdOneofCase.Error:
-                        errback(new NError(authResponse.Error, authResponse.CollationId));
-                        break;
-                    case AuthenticateResponse.IdOneofCase.None:
-                        Logger.Error("Received invalid response from server");
-                        break;
-                    default:
-                        Logger.Error("Received invalid response from server");
-                        break;
+                    AuthenticateResponse authResponse = AuthenticateResponse.Parser.ParseFrom(data);
+                    Logger.TraceFormatIf(Trace, "DecodedResponse={0}", authResponse);
+
+                    switch (authResponse.IdCase)
+                    {
+                        case AuthenticateResponse.IdOneofCase.Session:
+                            callback(new NSession(authResponse.Session.Token, authResponse.Session.UdpToken, System.Convert.ToInt64(span.TotalMilliseconds)));
+                            break;
+                        case AuthenticateResponse.IdOneofCase.Error:
+                            errback(new NError(authResponse.Error, authResponse.CollationId));
+                            break;
+                        case AuthenticateResponse.IdOneofCase.None:
+                            errback(new NError("Received invalid response from server"));
+                            break;
+                        default:
+                            errback(new NError("Received invalid response from server"));
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    errback(new NError(string.Format("Unable to parse Auth response: {0}", e)));
                 }
             }, (e) =>
             {
