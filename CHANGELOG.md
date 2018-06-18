@@ -3,9 +3,17 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
-### Fixed
-- Add correct purchase records processing.
+## [2.0.0] - 2018-06-18
+### Added
+- New documentation on the client.
+- Many new features and APIs.
+- Support for Nakama 2 release.
+
+### Changed
+- Rewrite client with async/await sockets.
+- New project structure for simpler Unity builds.
+
+---
 
 ## [0.10.2] - 2017-11-27
 ### Fixed
