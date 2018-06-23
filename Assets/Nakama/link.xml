@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="Nakama.TinyJson" ignoreIfMissing="1">
+    <type fullname="Nakama.TinyJson.*" preserve="all"/>
+  </assembly> 
+   <assembly fullname="Nakama" ignoreIfMissing="1">
+    <type fullname="Nakama.*" preserve="all"/>
+  </assembly>  
+</linker>
