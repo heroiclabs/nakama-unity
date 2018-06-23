@@ -39,7 +39,7 @@ public class ChatRoom : MonoBehaviour
         var connectedUsers = new List<IUserPresence>(0);
         _socket.OnChannelPresence += (sender, presenceChange) =>
         {
-            connectedUsers.AddRange(connectedUsers);
+            connectedUsers.AddRange(presenceChange.Joins);
             foreach (var leave in presenceChange.Leaves)
             {
                 connectedUsers.RemoveAll(item => item.SessionId.Equals(leave.SessionId));
