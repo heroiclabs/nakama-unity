@@ -1,6 +1,11 @@
 <linker>
-  <assembly fullname="Nakama" ignoreIfMissing="0">
-    <type fullname="Nakama.*" preserve="all" />
-    <type fullname="Nakama.TinyJson.*" preserve="all" />
+  <assembly fullname="Nakama" ignoreIfMissing="0" preserve="all" />
+  <assembly fullname="deniszykov.WebSocketListener" ignoreIfMissing="0" preserve="all" />
+
+  <!-- NOTE: Do not code strip cryptographic utilities. -->
+  <!--
+  <assembly fullname="mscorlib">
+    <namespace fullname="System.Security.Cryptography" preserve="all" />
   </assembly>
+  -->
 </linker>
