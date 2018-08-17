@@ -26,7 +26,7 @@ public class SessionWithPlayerPrefs : MonoBehaviour
     private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
     private ISession _session;
 
-    private async void Awake()
+    async void Awake()
     {
         var authtoken = PlayerPrefs.GetString(PrefKeyName);
         if (!string.IsNullOrEmpty(authtoken))

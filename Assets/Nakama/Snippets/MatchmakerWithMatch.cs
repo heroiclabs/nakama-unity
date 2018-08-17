@@ -26,7 +26,7 @@ public class MatchmakerWithMatch : MonoBehaviour
     private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
     private ISocket _socket;
 
-    private async void Start()
+    async void Start()
     {
         var deviceid = SystemInfo.deviceUniqueIdentifier;
         // NOTE should cache a user session.
@@ -49,8 +49,6 @@ public class MatchmakerWithMatch : MonoBehaviour
             var newState = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
             _socket.SendMatchState(match.Id, 0, newState); // Send to all connected users.
         };
-        _socket.OnConnect += (sender, evt) => Debug.Log("Socket connected.");
-        _socket.OnDisconnect += (sender, evt) => Debug.Log("Socket disconnected.");
         _socket.OnMatchPresence += (sender, presenceChange) =>
         {
             connectedOpponents.AddRange(presenceChange.Joins);
@@ -58,7 +56,7 @@ public class MatchmakerWithMatch : MonoBehaviour
             {
                 connectedOpponents.RemoveAll(item => item.SessionId.Equals(leave.SessionId));
             };
-            // Remove ourself from connected opponents.
+            // Remove yourself from connected opponents.
             connectedOpponents.RemoveAll(item => {
                 return self != null && item.SessionId.Equals(self.SessionId);
             });
@@ -68,6 +66,8 @@ public class MatchmakerWithMatch : MonoBehaviour
             var enc = System.Text.Encoding.UTF8;
             Debug.LogFormat("Match state '{0}'", enc.GetString(message.State));
         };
+        _socket.OnConnect += (sender, evt) => Debug.Log("Socket connected.");
+        _socket.OnDisconnect += (sender, evt) => Debug.Log("Socket disconnected.");
 
         await _socket.ConnectAsync(session);
 
@@ -77,10 +77,7 @@ public class MatchmakerWithMatch : MonoBehaviour
         Debug.LogFormat("Matchmaker ticket '{0}'", matchmakerTicket);
     }
 
-    private void Update() {
-    }
-
-    private async void OnApplicationQuit()
+    async void OnApplicationQuit()
     {
         if (_socket != null)
         {

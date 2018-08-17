@@ -23,7 +23,7 @@ public class AccountAndUsers : MonoBehaviour
 {
     private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
 
-    private async void Awake()
+    async void Awake()
     {
         var deviceid = SystemInfo.deviceUniqueIdentifier;
         var session = await _client.AuthenticateDeviceAsync(deviceid);

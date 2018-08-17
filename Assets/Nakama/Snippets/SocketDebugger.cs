@@ -21,36 +21,32 @@ using UnityEngine;
 
 public class SocketDebugger : MonoBehaviour
 {
-    private const int SendDelaySec = 5;
-
     private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
     private ISocket _socket;
 
-    private async void Awake()
+    async void Awake()
     {
         var deviceid = SystemInfo.deviceUniqueIdentifier;
         var session = await _client.AuthenticateDeviceAsync(deviceid);
 
         _socket = _client.CreateWebSocket();
-        _socket.Logger = new UnityLogger();
-        _socket.Trace = true;
 
         await _socket.ConnectAsync(session);
     }
 
-    private void Start()
+    private float waitTime = 1f;
+    private float timer = 0f;
+
+    void Update()
     {
-        StartCoroutine(MessageSender());
+        timer += Time.deltaTime;
+        if (timer > waitTime && _socket != null)
+        {
+           _socket.RpcAsync("somefunc", string.Empty);
+        }
     }
 
-    private IEnumerator MessageSender()
-    {
-        yield return new WaitForSeconds(SendDelaySec);
-        _socket.RpcAsync("somefunc", string.Empty);
-        StartCoroutine(MessageSender());
-    }
-
-    private async void OnApplicationQuit()
+    async void OnApplicationQuit()
     {
         if (_socket != null)
         {

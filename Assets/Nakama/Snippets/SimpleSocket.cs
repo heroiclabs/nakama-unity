@@ -21,26 +21,27 @@ using UnityEngine;
 
 public class SimpleSocket : MonoBehaviour
 {
-	private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-	private ISocket _socket;
+    private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
+    private ISocket _socket;
 
-	private async void Awake()
-	{
-		var deviceid = SystemInfo.deviceUniqueIdentifier;
-		var session = await _client.AuthenticateDeviceAsync(deviceid);
+    async void Awake()
+    {
+        // Authenticate with device id for a user account.
+        var deviceid = SystemInfo.deviceUniqueIdentifier;
+        var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-		_socket = _client.CreateWebSocket();
-		_socket.OnConnect += (sender, args) => Debug.Log("Socket connected.");
-		_socket.OnDisconnect += (sender, args) => Debug.Log("Socket disconnected.");
+        _socket = _client.CreateWebSocket();
+        _socket.OnConnect += (sender, args) => Debug.Log("Socket connected.");
+        _socket.OnDisconnect += (sender, args) => Debug.Log("Socket disconnected.");
 
-		await _socket.ConnectAsync(session);
-	}
+        await _socket.ConnectAsync(session);
+    }
 
-	private async void OnApplicationQuit()
-	{
-		if (_socket != null)
-		{
-			await _socket.DisconnectAsync(false);
-		}
-	}
+    async void OnApplicationQuit()
+    {
+        if (_socket != null)
+        {
+            await _socket.DisconnectAsync(false);
+        }
+    }
 }

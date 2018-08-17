@@ -27,7 +27,7 @@ public class ChatRoom : MonoBehaviour
     private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
     private ISocket _socket;
 
-    private async void Start()
+    async void Start()
     {
         var deviceid = SystemInfo.deviceUniqueIdentifier;
         // NOTE should cache a user session.
