@@ -3,6 +3,9 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
+
 ## [2.1.0] - 2018-08-17
 ### Added
 - Linker instructions to preserve code in dependent DLLs.
