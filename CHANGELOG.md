@@ -3,6 +3,14 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.1.0] - 2018-08-17
+### Added
+- Linker instructions to preserve code in dependent DLLs.
+- New code snippets for multiplayer and matchmaker examples.
+
+### Changed
+- Update dependent DLLs for lowlevel websocket driver and .NET client.
+
 ## [2.0.0] - 2018-06-18
 ### Added
 - New documentation on the client.
