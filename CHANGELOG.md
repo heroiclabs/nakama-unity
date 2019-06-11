@@ -4,7 +4,18 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Support WebGL builds.
+- Add new Leaderboard and Tournament API methods.
 
+### Changed
+- Use new socket library instead of WebSocketListener.
+- Update socket event names to match csharp style guide.
+- Update TinyJson dependency.
+
+### Fixed
+- Socket logger must not disable the socket events.
+- Deserialize data in stream messages correctly.
 
 ## [2.1.0] - 2018-08-17
 ### Added

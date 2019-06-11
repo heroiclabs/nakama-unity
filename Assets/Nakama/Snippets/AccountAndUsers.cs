@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,26 +14,36 @@
  * limitations under the License.
  */
 
-using System.Collections;
-using System.Collections.Generic;
-using Nakama;
 using UnityEngine;
 
-public class AccountAndUsers : MonoBehaviour
+namespace Nakama.Snippets
 {
-    private IClient _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-
-    async void Awake()
+    public class AccountAndUsers : MonoBehaviour
     {
-        var deviceid = SystemInfo.deviceUniqueIdentifier;
-        var session = await _client.AuthenticateDeviceAsync(deviceid);
+        private readonly IClient _client = new Client("defaultkey");
 
-        var account = await _client.GetAccountAsync(session);
-        Debug.LogFormat("User id '{0}'", account.User.Id);
-        Debug.LogFormat("User username '{0}'", account.User.Username);
-        Debug.LogFormat("Account virtual wallet '{0}'", account.Wallet);
+        private async void Awake()
+        {
+            var deviceid = SystemInfo.deviceUniqueIdentifier;
+            const string username = "myusername";
+            var session = await _client.AuthenticateDeviceAsync(deviceid, username);
 
-        var users = await _client.GetUsersAsync(session, new [] { session.UserId });
-        Debug.Log(users);
+            var account = await _client.GetAccountAsync(session);
+            // Account properties.
+            Debug.LogFormat("Account devices: [{0}]", string.Join(",", account.Devices));
+            Debug.LogFormat("Account custom id: '{0}'", account.CustomId);
+            Debug.LogFormat("Account email: '{0}'", account.Email);
+            Debug.LogFormat("Account verify time: '{0}'", account.VerifyTime);
+            Debug.LogFormat("Account wallet: '{0}'", account.Wallet);
+
+            // User properties.
+            Debug.LogFormat("User id: '{0}'", account.User.Id);
+            Debug.LogFormat("User metadata: '{0}'", account.User.Metadata);
+            Debug.LogFormat("User username: '{0}'", account.User.Username);
+            Debug.LogFormat("User online: {0}", account.User.Online);
+
+            var result = await _client.GetUsersAsync(session, new[] {session.UserId});
+            Debug.LogFormat("Users: [{0}]", string.Join(",\n", result.Users));
+        }
     }
 }
