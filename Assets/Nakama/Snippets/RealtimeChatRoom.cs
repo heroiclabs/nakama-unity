@@ -36,6 +36,7 @@ namespace Nakama.Snippets
             _socket = _client.NewSocket();
             _socket.Connected += () => Debug.Log("Socket connected.");
             _socket.Closed += () => Debug.Log("Socket closed.");
+            _socket.ReceivedError += Debug.LogError;
 
             var roomUsers = new List<IUserPresence>(10);
             _socket.ReceivedChannelPresence += presenceEvent =>
@@ -48,21 +49,45 @@ namespace Nakama.Snippets
                 roomUsers.AddRange(presenceEvent.Joins);
                 Debug.LogFormat("Room users: [{0}]", string.Join(",\n  ", roomUsers));
             };
-            _socket.ReceivedChannelMessage += message => Debug.LogFormat("Received message: '{0}'", message);
+
+            var messageList = new List<IApiChannelMessage>(100);
+            _socket.ReceivedChannelMessage += message =>
+            {
+                Debug.LogFormat("Received message: '{0}'", message);
+                AddListSorted(messageList, message);
+                Debug.LogFormat("Message list: {0}", string.Join(",\n  ", messageList));
+            };
             await _socket.ConnectAsync(session);
+            Debug.Log("After socket connected.");
 
             // Join chat channel.
             var channel = await _socket.JoinChatAsync(RoomName, ChannelType.Room);
             roomUsers.AddRange(channel.Presences);
+            Debug.LogFormat("Joined chat channel: {0}", channel);
 
-            // Send chat message.
+            // Send many chat messages.
             var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-            await _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
+            _ = _socket.WriteChatMessageAsync(channel, content);
         }
 
         private void OnApplicationQuit()
         {
             _socket?.CloseAsync();
+        }
+
+        private static void AddListSorted(List<IApiChannelMessage> messageList, IApiChannelMessage message)
+        {
+            messageList.Add(message);
+            messageList.Sort((a, b) =>
+            {
+                var ordinal = string.CompareOrdinal(a.CreateTime, b.CreateTime);
+                return ordinal == 0 ? string.CompareOrdinal(a.MessageId, b.MessageId) : ordinal;
+            });
         }
     }
 }
