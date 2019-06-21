@@ -3,9 +3,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.2.1] - 2019-06-21
 ### Added
 - New example on how to manage the client/socket/session as a singleton.
+- Various improvements to existing code examples.
 
 ### Changed
 - Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.2.1.
