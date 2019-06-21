@@ -35,6 +35,8 @@ namespace Nakama.Snippets
             _socket = _client.NewSocket();
             _socket.Connected += () => Debug.Log("Socket connected.");
             _socket.Closed += () => Debug.Log("Socket closed.");
+            _socket.ReceivedError += Debug.LogError;
+
             IUserPresence self = null;
             var connectedOpponents = new List<IUserPresence>(2);
             _socket.ReceivedMatchmakerMatched += async matched =>

@@ -30,6 +30,7 @@ namespace Nakama.Snippets
 
             NakamaManager.Instance.Socket.Closed += () => Debug.Log("Socket closed.");
             NakamaManager.Instance.Socket.Connected += () => Debug.Log("Socket connected.");
+            NakamaManager.Instance.Socket.ReceivedError += Debug.LogError;
             await NakamaManager.Instance.Socket.ConnectAsync(session);
         }
     }

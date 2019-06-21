@@ -36,7 +36,7 @@ namespace Nakama.Snippets
             _socket.Connected += () => Debug.Log("Socket connected.");
             _socket.ReceivedError += e => Debug.LogErrorFormat("Socket error: {0}", e.Message);
 
-            // cant use SystemInfo.deviceUniqueIdentifier with WebGL builds.
+            // Cant use SystemInfo.deviceUniqueIdentifier with WebGL builds.
             var udid = PlayerPrefs.GetString(UdidKey, Guid.NewGuid().ToString());
             Debug.LogFormat("Unique Device ID: {0}", udid);
 
