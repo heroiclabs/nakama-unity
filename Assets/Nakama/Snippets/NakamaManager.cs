@@ -80,7 +80,7 @@ namespace Nakama.Snippets
             // Modify to fit the authentication strategy you want within your game.
             // EXAMPLE:
             const string deviceIdPrefName = "deviceid";
-            var deviceId = PlayerPrefs.GetString(deviceIdPrefName,SystemInfo.deviceUniqueIdentifier);
+            var deviceId = PlayerPrefs.GetString(deviceIdPrefName, SystemInfo.deviceUniqueIdentifier);
 #if UNITY_EDITOR
             Debug.LogFormat("Device id: {0}", deviceId);
 #endif
@@ -93,8 +93,9 @@ namespace Nakama.Snippets
         {
             // Restore session or create a new one.
             var authToken = PlayerPrefs.GetString(SessionPrefName);
+            var session = Nakama.Session.Restore(authToken);
             var expiredDate = DateTime.UtcNow.AddDays(-1);
-            if (string.IsNullOrEmpty(authToken) || Nakama.Session.Restore(authToken).HasExpired(expiredDate))
+            if (session == null || session.HasExpired(expiredDate))
             {
                 var sessionTask = AuthenticateAsync();
                 Session = sessionTask;
@@ -108,7 +109,7 @@ namespace Nakama.Snippets
             }
             else
             {
-                Session = Task.FromResult(Nakama.Session.Restore(authToken));
+                Session = Task.FromResult(session);
             }
         }
 

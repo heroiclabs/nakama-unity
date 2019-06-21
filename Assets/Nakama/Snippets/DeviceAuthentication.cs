@@ -31,9 +31,10 @@ namespace Nakama.Snippets
             var deviceId = SystemInfo.deviceUniqueIdentifier;
 
             // Restore session from PlayerPrefs if possible.
-            ISession session;
             var sessionToken = PlayerPrefs.GetString(SessionTokenKey);
-            if (string.IsNullOrEmpty(sessionToken) || (session = Session.Restore(sessionToken)).IsExpired)
+            var session = Session.Restore(sessionToken);
+            var expiredDate = DateTime.UtcNow.AddDays(-1);
+            if (session == null || session.HasExpired(expiredDate))
             {
                 session = await _client.AuthenticateDeviceAsync(deviceId);
                 PlayerPrefs.SetString(UdidKey, deviceId);
@@ -45,9 +46,8 @@ namespace Nakama.Snippets
             Debug.LogFormat("Session expired: {0}", session.IsExpired);
             Debug.LogFormat("Session expires: '{0}'", session.ExpireTime); // in seconds.
 
-            var date = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            date = date.AddSeconds(session.ExpireTime).ToLocalTime();
-            Debug.LogFormat("Session expires on: '{0}'", date);
+            var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            Debug.LogFormat("Session expires on: '{0}'", unixEpoch.AddSeconds(session.ExpireTime).ToLocalTime());
         }
     }
 }
