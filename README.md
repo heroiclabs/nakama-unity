@@ -112,7 +112,7 @@ var socket = Socket.From(client, adapter);
 
 ## Contribute
 
-The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community chat](https://gitter.im/heroiclabs/nakama).
+The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
 
 This project can be opened in Unity to create a ".unitypackage".
 
