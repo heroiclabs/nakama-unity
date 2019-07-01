@@ -3,6 +3,8 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
 ## [2.2.2] - 2019-07-02
 ### Changed
 - Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.2.2.
