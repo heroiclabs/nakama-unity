@@ -71,8 +71,9 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public void Connect(Uri uri)
+        public void Connect(Uri uri, int timeout)
         {
+            // TODO will need to use window.setTimeout to implement timeouts on DOM WebSocket.
             if (Ref > -1)
             {
                 ReceivedError?.Invoke(new SocketException((int) SocketError.IsConnected));
