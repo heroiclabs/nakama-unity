@@ -127,7 +127,7 @@ namespace Nakama
             }
             else
             {
-                callback?.Invoke(www.downloadHandler.text);
+                callback?.Invoke(www.downloadHandler?.text);
             }
         }
     }
