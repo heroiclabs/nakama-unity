@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using UnityEngine;
+
 namespace Nakama
 {
     /// <summary>
@@ -33,7 +35,11 @@ namespace Nakama
 #else
             ISocketAdapter adapter = new WebSocketAdapter();
 #endif
-            return Socket.From(client, adapter);
+            var socket = Socket.From(client, adapter);
+#if UNITY_EDITOR
+            socket.ReceivedError += Debug.LogError;
+#endif
+            return socket;
         }
     }
 }

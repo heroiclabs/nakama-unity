@@ -4,6 +4,9 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Add a default error handler to the socket adapter to make common errors more visible.
+
 ### Fixed
 - UnityWebRequest downloadHandler is null on DELETE methods. Thanks @hasbean.
 
