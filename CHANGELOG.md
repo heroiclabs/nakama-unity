@@ -4,6 +4,9 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add new scene as an example for WebGL basics. Thanks @humbertodias.
+
 ### Changed
 - Add a default error handler to the socket adapter to make common errors more visible.
 
