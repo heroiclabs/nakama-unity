@@ -110,6 +110,37 @@ var socket = client.NewSocket();
 var socket = Socket.From(client, adapter);
 ```
 
+### Errors
+
+You can capture errors when you use `await` scaffolding with Tasks in C#.
+
+```csharp
+try
+{
+    var account = await client.GetAccountAsync(session);
+    Debug.LogFormat("User id: '{0}'", account.User.Id);
+}
+catch (ApiResponseException e)
+{
+    Debug.LogFormat("{0}", e);
+}
+```
+
+You can avoid the use of `await` where exceptions will need to be caught and use `Task.ContinueWith(...)` as a callback style with standard C# if you prefer.
+
+```csharp
+client.GetAccountAsync(session).ContinueWith(t =>
+{
+    if (t.IsFaulted || t.IsCanceled)
+    {
+        Debug.LogFormat("{0}", t.Exception);
+        return;
+    }
+    var account = t.Result;
+    Debug.LogFormat("User id: '{0}'", account.User.Id);
+});
+```
+
 ## Contribute
 
 The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
