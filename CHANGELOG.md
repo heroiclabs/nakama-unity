@@ -9,6 +9,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Add a default error handler to the socket adapter to make common errors more visible.
+- Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.4.0.
 
 ### Fixed
 - UnityWebRequest downloadHandler is null on DELETE methods. Thanks @hasbean.
