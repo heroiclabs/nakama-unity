@@ -3,6 +3,9 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
+
 ## [2.4.0] - 2020-05-04 :star:
 ### Added
 - Add new scene as an example for WebGL basics. Thanks @humbertodias.
