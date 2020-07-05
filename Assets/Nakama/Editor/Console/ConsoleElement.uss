@@ -1,0 +1,8 @@
+#console-background {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;    
+    background-color: #f2f6fa;
+    height: 100%;
+    width: 100%;
+}

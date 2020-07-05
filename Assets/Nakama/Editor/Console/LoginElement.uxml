@@ -1,3 +1,23 @@
 ﻿<UXML xmlns="UnityEngine.UIElements">
-    <VisualElement/>   
+  <VisualElement name="login-container">
+    <Style src="LoginElement.uss"/>
+    <Image name="logo" />
+      <VisualElement name="login-input-container">
+        <Label name="login-console-header" text="Developer Console"/>
+        <VisualElement name="login-divider"/>
+        <VisualElement name="login-text-container">
+          <Label class="login-text-input-label" text="Username" />
+          <TextField class="login-text-input"/>
+          <Label name="login-text-input-label-password" class="login-text-input-label" text="Password" />
+          <TextField class="login-text-input" password="true" />
+        </VisualElement>
+        <VisualElement name="remember-me-container">
+          <Toggle name="remember-me-toggle" />
+          <Label name="remember-me-text" text="Remember me" />
+        </VisualElement>
+        <Button name="login-button">
+          <Label name="login-button-text" text="Login"></Label>
+        </Button>
+      </VisualElement>
+    </VisualElement>
 </UXML>

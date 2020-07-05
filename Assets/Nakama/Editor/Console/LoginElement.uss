@@ -1,5 +1,89 @@
-#login-element {
+#login-container {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;    
+}
+
+#login-input-container {
+    background-color: white;
+    border-color: lightgray;
+    border-width: 1px;
+    width: 250px;
+}
+
+#login-input {
+    width: 100px;
+    height: 20px;
+}
+
+#login-divider {
+    background-color: lightgray;
+    height: 1px
+}
+
+#logo {
     background-image: url("logo.png");
     width: 200px;
-    height: 200px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+
+#login-button {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 25px;
+    margin-top: 15px;
+    height: 36px;
+    background-color: #209cee;
+    justify-content: center;
+
+}
+
+#login-button-text {
+    color: white;
+    font-size: 16px
+}
+
+#login-console-header {
+    color: #363636;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+
+.login-text-input-label {
+    width: 100px;
+    height: 20px;
+    font-size: 11px;
+    margin-left: 20px;
+}
+
+#login-text-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.login-text-input {
+    height: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#login-text-input-label-password {
+    margin-top: 15px;
+}
+
+#remember-me-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+}
+
+#remember-me-text {
+    font-size: 14px;
 }

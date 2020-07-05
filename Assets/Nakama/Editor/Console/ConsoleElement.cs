@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace NakamaConsole
 {
-    class ConsoleElement : VisualElement
+    internal class ConsoleElement : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<ConsoleElement, UxmlTraits> { }
 
