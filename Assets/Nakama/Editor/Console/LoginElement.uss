@@ -1,0 +1,5 @@
+#login-element {
+    background-image: url("logo.png");
+    width: 200px;
+    height: 200px;
+}

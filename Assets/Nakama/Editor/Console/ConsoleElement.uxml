@@ -1,0 +1,4 @@
+﻿<UXML xmlns="UnityEngine.UIElements">
+    <Template path="Assets/Nakama/Editor/Console/LoginElement.uxml" name="login-template" />
+    <Instance template="login-template" name="login-element"/>
+</UXML>
