@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<UXML xmlns="UnityEngine.UIElements">
+<UXML xmlns="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements">
     <Template path="Assets/Nakama/Console/ConfigElement/ConfigElement.uxml" name="config-element-template" />
     <Template path="Assets/Nakama/Console/UserElement/UserElement.uxml" name="user-element-template" />
-
     <VisualElement name="console-container">
+        <VisualElement name="logo-container" style="background-color: lightgray; align-items:flex-end; justify-content: flex-end; width: 100%;">
+            <VisualElement name="logo" style=" width: 150px; height: 45px; margin-top: 5px; margin-bottom: 5px; margin-right: 15px; "></VisualElement>
+        </VisualElement>
         <Style src="ConsoleElement.uss"></Style>
-            <Foldout text="Configuration">
+        <VisualElement style=" padding: 10px">
+            <Foldout class="console-foldout" text="Configuration">
                 <Instance name="config-element" template="config-element-template"></Instance>
             </Foldout>
-            <Foldout text="User">
+        </VisualElement>
+        <VisualElement style="background-color: lightgray; padding: 10px;">
+            <Foldout class="console-foldout" text="User">
                 <Instance name="user-element" template="user-element-template"></Instance>
             </Foldout>
+        </VisualElement>
+
     </VisualElement>
 </UXML>
