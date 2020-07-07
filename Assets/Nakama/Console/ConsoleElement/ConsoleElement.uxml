@@ -6,7 +6,9 @@
 
     <VisualElement name="console-container">
         <Style src="ConsoleElement.uss"></Style>
-            <Instance name="config-element" template="config-element-template"></Instance>
-            <Instance name="user-element" template="user-element-template"></Instance>
+            <Foldout text="Configuration">
+                <Instance name="config-element" template="config-element-template"></Instance>
+            </Foldout>
+        <Instance name="user-element" template="user-element-template"></Instance>
     </VisualElement>
 </UXML>

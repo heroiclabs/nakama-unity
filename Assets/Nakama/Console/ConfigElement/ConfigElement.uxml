@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="NakamaConsole">
-    <engine:Box name="config-container">
+    <engine:VisualElement name="config-container">
         <engine:Style src="ConfigElement.uss"></engine:Style>
-        <engine:VisualElement class="config-input-container">
-            <engine:Label class="config-label" text="Scheme"></engine:Label>
-            <engine:TextField name="config-scheme" class="config-input" />
+        <engine:VisualElement class="text-input-container">
+            <engine:Label class="text-input-label" text="Scheme"></engine:Label>
+            <engine:TextField name="config-scheme" class="text-input" />
         </engine:VisualElement>
-        <engine:VisualElement class="config-input-container">
-            <engine:Label class="config-label" text="Host"></engine:Label>
-            <engine:TextField name="config-host" class="config-input" />
+        <engine:VisualElement class="text-input-container">
+            <engine:Label class="text-input-label" text="Host"></engine:Label>
+            <engine:TextField name="config-host" class="text-input" />
         </engine:VisualElement>
-        <engine:VisualElement class="config-input-container">
-            <engine:Label class="config-label" text="Port"></engine:Label>
-            <editor:IntegerField name="config-port" class="config-input" />
+        <engine:VisualElement class="text-input-container">
+            <engine:Label class="text-input-label" text="Port"></engine:Label>
+            <editor:IntegerField name="config-port" class="text-input" />
         </engine:VisualElement>
-        <engine:VisualElement class="config-input-container">
-            <engine:Label class="config-label" text="Username"></engine:Label>
-            <engine:TextField name="config-username" class="config-input" />
+        <engine:VisualElement class="text-input-container">
+            <engine:Label class="text-input-label" text="Username"></engine:Label>
+            <engine:TextField name="config-username" class="text-input" />
         </engine:VisualElement>
-    </engine:Box>
+    </engine:VisualElement>
 </engine:UXML>

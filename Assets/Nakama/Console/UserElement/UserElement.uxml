@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <UXML xmlns="UnityEngine.UIElements">
-    
+    <VisualElement name = "user-container">
+        <VisualElement name="user-username"></VisualElement>
+        <VisualElement name="user-displayname"></VisualElement>
+        <VisualElement name="user-facebook-id"></VisualElement>
+        <VisualElement name="user-facebook-instant-id"></VisualElement>
+        <VisualElement name="user-gamecenter-id"></VisualElement>
+        <VisualElement name="user-google-id"></VisualElement>
+        <VisualElement name="user-steam-id"></VisualElement>
+        <VisualElement name="user-avatar-url"></VisualElement>
+    </VisualElement>
 </UXML>

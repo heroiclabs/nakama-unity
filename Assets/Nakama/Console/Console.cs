@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace NakamaConsole
 {
-
     public class Console : EditorWindow
     {
         [MenuItem("Nakama/Console")]
