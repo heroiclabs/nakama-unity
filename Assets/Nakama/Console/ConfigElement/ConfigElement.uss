@@ -3,14 +3,3 @@
     flex-wrap: wrap;
     justify-content: center;
 }
-
-.config-input-container {
-    width: 100px;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-

@@ -2,13 +2,37 @@
 
 <UXML xmlns="UnityEngine.UIElements">
     <VisualElement name = "user-container">
-        <VisualElement name="user-username"></VisualElement>
-        <VisualElement name="user-displayname"></VisualElement>
-        <VisualElement name="user-facebook-id"></VisualElement>
-        <VisualElement name="user-facebook-instant-id"></VisualElement>
-        <VisualElement name="user-gamecenter-id"></VisualElement>
-        <VisualElement name="user-google-id"></VisualElement>
-        <VisualElement name="user-steam-id"></VisualElement>
-        <VisualElement name="user-avatar-url"></VisualElement>
+        <VisualElement class="text-input-container" name="user-username">
+            <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-displayname">
+                        <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-facebook-id">
+            <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-facebook-instant-id">
+            <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-gamecenter-id">
+                        <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-google-id">
+            <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-steam-id">
+                        <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
+        <VisualElement class="text-input-container" name="user-avatar-url">
+                        <Label class="text-input-label" text="Host"></Label>
+            <TextField name="config-host" class="text-input" />
+        </VisualElement>
     </VisualElement>
 </UXML>

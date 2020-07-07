@@ -9,6 +9,8 @@
             <Foldout text="Configuration">
                 <Instance name="config-element" template="config-element-template"></Instance>
             </Foldout>
-        <Instance name="user-element" template="user-element-template"></Instance>
+            <Foldout text="User">
+                <Instance name="user-element" template="user-element-template"></Instance>
+            </Foldout>
     </VisualElement>
 </UXML>

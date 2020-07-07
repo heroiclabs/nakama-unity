@@ -22,7 +22,6 @@
 }
 
 .text-input-label {
-    font-size: 10px;
     width: 100px;
     margin-bottom: 1px;
 }
@@ -32,13 +31,15 @@
     margin-left: 25px;
 }
 
-.unity-toggle__text{
-    font-style: bold;
-}
-
 .unity-toggle {
     align-items: flex-start;
+    margin: 0px;
+    
 
+}
+
+.unity-foldout__content {
+    margin: 0px;
 }
 
 Foldout {
