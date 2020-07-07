@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UXML xmlns="UnityEngine.UIElements">
+    <Template path="Assets/Nakama/Console/ConfigElement/ConfigElement.uxml" name="config-element-template" />
+    <Template path="Assets/Nakama/Console/UserElement/UserElement.uxml" name="user-element-template" />
+
+    <VisualElement name="console-container">
+        <Style src="ConsoleElement.uss"></Style>
+            <Instance name="config-element" template="config-element-template"></Instance>
+            <Instance name="user-element" template="user-element-template"></Instance>
+    </VisualElement>
+</UXML>

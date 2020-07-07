@@ -1,0 +1,25 @@
+#config-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.config-input {
+    width: 100px;
+    height: 25px;
+}
+
+.config-input-container {
+    width: 100px;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.config-label {
+    font-size: 11px;
+    width: 100px;
+    margin-bottom: 1px;
+}
