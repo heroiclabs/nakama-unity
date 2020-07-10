@@ -2,22 +2,10 @@
 
 <engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="NakamaConsole">
     <engine:VisualElement name="config-container">
-        <engine:Style src="ConfigElement.uss"></engine:Style>
-        <engine:VisualElement class="text-input-container">
-            <engine:Label class="text-input-label" text="Scheme"></engine:Label>
-            <engine:TextField name="config-scheme" class="text-input" />
-        </engine:VisualElement>
-        <engine:VisualElement class="text-input-container">
-            <engine:Label class="text-input-label" text="Host"></engine:Label>
-            <engine:TextField name="config-host" class="text-input" />
-        </engine:VisualElement>
-        <engine:VisualElement class="text-input-container">
-            <engine:Label class="text-input-label" text="Port"></engine:Label>
-            <editor:IntegerField name="config-port" class="text-input" />
-        </engine:VisualElement>
-        <engine:VisualElement class="text-input-container">
-            <engine:Label class="text-input-label" text="Username"></engine:Label>
-            <engine:TextField name="config-username" class="text-input" />
-        </engine:VisualElement>
+        <engine:Style src="ConfigElement.uss"/>
+        <editor:EnumField name="config-scheme" label="Scheme" type="NakamaConsole.ConfigScheme, Assembly-CSharp"/>
+        <engine:TextField name="config-host" label="Host" text="localhost"/>
+        <editor:IntegerField name="config-port" label="Port" value="7351"/>
+        <engine:Button class="section-button" text="Connect"/>
     </engine:VisualElement>
 </engine:UXML>

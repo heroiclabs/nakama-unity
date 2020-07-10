@@ -1,0 +1,4 @@
+
+<engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="NakamaConsole">
+    <console:WalletElement></console:WalletElement>
+</engine:UXML>

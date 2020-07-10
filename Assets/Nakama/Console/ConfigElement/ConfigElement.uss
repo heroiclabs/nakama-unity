@@ -1,2 +1,4 @@
 #config-container {
+    width: 100%;
+    flex-direction: column;
 }

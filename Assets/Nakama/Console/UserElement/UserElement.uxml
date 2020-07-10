@@ -1,38 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <UXML xmlns="UnityEngine.UIElements">
-    <VisualElement name="user-container">
-        <VisualElement class="text-input-container" name="user-username">
-            <Label class="text-input-label" text="User id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-displayname">
-            <Label class="text-input-label" text="Username"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-facebook-id">
-            <Label class="text-input-label" text="Facebook Id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-facebook-instant-id">
-            <Label class="text-input-label" text="Facebook Instant Id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-gamecenter-id">
-            <Label class="text-input-label" text="Game Center Id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-google-id">
-            <Label class="text-input-label" text="Google Id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-steam-id">
-            <Label class="text-input-label" text="Steam Id"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
-        <VisualElement class="text-input-container" name="user-avatar-url">
-            <Label class="text-input-label" text="Avatar Url"></Label>
-            <TextField class="text-input" />
-        </VisualElement>
+    <VisualElement style="width: 100%; flex-direction: column;">
+        <TextField label = "User ID"/>
+        <TextField label = "Facebook Instant ID"/>
+        <TextField label = "Game Center ID"/>
+        <TextField label = "Google ID" />
+        <TextField label = "Steam ID" />
+        <TextField label = "Avatar URL" />
     </VisualElement>
 </UXML>
