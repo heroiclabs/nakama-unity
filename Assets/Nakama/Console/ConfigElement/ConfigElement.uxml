@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="NakamaConsole">
+<engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="Nakama.Console">
     <engine:VisualElement name="config-container">
         <engine:Style src="ConfigElement.uss"/>
-        <editor:EnumField name="config-scheme" label="Scheme" type="NakamaConsole.ConfigScheme, Assembly-CSharp"/>
+        <editor:EnumField name="config-scheme" label="Scheme" type="Nakama.Console.ConfigScheme, Assembly-CSharp"/>
         <engine:TextField name="config-host" label="Host" text="localhost"/>
         <editor:IntegerField name="config-port" label="Port" value="7351"/>
         <engine:Button class="section-button" text="Connect"/>

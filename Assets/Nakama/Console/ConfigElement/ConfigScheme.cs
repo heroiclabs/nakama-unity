@@ -1,4 +1,4 @@
-﻿namespace NakamaConsole
+﻿namespace Nakama.Console
 {
     internal enum ConfigScheme
     {

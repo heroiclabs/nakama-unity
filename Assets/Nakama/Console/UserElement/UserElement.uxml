@@ -2,11 +2,29 @@
 
 <UXML xmlns="UnityEngine.UIElements">
     <VisualElement style="width: 100%; flex-direction: column;">
-        <TextField label = "User ID"/>
-        <TextField label = "Facebook Instant ID"/>
-        <TextField label = "Game Center ID"/>
-        <TextField label = "Google ID" />
-        <TextField label = "Steam ID" />
-        <TextField label = "Avatar URL" />
+        <Style src="UserElement.uss"></Style>
+        <VisualElement class="user-row">
+            <TextField style="width: 80%;" label="User ID" />
+            <VisualElement style="flex-direction: row; width: 80px; align-items: center;">
+                <TextField class="id-label" label="Link" />
+                <Toggle/>
+            </VisualElement>
+
+        </VisualElement>
+        <VisualElement class="user-row">
+            <TextField label="Facebook Instant ID" />
+        </VisualElement>
+        <VisualElement class="user-row">
+            <TextField label="Game Center ID" />
+        </VisualElement>
+        <VisualElement class="user-row">
+            <TextField label="Google ID" />
+        </VisualElement>
+        <VisualElement class="user-row">
+            <TextField label="Steam ID" />
+        </VisualElement>
+        <VisualElement class="user-row">
+            <TextField label="Avatar URL" />
+        </VisualElement>
     </VisualElement>
 </UXML>

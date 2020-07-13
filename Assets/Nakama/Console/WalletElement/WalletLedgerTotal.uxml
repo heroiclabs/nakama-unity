@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement style="width: 100%; flex-direction: row;">
+        <Label text="Item1 Total:"/>
+        <Label text="84"/>
+    </VisualElement>
+</UXML>
