@@ -4,26 +4,40 @@
     <Template path="Assets/Nakama/Console/ConfigElement/ConfigElement.uxml" name="config-element-template" />
     <Template path="Assets/Nakama/Console/UserElement/UserElement.uxml" name="user-element-template" />
     <Template path="Assets/Nakama/Console/WalletElement/WalletElement.uxml" name="wallet-element-template" />
+    <Template path="Assets/Nakama/Console/StorageElement/StorageElement.uxml" name="storage-element-template" />
 
     <ScrollView name="console-container">
         <Style src="ConsoleElement.uss"></Style>
         <VisualElement name="logo-container" style="align-items:center; justify-content: center; width: 100%;">
             <VisualElement name="logo" style=" width: 150px; height: 45px; margin-top: 5px; margin-bottom: 5px; margin-right: 15px; "></VisualElement>
         </VisualElement>
-        <VisualElement>
-            <Foldout class="console-foldout" text="Configuration">
-                <Instance name="config-element" template="config-element-template"></Instance>
-            </Foldout>
+        <VisualElement class="console-foldout-container">
+            <Box>
+                <Foldout class="console-foldout" text="Configuration">
+                    <Instance name="config-element" template="config-element-template"></Instance>
+                </Foldout>
+            </Box>
         </VisualElement>
-        <VisualElement>
-            <Foldout class="console-foldout" text="User">
-                <Instance name="user-element" template="user-element-template"></Instance>
-            </Foldout>
+        <VisualElement class="console-foldout-container">
+            <Box>
+                <Foldout class="console-foldout" text="User">
+                    <Instance name="user-element" template="user-element-template"></Instance>
+                </Foldout>
+            </Box>
         </VisualElement>
-        <VisualElement>
-            <Foldout class="console-foldout" text="Wallet">
-                <Instance name="wallet-element" template="wallet-element-template"></Instance>
-            </Foldout>
+        <VisualElement class="console-foldout-container">
+            <Box>
+                <Foldout class="console-foldout" text="Wallet">
+                    <Instance name="wallet-element" template="wallet-element-template"></Instance>
+                </Foldout>
+            </Box>
+        </VisualElement>
+        <VisualElement class="console-foldout-container">
+            <Box>
+                <Foldout class="console-foldout" text="User Storage">
+                    <Instance name="storage-element" template="storage-element-template"></Instance>
+                </Foldout>
+            </Box>
         </VisualElement>
     </ScrollView>
 </UXML>

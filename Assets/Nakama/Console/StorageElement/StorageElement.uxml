@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement style="width: 100%; flex-direction: column;">
+        <Style src="StorageElement.uss"></Style>
+    </VisualElement>
+</UXML>

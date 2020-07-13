@@ -4,27 +4,24 @@
     <VisualElement style="width: 100%; flex-direction: column;">
         <Style src="UserElement.uss"></Style>
         <VisualElement class="user-row">
-            <TextField style="width: 80%;" label="User ID" />
-            <VisualElement style="flex-direction: row; width: 80px; align-items: center;">
-                <TextField class="id-label" label="Link" />
-                <Toggle/>
-            </VisualElement>
-
+            <TextField class="user-field" label="User ID" />
+            <Button class="user-link-button" text="Link"></Button>
         </VisualElement>
         <VisualElement class="user-row">
-            <TextField label="Facebook Instant ID" />
+            <TextField class="user-field" label="Facebook Instant ID" />
+            <Button class="user-link-button" text="Link"></Button>
         </VisualElement>
         <VisualElement class="user-row">
-            <TextField label="Game Center ID" />
+            <TextField class="user-field" label="GameCenter ID" />
+            <Button class="user-link-button" text="Link"></Button>
         </VisualElement>
         <VisualElement class="user-row">
-            <TextField label="Google ID" />
+            <TextField class="user-field" label="Google ID" />
+            <Button class="user-link-button" text="Link"></Button>
         </VisualElement>
         <VisualElement class="user-row">
-            <TextField label="Steam ID" />
-        </VisualElement>
-        <VisualElement class="user-row">
-            <TextField label="Avatar URL" />
+            <TextField class="user-field" label="Steam ID" />
+            <Button class="user-link-button" text="Link"></Button>
         </VisualElement>
     </VisualElement>
 </UXML>

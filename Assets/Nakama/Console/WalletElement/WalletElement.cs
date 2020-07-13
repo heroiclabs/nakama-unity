@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,12 +8,6 @@ namespace Nakama.Console
 {
     internal class WalletElement : IMGUIContainer
     {
-        internal delegate void LedgerAddHandler(WalletLedgerItem item);
-        internal delegate void LedgerRemoveHandler(WalletLedgerItem item);
-
-        internal event LedgerAddHandler OnLedgerAdd;
-        internal event LedgerRemoveHandler OnLedgerRemove;
-
         private ReorderableList ledger;
         private bool initialized = false;
 
@@ -36,41 +31,60 @@ namespace Nakama.Console
                 displayHeader: false, displayAddButton: true, displayRemoveButton: true);
 
             ledger.onAddCallback += HandleOnAdd;
+            ledger.onRemoveCallback += HandleOnRemove;
             ledger.drawElementCallback += HandleDrawElement;
+            ledger.elementHeightCallback += HandleElementHeight;
+        }
+
+        private float HandleElementHeight(int index)
+        {
+            return EditorGUIUtility.singleLineHeight * 2 + 20;
         }
 
         private void HandleDrawElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty ledgerItem = ledger.serializedProperty.GetArrayElementAtIndex(index);
-
             rect.y += 2;
-
-            var idRect = new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight);
+            const float ROW_SPACING = 5;
+            SerializedProperty ledgerItem = ledger.serializedProperty.GetArrayElementAtIndex(index);
+            
+            var idRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
             SerializedProperty idProperty = ledgerItem.FindPropertyRelative("id");
+            DrawLedgerItemRow("Id", idProperty, idRect);
 
-            Debug.Log(" id prop " + idProperty);
-            EditorGUI.PropertyField(idRect, idProperty, GUIContent.none);
-
-            var amountRect = new Rect(rect.x + 60, rect.y, rect.width - 60 - 30, EditorGUIUtility.singleLineHeight);
+            var amountRect = new Rect(rect.x, rect.y + EditorGUIUtility.singleLineHeight + ROW_SPACING, rect.width, EditorGUIUtility.singleLineHeight);
             SerializedProperty amountProperty = ledgerItem.FindPropertyRelative("amount");
-
-            EditorGUI.PropertyField(amountRect, amountProperty, GUIContent.none);
+            DrawLedgerItemRow("Amount", amountProperty, amountRect);
         }
 
-        internal void HandleOnAdd(ReorderableList ledger)
+        private void HandleOnAdd(ReorderableList ledger)
         {
-            if (OnLedgerAdd != null)
-            {
-                OnLedgerAdd(new WalletLedgerItem { Id = "test", Amount = 120.2f });
-            }
+            ledger.serializedProperty.InsertArrayElementAtIndex(ledger.serializedProperty.arraySize);
+            ledger.serializedProperty.serializedObject.ApplyModifiedProperties();
+        }
 
-
+        private void HandleOnRemove(ReorderableList ledger)
+        {
+            ledger.serializedProperty.DeleteArrayElementAtIndex(ledger.serializedProperty.arraySize - 1);
+            ledger.serializedProperty.serializedObject.ApplyModifiedProperties();
         }
 
         private void handleOnGui()
         {
             serializedObject.Update();
             ledger.DoLayoutList();
+        }
+
+        private void DrawLedgerItemRow(string label, SerializedProperty property, Rect rowRect)
+        {
+            const int LABEL_WIDTH = 50;
+            const int LABEL_FIELD_SPACING = 10;
+
+            var labelRect = new Rect(rowRect.x, rowRect.y, LABEL_WIDTH, rowRect.height);
+            EditorGUI.LabelField(labelRect, label);
+
+            var propertyRect = new Rect(rowRect.x + LABEL_FIELD_SPACING + LABEL_WIDTH, rowRect.y, 
+            rowRect.width - LABEL_WIDTH - LABEL_FIELD_SPACING, rowRect.height);
+            EditorGUI.PropertyField(propertyRect, property, GUIContent.none);
         }
     }
 
