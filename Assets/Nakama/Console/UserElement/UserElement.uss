@@ -15,3 +15,7 @@
     flex-basis: 50px;
 }
 
+#user-container {
+    padding-top: 5px;
+}
+

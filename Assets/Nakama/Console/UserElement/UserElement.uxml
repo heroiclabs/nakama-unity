@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <UXML xmlns="UnityEngine.UIElements">
-    <VisualElement style="width: 100%; flex-direction: column;">
+    <VisualElement name="user-container" style="width: 100%; flex-direction: column;">
         <Style src="UserElement.uss"></Style>
         <VisualElement class="user-row">
             <TextField class="user-field" label="User ID" />

@@ -24,21 +24,38 @@ namespace Nakama.Console
 
             this.serializedObject = serializedObject;
 
-
             this.onGUIHandler += handleOnGui;
 
             ledger = new ReorderableList(serializedObject, serializedProperty, draggable: true,
-                displayHeader: false, displayAddButton: true, displayRemoveButton: true);
+                displayHeader: true, displayAddButton: true, displayRemoveButton: true);
 
             ledger.onAddCallback += HandleOnAdd;
             ledger.onRemoveCallback += HandleOnRemove;
             ledger.drawElementCallback += HandleDrawElement;
             ledger.elementHeightCallback += HandleElementHeight;
+            ledger.drawHeaderCallback += HandleDrawHeader;
+            ledger.drawElementBackgroundCallback += HandleElementBackground;
+            ledger.onChangedCallback += HandleOnChanged;
+        }
+
+        private void HandleOnChanged(ReorderableList list)
+        {
+            list.serializedProperty.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void HandleElementBackground(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            // do nothing
+        }
+
+        private void HandleDrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Ledger");
         }
 
         private float HandleElementHeight(int index)
         {
-            return EditorGUIUtility.singleLineHeight * 2 + 20;
+            return EditorGUIUtility.singleLineHeight * 2 + 15;
         }
 
         private void HandleDrawElement(Rect rect, int index, bool isActive, bool isFocused)
@@ -70,7 +87,7 @@ namespace Nakama.Console
 
         private void handleOnGui()
         {
-            serializedObject.Update();
+            ledger.serializedProperty.serializedObject.ApplyModifiedProperties();
             ledger.DoLayoutList();
         }
 

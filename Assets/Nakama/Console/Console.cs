@@ -27,6 +27,7 @@ namespace Nakama.Console
             var console = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(consolePath);
             TemplateContainer consoleTree = console.CloneTree();
             InitWallet(consoleTree);
+            InitStorage(consoleTree);
             rootVisualElement.Add(consoleTree);
         }
 
@@ -36,6 +37,14 @@ namespace Nakama.Console
             var asSerializedObject = new SerializedObject(this);
             SerializedProperty serializedLedgerItems = asSerializedObject.FindProperty(nameof(walletLedgerItems));
             wallet.Init(asSerializedObject, serializedLedgerItems);
+        }
+
+        private void InitStorage(TemplateContainer consoleTree)
+        {
+            StorageElement storageElement = consoleTree.Q<StorageElement>();
+            var asSerializedObject = new SerializedObject(this);
+            SerializedProperty serializedLedgerItems = asSerializedObject.FindProperty(nameof(walletLedgerItems));
+            storageElement.Init();
         }
     }
 }
