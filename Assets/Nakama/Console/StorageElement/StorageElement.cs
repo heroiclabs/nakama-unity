@@ -10,17 +10,26 @@ namespace Nakama.Console
     {
         public void Init()
         {
-            Add(CreateCollection());
-            Add(CreateCollection());
+            var c1 = CreateCollection();
+            Add(c1);
+
+            var spacer = new VisualElement();
+            spacer.style.height = 10;
+            Add(spacer);
+
+            var c2 = CreateCollection();
+            Add(c2);
         }
 
         private VisualElement CreateCollection()
         {
+            var box = new Box();
             var foldout = new Foldout();
             foldout.text = "Test Collection";
             foldout.Add(CreatePermissionDropdowns());
             foldout.Add(CreateCollectionItems());
-            return foldout;
+            box.Add(foldout);
+            return box;
         }
 
         private VisualElement CreatePermissionDropdowns()
@@ -28,11 +37,10 @@ namespace Nakama.Console
             var readPermissions = new EnumField();
             readPermissions.Init(StorageReadPermission.None);
             readPermissions.label = "Read";
-            readPermissions.style.width = 200;
+            readPermissions.style.paddingRight = 10;
 
             var writePermissions = new EnumField();
             writePermissions.Init(StorageWritePermission.None);
-            writePermissions.style.width = 200;
 
             writePermissions.label = "Write";
 
@@ -41,6 +49,15 @@ namespace Nakama.Console
             container.Add(writePermissions);
             container.style.flexDirection = FlexDirection.Row;
             container.style.flexShrink = 1;
+
+            var search = new ToolbarSearchField();
+            search.style.flexGrow = 1;
+            search.style.minWidth = 0;
+            search.style.width = 0;
+            container.Add(search);
+
+            container.style.paddingBottom = container.style.paddingTop = 10;
+            container.style.paddingRight = container.style.paddingLeft = 20;
             return container;
         }
 

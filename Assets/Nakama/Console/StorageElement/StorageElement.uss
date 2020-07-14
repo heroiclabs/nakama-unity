@@ -2,7 +2,7 @@ ListView {
     /* Provide the list view with an explict height for every row
     so it can calculate how many items to actually display */
     --unity-item-height: 30;
-    height: 200px;
+    height: 400px;
 }
 
 #storage-container {    
@@ -25,4 +25,9 @@ ListView {
 
 .unity-listview-item:hover {
     background-color: lightgray;
+}
+
+.unity-enum-field__label {
+    width: 40px;
+    min-width: 40px;
 }
