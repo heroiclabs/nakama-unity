@@ -1,11 +1,12 @@
-
 <engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="Nakama.Console">
     <engine:Template path="Assets/Nakama/Console/WalletElement/WalletLedgerTotal.uxml" name="ledger-total-template" />
 
     <engine:VisualElement name="wallet-container">
-        <engine:Style src="WalletElement.uss"/>
+        <engine:Style src="WalletElement.uss" />
         <console:WalletElement name="wallet" binding_path="walletLedgerItems"></console:WalletElement>
-        <engine:Instance name="total1-element" template="ledger-total-template"></engine:Instance>
+        <engine:VisualElement name="wallet-totals-container">
+            <engine:Instance name="total1-element" template="ledger-total-template"></engine:Instance>
+        </engine:VisualElement>
     </engine:VisualElement>
 
 </engine:UXML>

@@ -2,3 +2,8 @@
     padding-top: 5px;
     padding-right: 15px;
 }
+
+#wallet-totals-container {
+    padding: 5px;
+    flex-direction: column;
+}

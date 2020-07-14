@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="Nakama.Console">
+    <engine:VisualElement class="group-row">
+        <engine:Style src="GroupRow.uss"/>
+        <engine:Label class="group-id" text="some-group-id"></engine:Label>
+        <engine:Label class="group-name" text="Some Group"></engine:Label>
+        <editor:EnumField class="group-membership" type="Nakama.Console.GroupStatus, Assembly-CSharp"/>
+        <engine:Button class="group-leave" text="Leave"/>
+    </engine:VisualElement>
+</engine:UXML>

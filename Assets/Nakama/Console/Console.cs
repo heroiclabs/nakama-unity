@@ -28,12 +28,13 @@ namespace Nakama.Console
             TemplateContainer consoleTree = console.CloneTree();
             InitWallet(consoleTree);
             InitStorage(consoleTree);
+            InitGroup(consoleTree);
             rootVisualElement.Add(consoleTree);
         }
 
         private void InitWallet(TemplateContainer consoleTree)
         {
-            WalletElement wallet = consoleTree.Q("wallet") as WalletElement;
+            var wallet = consoleTree.Q("wallet") as WalletElement;
             var asSerializedObject = new SerializedObject(this);
             SerializedProperty serializedLedgerItems = asSerializedObject.FindProperty(nameof(walletLedgerItems));
             wallet.Init(asSerializedObject, serializedLedgerItems);
@@ -41,10 +42,14 @@ namespace Nakama.Console
 
         private void InitStorage(TemplateContainer consoleTree)
         {
-            StorageElement storageElement = consoleTree.Q<StorageElement>();
-            var asSerializedObject = new SerializedObject(this);
-            SerializedProperty serializedLedgerItems = asSerializedObject.FindProperty(nameof(walletLedgerItems));
+            var storageElement = consoleTree.Q<StorageElement>();
             storageElement.Init();
+        }
+
+        private void InitGroup(TemplateContainer consoleTree)
+        {
+            var groupElement = consoleTree.Q<GroupElement>();
+            groupElement.Init();
         }
     }
 }

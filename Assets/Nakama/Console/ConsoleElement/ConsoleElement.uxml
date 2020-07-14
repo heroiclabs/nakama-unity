@@ -5,6 +5,7 @@
     <Template path="Assets/Nakama/Console/UserElement/UserElement.uxml" name="user-element-template" />
     <Template path="Assets/Nakama/Console/WalletElement/WalletElement.uxml" name="wallet-element-template" />
     <Template path="Assets/Nakama/Console/StorageElement/StorageElement.uxml" name="storage-element-template" />
+    <Template path="Assets/Nakama/Console/GroupElement/GroupElement.uxml" name="group-element-template" />
 
     <ScrollView name="console-container">
         <Style src="ConsoleElement.uss"></Style>
@@ -34,8 +35,15 @@
         </VisualElement>
         <VisualElement class="console-foldout-container">
             <Box>
-                <Foldout class="console-foldout" text="User Storage">
+                <Foldout class="console-foldout" text="Storage">
                     <Instance name="storage-element" template="storage-element-template"></Instance>
+                </Foldout>
+            </Box>
+        </VisualElement>
+        <VisualElement class="console-foldout-container">
+            <Box>
+                <Foldout class="console-foldout" text="Groups">
+                    <Instance name="group-element" template="group-element-template"></Instance>
                 </Foldout>
             </Box>
         </VisualElement>

@@ -1,4 +1,4 @@
-#storage-list {
+ListView {
     /* Provide the list view with an explict height for every row
     so it can calculate how many items to actually display */
     --unity-item-height: 30;
@@ -13,4 +13,16 @@
 
 .unity-scroll-view__vertical-scroller {
     display: none;
+}
+
+.unity-base-field-text__input:hover {
+    background-color: white;
+}
+
+:active {
+    background-color: white;
+}
+
+.unity-listview-item:hover {
+    background-color: lightgray;
 }

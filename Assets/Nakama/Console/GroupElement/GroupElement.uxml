@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:console="Nakama.Console">
-    <console:StorageElement name="storage-container">
-        <engine:Style src="StorageElement.uss"/>
-    </console:StorageElement>
+    <console:GroupElement name="groups-container">
+        <engine:Style src="GroupsElement.uss"/>
+    </console:GroupElement>
 </engine:UXML>
