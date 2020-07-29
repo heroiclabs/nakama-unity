@@ -17,7 +17,11 @@ You'll need to setup the server and database before you can connect with the cli
 
 1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
 
-2. Download the client from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. You can also download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
+2. We recommend adding the Nakama Unity package via this repository's HTTPS url through Unity's built-in Package Manager.
+
+You may also download the client from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. 
+
+You can also download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
 
 3. Use the connection credentials to build a client object.
 
