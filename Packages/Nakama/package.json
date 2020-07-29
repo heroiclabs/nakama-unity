@@ -1,0 +1,20 @@
+{
+    "name": "com.heroiclabs.nakama-unity",
+    "version": "2.4.0",
+    "unity": "2018.4",
+    "displayName": "Nakama Unity",
+    "description": "Unity3D client for Nakama server written in C#.",
+    "keywords": [
+        "app server",
+        "client library",
+        "game server",
+        "nakama",
+        "realtime",
+        "realtime chat"
+    ],
+    "author": {
+        "name": "Heroic Labs",
+        "email": "chris@heroiclabs.com",
+        "url": "https://www.heroiclabs.com"
+    }
+}
