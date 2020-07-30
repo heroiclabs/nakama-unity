@@ -1,5 +1,5 @@
 Nakama Unity
-============
+ 
 
 > Unity client for Nakama server.
 
@@ -15,13 +15,22 @@ Full documentation is online - https://heroiclabs.com/docs/unity-client-guide
 
 You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/heroiclabs/nakama#getting-started) for other options.
 
+### Installing the SDK
+
+
 1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
 
-2. We recommend adding the Nakama Unity package via this repository's HTTPS url through Unity's built-in Package Manager.
+2. Install the Unity SDK. You have three options for this.
 
-You may also download the client from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. 
+To use an official release, you may download either the .unitypackage or .tar from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. If you chose the .tar option, you can import it from a dropdown in the Unity Package Manager window. 
 
-You can also download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
+Alternatively, if you'd like to checkout a specific commit, you can add the following to the `manifest.json` file in your project's `Packages` folder:
+
+```json
+    "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#<commit>"
+```
+
+Your final option is to download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
 
 3. Use the connection credentials to build a client object.
 
