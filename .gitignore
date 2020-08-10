@@ -75,7 +75,6 @@ StyleCopReport.xml
 *_p.c
 *_h.h
 *.ilk
-*.meta
 *.obj
 *.iobj
 *.pch
@@ -562,11 +561,6 @@ ExportedObj/
 *.booproj
 *.svd
 *.mdb
-
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
