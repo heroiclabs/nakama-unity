@@ -75,7 +75,6 @@ StyleCopReport.xml
 *_p.c
 *_h.h
 *.ilk
-*.meta
 *.obj
 *.iobj
 *.pch
@@ -197,6 +196,8 @@ PublishScripts/
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
+# except Nakama/, which contains the Nakama Unity SDK.
+!**/[Pp]ackages/Nakama/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/[Pp]ackages/repositories.config
 # NuGet v3's project.json files produces more ignorable files
@@ -537,9 +538,6 @@ test-results/
 [Bb]uilds/
 [Ll]ogs/
 
-# Never ignore Asset meta data
-![Aa]ssets/**/*.meta
-
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # [Aa]ssets/AssetStoreTools*
 
@@ -560,11 +558,6 @@ ExportedObj/
 *.booproj
 *.svd
 *.mdb
-
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
