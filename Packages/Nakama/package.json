@@ -16,5 +16,8 @@
         "name": "Heroic Labs",
         "email": "chris@heroiclabs.com",
         "url": "https://www.heroiclabs.com"
+    },
+    "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
     }
 }
