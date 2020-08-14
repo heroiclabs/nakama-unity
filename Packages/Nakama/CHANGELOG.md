@@ -3,9 +3,13 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.5.0] - 2020-08-14
+### Added
+- Add support for the Unity Package Manager. See the README for usage.
+
 ### Changed
 - Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.5.0.
+- Update minimum required Unity version to 2018.4.26f1 LTS. While older releases may work YMMV.
 
 ## [2.4.0] - 2020-05-04 :star:
 ### Added
