@@ -1,13 +1,11 @@
 Nakama Unity
- 
+===
 
 > Unity client for Nakama server.
 
 [Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
 
 This client is built on the [.NET client](https://github.com/heroiclabs/nakama-dotnet) with extensions for Unity Engine. It requires the .NET4.6 scripting runtime version to be set in the editor.
-
-NOTE: In Unity versions earlier than 2018 you must navigate to Edit -> Project Settings -> Player -> Configuration (subheading) to apply it. 
 
 Full documentation is online - https://heroiclabs.com/docs/unity-client-guide
 
@@ -17,20 +15,19 @@ You'll need to setup the server and database before you can connect with the cli
 
 ### Installing the SDK
 
-
 1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
 
 2. Install the Unity SDK. You have three options for this.
 
-To use an official release, you may download either the .unitypackage or .tar from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. If you chose the .tar option, you can import it from a dropdown in the Unity Package Manager window. 
+   1. To use an official release, you may download either the .unitypackage or .tar from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. If you chose the .tar option, you can import it from a dropdown in the Unity Package Manager window. 
 
-Alternatively, if you'd like to checkout a specific commit, you can add the following to the `manifest.json` file in your project's `Packages` folder:
+   2. Alternatively, if you'd like to checkout a specific commit, you can add the following to the `manifest.json` file in your project's `Packages` folder:
 
-```json
-    "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#<commit>"
-```
+      ```json
+          "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#<commit>"
+      ```
 
-Your final option is to download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
+   3. Your final option is to download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
 
 3. Use the connection credentials to build a client object.
 
@@ -138,6 +135,8 @@ catch (ApiResponseException e)
     Debug.LogFormat("{0}", e);
 }
 ```
+
+### Error Callbacks
 
 You can avoid the use of `await` where exceptions will need to be caught and use `Task.ContinueWith(...)` as a callback style with standard C# if you prefer.
 
