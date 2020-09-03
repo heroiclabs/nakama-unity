@@ -122,13 +122,9 @@ namespace Nakama
             {
                 var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
-                ApiResponseException e;
+                ApiResponseException e = new ApiResponseException(www.downloadHandler.text);
 
-                if (decoded == null)
-                {
-                    e = new ApiResponseException(www.downloadHandler.text);
-                }
-                else
+                if (decoded != null)
                 {
                     e = new ApiResponseException(www.responseCode, decoded["message"].ToString(), (int) decoded["code"]);
                     IHttpAdapterExtensions.CopyErrorDictionary(_instance, decoded, e);
