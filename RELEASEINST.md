@@ -35,7 +35,8 @@ users.
 
 11. Upon logging in you should see a Nakama package entry with a `Draft` label next to it. Tick the `include dependencies` and click on the `Upload` button. You should see a success dialog.
 
-12. Back in the web dashboard, click on the `Edit` button in section 3 and answer the questions: (a) We support all platforms. (b) We support 2018.4 onwards (c) We are compatible with all render pipelines (4) Our package does not require any other Asset Store packages as dependencies.
+12. Back in the web dashboard, click on the `Edit` button in section 3 and answer the questions: (a) We support all platforms. (b) We support 2018.4 onwards (c) We are compatible with all render pipelines (d) Our package does not require any other Asset Store packages as dependencies.
 
 13. Click on the `Preview in Asset Store` button to confirm everything looks okay.
 
+14. Click on the submit button. You're done!
