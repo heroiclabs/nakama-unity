@@ -5,6 +5,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [2.6.0] - 2020-09-21
+### Changed
+Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.6.0.
 
 ## [2.5.0] - 2020-08-14
 ### Added
