@@ -127,7 +127,11 @@ namespace Nakama
                 if (decoded != null)
                 {
                     e = new ApiResponseException(www.responseCode, decoded["message"].ToString(), (int) decoded["code"]);
-                    IHttpAdapterExtensions.CopyErrorDictionary(_instance, decoded, e);
+
+                    if (decoded.ContainsKey("error"))
+                    {
+                        _instance.CopyResponseError(decoded["error"], e);
+                    }
                 }
 
                 errback(e);
