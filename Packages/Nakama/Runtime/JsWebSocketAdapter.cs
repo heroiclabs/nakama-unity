@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -205,19 +205,19 @@ namespace Nakama
 
             var socketRef = _globalSocketRef++;
             _handlers.Add(socketRef, handler);
-            CreateSocket(socketRef, address);
+            NKCreateSocket(socketRef, address);
             return socketRef;
         }
 
         public void Close(int socketRef)
         {
-            CloseSocket(socketRef);
+            NKCloseSocket(socketRef);
             _handlers.Remove(socketRef);
         }
 
         public void Send(int socketRef, string payload)
         {
-            SendData(socketRef, payload);
+            NKSendData(socketRef, payload);
         }
 
         private UnityWebGLSocketBridgeHandler GetHandler(int socketRef)
@@ -228,19 +228,19 @@ namespace Nakama
         }
 
         [DllImport("__Internal")]
-        private static extern void CreateSocket(int socketRef, string address);
+        private static extern void NKCreateSocket(int socketRef, string address);
 
         [DllImport("__Internal")]
-        private static extern void CloseSocket(int socketRef);
+        private static extern void NKCloseSocket(int socketRef);
 
         [DllImport("__Internal")]
-        private static extern void SendData(int socketRef, string data);
+        private static extern void NKSendData(int socketRef, string data);
 
         [DllImport("__Internal")]
-        private static extern int SocketState();
+        private static extern int NKSocketState();
 
         // called by jslib
-        private void BridgeOnOpen(string bridgeMsg)
+        private void NKBridgeOnOpen(string bridgeMsg)
         {
             var index = bridgeMsg.IndexOf('_');
             if (index < 0)
@@ -253,7 +253,7 @@ namespace Nakama
         }
 
         // called by jslib
-        private void BridgeOnMessage(string bridgeMsg)
+        private void NKBridgeOnMessage(string bridgeMsg)
         {
             var index = bridgeMsg.IndexOf('_');
             if (index < 0 || index + 1 >= bridgeMsg.Length)
@@ -266,7 +266,7 @@ namespace Nakama
         }
 
         // called by jslib
-        private void BridgeOnClose(string bridgeMsg)
+        private void NKBridgeOnClose(string bridgeMsg)
         {
             var index = bridgeMsg.IndexOf('_');
             if (index < 0 || index + 1 >= bridgeMsg.Length)
@@ -281,7 +281,7 @@ namespace Nakama
         }
 
         // called by jslib
-        private void BridgeOnError(string bridgeMsg)
+        private void NKBridgeOnError(string bridgeMsg)
         {
             var index = bridgeMsg.IndexOf('_');
             if (index >= 0 && index + 1 < bridgeMsg.Length)
