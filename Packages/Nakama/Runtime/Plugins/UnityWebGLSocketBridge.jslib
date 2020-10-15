@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ var UnityWebGLSocketBridge = {
 	$INITIALIZE: function() {
 		SOCKET_REF_MAP = new Map();
 		BRIDGE_NAME = "[Nakama]";
-		OPEN_METHOD_NAME = "BridgeOnOpen";
-		CLOSE_METHOD_NAME = "BridgeOnClose";
-		MESSAGE_METHOD_NAME = "BridgeOnMessage";
-		ERROR_METHOD_NAME = "BridgeOnError";
+		OPEN_METHOD_NAME = "NKBridgeOnOpen";
+		CLOSE_METHOD_NAME = "NKBridgeOnClose";
+		MESSAGE_METHOD_NAME = "NKBridgeOnMessage";
+		ERROR_METHOD_NAME = "NKBridgeOnError";
 	},
 
-	CreateSocket: function(socketRef, addressPtr) {
+	NKCreateSocket: function(socketRef, addressPtr) {
 		if (!(SOCKET_REF_MAP instanceof Map)) {
 			INITIALIZE();
 		}
@@ -65,7 +65,7 @@ var UnityWebGLSocketBridge = {
 		SOCKET_REF_MAP.set(socketRef, ws);
 	},
 
-	SocketState: function (socketRef) {
+	NKSocketState: function (socketRef) {
 	    if(!SOCKET_REF_MAP.has(socketRef)) {
 	        SendMessage(BRIDGE_NAME, ERROR_METHOD_NAME, socketRef + "_" + "Did not find websocket with given reference.");
 	        return -1;
@@ -73,7 +73,7 @@ var UnityWebGLSocketBridge = {
         return SOCKET_REF_MAP.get(socketRef).readyState;
     },
 
-    CloseSocket: function (socketRef) {
+    NKCloseSocket: function (socketRef) {
         if(!SOCKET_REF_MAP.has(socketRef)) {
             SendMessage(BRIDGE_NAME, ERROR_METHOD_NAME, socketRef + "_" + "Did not find websocket with given reference.");
         } else {
@@ -81,7 +81,7 @@ var UnityWebGLSocketBridge = {
         }
     },
 
-    SendData: function (socketRef, msg) {
+    NKSendData: function (socketRef, msg) {
         if(!SOCKET_REF_MAP.has(socketRef)) {
             SendMessage(BRIDGE_NAME, ERROR_METHOD_NAME, socketRef + "_" + "Did not find websocket with given reference.");
         } else {
