@@ -3,7 +3,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.7.0] - 2020-10-19
+### Changed
+Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.7.0.
+Added namespace to JavaScript web socket adapter internals.
 
 ## [2.6.0] - 2020-09-21
 ### Changed
