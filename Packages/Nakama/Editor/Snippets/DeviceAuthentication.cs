@@ -33,7 +33,8 @@ namespace Nakama.Snippets
             // Restore session from PlayerPrefs if possible.
             var sessionToken = PlayerPrefs.GetString(SessionTokenKey);
             var session = Session.Restore(sessionToken);
-            var expiredDate = DateTime.UtcNow.AddDays(-1);
+            // Add a day so we check whether the token is within a day of expiration to refresh it.
+            var expiredDate = DateTime.UtcNow.AddDays(1);
             if (session == null || session.HasExpired(expiredDate))
             {
                 session = await _client.AuthenticateDeviceAsync(deviceId);
