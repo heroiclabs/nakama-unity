@@ -13,55 +13,46 @@ namespace Nakama.Snippets
         private IClient _client;
         private ISocket _socket;
 
-        public Text logText;
-        public Text serverText;
-        public Text serverPortText;
+        public string serverText;
+        public string serverPortText;
 
-        void Log(string msg)
-        {
-            if (logText != null)
-            {
-                logText.text += "\n" + msg;
-            }
-        }
-        
         public async void Connect()
         {
             try
             {
                 const string scheme = "http";
-                string host = serverText.text;
-                int port = Int32.Parse(serverPortText.text);
+                string host = serverText;
+                int port = Int32.Parse(serverPortText);
                 const string serverKey = "defaultkey";
-                
+
                 _client = new Client(scheme, host, port, serverKey, UnityWebRequestAdapter.Instance);
                 _socket = _client.NewSocket();
-                _socket.Closed += () => Log("Socket closed.");
-                _socket.Connected += () => Log("Socket connected.");
-                _socket.ReceivedError += e => Log("Socket error: " + e.Message);
+                _socket.Closed += () => Debug.Log("Socket closed.");
+                _socket.Connected += () => Debug.Log("Socket connected.");
+                _socket.ReceivedError += e => Debug.Log("Socket error: " + e.Message);
 
                 // Cant use SystemInfo.deviceUniqueIdentifier with WebGL builds.
                 var udid = PlayerPrefs.GetString(UdidKey, Guid.NewGuid().ToString());
-                Log("Unique Device ID: " + udid);
+                Debug.Log("Unique Device ID: " + udid);
 
                 ISession session;
                 var sessionToken = PlayerPrefs.GetString(SessionTokenKey);
                 if (string.IsNullOrEmpty(sessionToken) || (session = Session.Restore(sessionToken)).IsExpired)
                 {
-                    Log("Before session");
+                    Debug.Log("Before session");
                     session = await _client.AuthenticateDeviceAsync(udid);
                     PlayerPrefs.SetString(UdidKey, udid);
                     PlayerPrefs.SetString(SessionTokenKey, session.AuthToken);
-                    Log("After session");
+                    Debug.Log("After session");
                 }
 
-                Log("Session Token: " + session.AuthToken);
+                Debug.Log("Session Token: " + session.AuthToken);
                 await _socket.ConnectAsync(session, true);
-                Log("After socket connected.");
+                Debug.Log("After socket connected.");
             }
             catch (Exception e)
             {
-                Log(e.ToString());
+                Debug.Log(e.ToString());
             }
         }
 
