@@ -21,10 +21,10 @@ You'll need to setup the server and database before you can connect with the cli
 
    1. To use an official release, you may download either the .unitypackage or .tar from the [releases page](https://github.com/heroiclabs/nakama-unity/releases) and import it into your project. If you chose the .tar option, you can import it from a dropdown in the Unity Package Manager window.
 
-   2. Alternatively, if you'd like to checkout a specific commit and are using Unity 2019.4.1 or later, you can add the following to the `manifest.json` file in your project's `Packages` folder:
+   2. Alternatively, if you'd like to checkout a specific release or commit from Github and are using Unity 2019.4.1 or later, you can add the following to the `manifest.json` file in your project's `Packages` folder:
 
       ```json
-          "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#<commit>"
+          "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#<commit | tag>"
       ```
 
    3. Your final option is to download prebuilt binaries from the [Asset Store](https://assetstore.unity.com/packages/tools/network/nakama-81338).
