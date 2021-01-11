@@ -29,7 +29,7 @@ namespace Nakama
         /// <param name="client">The client object.</param>
         /// <param name="useMainThread">Whether or not socket events should be dispatched on Unity's main thread.</param>
         /// <returns>A new socket.</returns>
-        public static ISocket NewSocket(this IClient client, bool useMainThread = true)
+        public static ISocket NewSocket(this IClient client, bool useMainThread = false)
         {
             ISocketAdapter threadedAdapter;
 #if UNITY_WEBGL && !UNITY_EDITOR
