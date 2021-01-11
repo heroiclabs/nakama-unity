@@ -27,7 +27,6 @@ namespace Nakama
     /// </summary>
     public class UnitySocket : MonoBehaviour, ISocketAdapter
     {
-
         event Action ISocketAdapter.Connected
         {
             add
@@ -89,13 +88,18 @@ namespace Nakama
         private readonly List<Action<Exception>> _errorHandlers = new List<Action<Exception>>();
         private readonly List<Action<ArraySegment<byte>>> _receivedHandlers = new List<Action<ArraySegment<byte>>>();
 
-        private ISocketAdapter _socketAdapter = new WebSocketAdapter();
+        private ISocketAdapter _socketAdapter;
 
         public static UnitySocket Create(ISocketAdapter adapter)
         {
             var adapterGO = new GameObject("[Nakama Socket]");
+            DontDestroyOnLoad(adapterGO);
             var unityAdapter = adapterGO.AddComponent<UnitySocket>();
             unityAdapter._socketAdapter = adapter;
+            unityAdapter._socketAdapter.Closed += unityAdapter.OnClosed;
+            unityAdapter._socketAdapter.Connected += unityAdapter.OnConnected;
+            unityAdapter._socketAdapter.Received += unityAdapter.OnReceived;
+            unityAdapter._socketAdapter.ReceivedError += unityAdapter.OnReceivedError;
             return unityAdapter;
         }
 
@@ -119,14 +123,6 @@ namespace Nakama
             _socketAdapter.Send(buffer, cancellationToken, reliable);
         }
 
-        private void Awake()
-        {
-            _socketAdapter.Closed += OnClosed;
-            _socketAdapter.Connected += OnConnected;
-            _socketAdapter.Received += OnReceived;
-            _socketAdapter.ReceivedError += OnReceivedError;
-        }
-
         private void OnClosed()
         {
             _eventQueue.Enqueue(new QueuedEvent(_closedHandlers));
@@ -144,7 +140,20 @@ namespace Nakama
 
         private void OnReceived(ArraySegment<byte> obj)
         {
-            _eventQueue.Enqueue(new QueuedEvent(_receivedHandlers, obj));
+            // copy the segment into a new segment with a new backing array
+            // this avoids threading issues with the socket and unity main thread
+            // accessing the same range within the same backing array.
+
+            byte[] copy = new byte[obj.Count];
+
+            int j = 0;
+            for (int i = obj.Offset; i < obj.Offset + obj.Count; i++)
+            {
+                copy[j] = obj.Array[i];
+                j++;
+
+            }
+            _eventQueue.Enqueue(new QueuedEvent(_receivedHandlers, new ArraySegment<byte>(copy)));
         }
 
         private void Update()
@@ -164,6 +173,7 @@ namespace Nakama
         {
             private readonly IEnumerable<Delegate> _listeners;
             private readonly object[] _eventArgs;
+            private readonly object mutex = new object();
 
             public QueuedEvent(IEnumerable<Delegate> listeners, params object[] eventArgs)
             {
@@ -173,7 +183,8 @@ namespace Nakama
 
             public void Dispatch()
             {
-                foreach (Delegate listener in _listeners)
+                var listenersCopy = new List<Delegate>(_listeners);
+                foreach (Delegate listener in listenersCopy)
                 {
                     listener.DynamicInvoke(_eventArgs);
                 }
