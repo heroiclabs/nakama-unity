@@ -27,14 +27,6 @@ namespace Nakama
     /// </summary>
     public class UnitySocket : MonoBehaviour, ISocketAdapter
     {
-        private readonly ConcurrentQueue<QueuedEvent> _eventQueue = new ConcurrentQueue<QueuedEvent>();
-        private readonly List<Action> _connectedHandlers = new List<Action>();
-        private readonly List<Action> _closedHandlers = new List<Action>();
-        private readonly List<Action<Exception>> _errorHandlers = new List<Action<Exception>>();
-        private readonly List<Action<ArraySegment<byte>>> _receivedHandlers = new List<Action<ArraySegment<byte>>>();
-
-        bool ISocketAdapter.IsConnected => _socketAdapter.IsConnected;
-        bool ISocketAdapter.IsConnecting => _socketAdapter.IsConnecting;
 
         event Action ISocketAdapter.Connected
         {
@@ -88,11 +80,20 @@ namespace Nakama
             }
         }
 
+        bool ISocketAdapter.IsConnected => _socketAdapter.IsConnected;
+        bool ISocketAdapter.IsConnecting => _socketAdapter.IsConnecting;
+
+        private readonly ConcurrentQueue<QueuedEvent> _eventQueue = new ConcurrentQueue<QueuedEvent>();
+        private readonly List<Action> _connectedHandlers = new List<Action>();
+        private readonly List<Action> _closedHandlers = new List<Action>();
+        private readonly List<Action<Exception>> _errorHandlers = new List<Action<Exception>>();
+        private readonly List<Action<ArraySegment<byte>>> _receivedHandlers = new List<Action<ArraySegment<byte>>>();
+
         private ISocketAdapter _socketAdapter = new WebSocketAdapter();
 
         public static UnitySocket Create(ISocketAdapter adapter)
         {
-            var adapterGO = new GameObject("Nakama Socket");
+            var adapterGO = new GameObject("[Nakama Socket]");
             var unityAdapter = adapterGO.AddComponent<UnitySocket>();
             unityAdapter._socketAdapter = adapter;
             return unityAdapter;
