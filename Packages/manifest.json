@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.heroiclabs.nakama-unity": "https://github.com/heroiclabs/nakama-unity.git?path=/Packages/Nakama#baea20ccfda15b1e7c71195642e503a1b73732c3",
+    "com.unity.ide.rider": "3.0.3",
+    "com.unity.ide.vscode": "1.2.3",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
