@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.8.0] - 2021-02-19
+### Changed
+- Listing tournaments can now be done without providing start or end time filters.
+- Can now import Steam friends after authenticating or linking to a Steam account.
+
 ## [2.7.1] - 2021-02-18
 ### Fixed
 - HTTP Client now properly reads off timeout value.
