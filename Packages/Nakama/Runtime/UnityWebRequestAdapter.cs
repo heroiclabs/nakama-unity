@@ -126,7 +126,10 @@ namespace Nakama
 
                 if (decoded != null)
                 {
-                    e = new ApiResponseException(www.responseCode, decoded["message"].ToString(), (int) decoded["code"]);
+                    string msg = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
+                    int grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
+
+                    e = new ApiResponseException(www.responseCode, msg, grpcCode);
 
                     if (decoded.ContainsKey("error"))
                     {

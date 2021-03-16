@@ -3,6 +3,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.8.1] - 2021-03-16
+### Fixed
+- Fixed a bug with parsing error responses that did not contain a message or grpc code.
+### Changed
+- Made names of asmdef files more specific for easier searching inside the Unity editor.
+
 ## [2.8.0] - 2021-02-19
 ### Changed
 - Listing tournaments can now be done without providing start or end time filters.
