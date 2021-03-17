@@ -103,10 +103,10 @@ socket.Closed += () => Debug.Log("Socket closed.");
 await socket.ConnectAsync(session);
 ```
 
-If you'd like socket handlers to execute on Unity's main thread, pass the `useMainThread: true` argument:
+If you'd like socket handlers to execute outside Unity's main thread, pass the `useMainThread: false` argument:
 
 ```csharp
-var socket = client.NewSocket(useMainThread: true);
+var socket = client.NewSocket(useMainThread: false);
 ```
 
 ### Unity WebGL
