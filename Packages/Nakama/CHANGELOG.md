@@ -3,6 +3,21 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.8.1] - 2021-03-16
+### Fixed
+- Fixed a bug with parsing error responses that did not contain a message or grpc code.
+### Changed
+- Made names of asmdef files more specific for easier searching inside the Unity editor.
+
+## [2.8.0] - 2021-02-19
+### Changed
+- Listing tournaments can now be done without providing start or end time filters.
+- Can now import Steam friends after authenticating or linking to a Steam account.
+
+## [2.7.1] - 2021-02-18
+### Fixed
+- HTTP Client now properly reads off timeout value.
+
 ## [2.7.0] - 2020-10-19
 ### Changed
 Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.7.0.
@@ -133,7 +148,7 @@ Update Nakama .NET dependency. See release notes: heroiclabs/nakama-dotnet@2.6.0
 - A new Unity example scene which shows how to matchmake users.
 - New `NIds` helper class and extension methods to compare byte arrays.
 - Add new In-App Notification feature.
-- Add new In-App Purchase Validation feature.   
+- Add new In-App Purchase Validation feature.
 
 ### Changed
 - Update client to support the new batch-orientated server protocol.
