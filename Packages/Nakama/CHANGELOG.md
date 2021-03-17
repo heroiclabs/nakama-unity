@@ -3,6 +3,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- Unity sockets now dispatch events on Unity's main thread by default. If you have been using code to move socket message
+to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code.
+
 ## [2.8.1] - 2021-03-16
 ### Fixed
 - Fixed a bug with parsing error responses that did not contain a message or grpc code.

@@ -103,6 +103,12 @@ socket.Closed += () => Debug.Log("Socket closed.");
 await socket.ConnectAsync(session);
 ```
 
+If you'd like socket handlers to execute outside Unity's main thread, pass the `useMainThread: false` argument:
+
+```csharp
+var socket = client.NewSocket(useMainThread: false);
+```
+
 ### Unity WebGL
 
 For WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter` and use the `NewSocket()` extension method to create the socket OR manually set the right `ISocketAdapter` per platform.

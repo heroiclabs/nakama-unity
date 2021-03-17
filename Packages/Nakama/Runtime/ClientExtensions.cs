@@ -27,14 +27,18 @@ namespace Nakama
         /// Build a new socket with conditional compilation on the adapter.
         /// </summary>
         /// <param name="client">The client object.</param>
+        /// <param name="useMainThread">Whether or not socket events should be dispatched on Unity's main thread.</param>
         /// <returns>A new socket.</returns>
-        public static ISocket NewSocket(this IClient client)
+        public static ISocket NewSocket(this IClient client, bool useMainThread = false)
         {
+            ISocketAdapter threadedAdapter;
 #if UNITY_WEBGL && !UNITY_EDITOR
-            ISocketAdapter adapter = new JsWebSocketAdapter();
+            threadedAdapter = new JsWebSocketAdapter();
 #else
-            ISocketAdapter adapter = new WebSocketAdapter();
+            threadedAdapter = new WebSocketAdapter();
 #endif
+
+            ISocketAdapter adapter = useMainThread ? UnitySocket.Create(threadedAdapter) : threadedAdapter;
             var socket = Socket.From(client, adapter);
 #if UNITY_EDITOR
             socket.ReceivedError += Debug.LogError;
