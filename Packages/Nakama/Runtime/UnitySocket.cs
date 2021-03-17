@@ -173,7 +173,6 @@ namespace Nakama
         {
             private readonly IEnumerable<Delegate> _listeners;
             private readonly object[] _eventArgs;
-            private readonly object mutex = new object();
 
             public QueuedEvent(IEnumerable<Delegate> listeners, params object[] eventArgs)
             {
