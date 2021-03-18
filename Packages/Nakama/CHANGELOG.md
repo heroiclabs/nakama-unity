@@ -7,7 +7,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Unity sockets now dispatch events on Unity's main thread by default. If you have been using code to move socket message
-to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code.
+to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code. This new default behavior can overridden
+by passing `useMainThread: false` to `client.NewSocket`. When passed this way, sockets default to their pre-2.9 behavior
+by dispatching messages in a separate thread.
+
 
 ## [2.8.1] - 2021-03-16
 ### Fixed
