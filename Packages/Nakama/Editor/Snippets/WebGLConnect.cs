@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Nakama.Snippets
@@ -15,7 +16,7 @@ namespace Nakama.Snippets
         public string serverText;
         public string serverPortText;
 
-        public async void Connect()
+        public async void Awake()
         {
             try
             {
@@ -38,20 +39,22 @@ namespace Nakama.Snippets
                 var sessionToken = PlayerPrefs.GetString(SessionTokenKey);
                 if (string.IsNullOrEmpty(sessionToken) || (session = Session.Restore(sessionToken)).IsExpired)
                 {
-                    Debug.Log("Before session");
                     session = await _client.AuthenticateDeviceAsync(udid);
                     PlayerPrefs.SetString(UdidKey, udid);
                     PlayerPrefs.SetString(SessionTokenKey, session.AuthToken);
-                    Debug.Log("After session");
                 }
 
                 Debug.Log("Session Token: " + session.AuthToken);
                 await _socket.ConnectAsync(session, true);
-                Debug.Log("After socket connected.");
+                Debug.Log("Connected ");
+                var match = await _socket.CreateMatchAsync();
+                Debug.Log("Created match: " + match.Id);
+
+                await _socket.CloseAsync();
             }
             catch (Exception e)
             {
-                Debug.Log(e.ToString());
+                Debug.LogError(e.ToString());
             }
         }
 
