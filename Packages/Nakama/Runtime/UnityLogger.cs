@@ -28,5 +28,8 @@ namespace Nakama
 
         /// <inheritdoc cref="ILogger"/>
         public void InfoFormat(string format, params object[] args) => Debug.LogFormat(format, args);
+
+        /// <inheritdoc cref="ILogger"/>
+        public void WarnFormat(string format, params object[] args) => Debug.LogWarningFormat(format, args);
     }
 }
