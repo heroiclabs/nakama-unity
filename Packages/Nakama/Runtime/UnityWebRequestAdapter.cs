@@ -133,7 +133,7 @@ namespace Nakama
 
                     if (decoded.ContainsKey("error"))
                     {
-                        _instance.CopyResponseError(decoded["error"], e);
+                        IHttpAdapterUtil.CopyResponseError(_instance, decoded["error"], e);
                     }
                 }
 
