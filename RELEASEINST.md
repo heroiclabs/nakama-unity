@@ -24,7 +24,7 @@ save the file as `Nakama.unitypackage` in the repository root.
 
 6. Create a release on GitHub: https://github.com/heroiclabs/nakama-unity/releases/new and attach `Nakama.unitypackage` to the release.
 
-7. Login to the Unity Asset Store publisher dashboard: https://publisher.assetstore.unity3d.com/package.html?id=549971
+7. Login to the Unity Asset Store publisher dashboard: https://publisher.unity.com/packages
 
 8. Click on the button that says "Create new draft to edit package" to begin a submission for a new package version.
 
