@@ -3,14 +3,26 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.9.0] 05-17-21
+
+### Added
+- A session can be refreshed on demand with "SessionRefreshAsync" method.
+- Session and/or refresh tokens can now be disabled with a client logout.
+- The client now supports session auto-refresh using refresh tokens. This is enabled by default.
+- New socket RPC and MatchSend methods using ArraySegment to allow developers to manage memory re-use.
+- Add IAP validation APIs for purchase receipts with Apple App Store, Google Play Store, and Huawei AppGallery.
+- Add Realtime Parties feature.
 
 ### Changed
+- Use lock object with socket operations instead of ConcurrentDictionary as a workaround for a Unity engine WebGL regression.
+- Avoid use of extension methods as a workaround for a Unity engine WebGL regression.
 - Unity sockets now dispatch events on Unity's main thread by default. If you have been using code to move socket message
 to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code. This new default behavior can overridden
 by passing `useMainThread: false` to `client.NewSocket`. When passed this way, sockets default to their pre-2.9 behavior
 by dispatching messages in a separate thread.
 
+### Fixed
+- Parse HTTP responses defensively in case of bad load balancer configurations.
 
 ## [2.8.1] - 2021-03-16
 ### Fixed
