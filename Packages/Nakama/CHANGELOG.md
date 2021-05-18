@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.9.1] 05-18-21
+
+### Fixed
+- Fixed incorrect .DLL version being pulled in from nakama-dotnet.
+
 ## [2.9.0] 05-17-21
 
 ### Added
