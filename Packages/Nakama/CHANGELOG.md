@@ -3,6 +3,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.9.2] 05-19-21
+
+### Added
+- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events
+from the leader of a closed party.
+
 ## [2.9.1] 05-18-21
 
 ### Fixed
