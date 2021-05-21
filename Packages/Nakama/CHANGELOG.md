@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [2.9.3] - 05-21-21
+### Fixed
+Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part
+of the `IParty` object.
+
 ## [2.9.2] 05-19-21
 
 ### Added
