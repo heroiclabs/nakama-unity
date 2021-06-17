@@ -1,7 +1,12 @@
 # Change Log
 All notable changes to this project are documented below.
 
-The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
+The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
+(http://semver.org/).
+
+## [2.9.4] - 06-17-21
+### Fixed
+- Fixed issue where refreshing a session with metadata threw an exception due to the key already existing.
 
 ## [2.9.3] - 05-21-21
 ### Fixed
