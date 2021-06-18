@@ -4,6 +4,10 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
 (http://semver.org/).
 
+## [2.9.5] - 06-18-21
+### Fixed
+- Fixed issue where UnityLogger did not implement a Debug log method.
+
 ## [2.9.4] - 06-17-21
 ### Fixed
 - Fixed issue where refreshing a session with metadata threw an exception due to the key already existing.
