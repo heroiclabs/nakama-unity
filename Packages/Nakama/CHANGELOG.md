@@ -4,6 +4,14 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
 (http://semver.org/).
 
+## [3.0.0] - 2021-07-14
+### Added
+- The language tag for the user can be configured with the socket on connect.
+
+### Changed
+- An `IPartyMatchmakerTicket` is now received by the party leader when they add their party to the matchmaker via `AddMatchmakerPartyAsync`.
+- Renamed `PromotePartyMember` to `PromotePartyMemberAsync`.
+
 ## [2.9.5] - 06-18-21
 ### Fixed
 - Fixed issue where UnityLogger did not implement a Debug log method.
