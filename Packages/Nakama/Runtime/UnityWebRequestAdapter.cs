@@ -114,11 +114,11 @@ namespace Nakama
             Action<ApiResponseException> errback)
         {
             yield return www.SendWebRequest();
-            if (www.isNetworkError)
+            if (www.result==UnityWebRequest.Result.ConnectionError)
             {
                 errback(new ApiResponseException(www.error));
             }
-            else if (www.isHttpError)
+            else if (www.result ==UnityWebRequest.Result.ProtocolError)
             {
                 var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
