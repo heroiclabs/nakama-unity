@@ -23,6 +23,9 @@ namespace Nakama
     /// </summary>
     public class UnityLogger : ILogger
     {
+        // TODO implement this.
+        public LogLevel LogLevel { get; set; }
+
         /// <inheritdoc cref="ILogger"/>
         public void DebugFormat(string format, params object[] args) => Debug.LogFormat(format, args);
 
@@ -34,7 +37,5 @@ namespace Nakama
 
         /// <inheritdoc cref="ILogger"/>
         public void WarnFormat(string format, params object[] args) => Debug.LogWarningFormat(format, args);
-
-
     }
 }
