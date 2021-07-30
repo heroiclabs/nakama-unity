@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2019 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,6 @@ namespace Nakama
     /// </remarks>
     public class UnityWebRequestAdapter : MonoBehaviour, IHttpAdapter
     {
-    #if UNITY_2020_2_OR_NEWER
         /// <inheritdoc cref="IHttpAdapter.Logger"/>
         public ILogger Logger { get; set; }
 
@@ -115,6 +114,13 @@ namespace Nakama
             Action<ApiResponseException> errback)
         {
             yield return www.SendWebRequest();
+            IsNetworkError(www);
+            
+        }
+
+        private void IsNetworkError(UnityWebRequest www){
+            #if UNITY_2020_2_OR_NEWER
+
             if (www.result==UnityWebRequest.Result.ConnectionError)
             {
                 errback(new ApiResponseException(www.error));
@@ -144,123 +150,39 @@ namespace Nakama
             {
                 callback?.Invoke(www.downloadHandler?.text);
             }
-        }
-    }
-    
-#else
 
-    /// <inheritdoc cref="IHttpAdapter.Logger"/>
-    public ILogger Logger { get; set; }
+            #else
 
-    private static readonly object Lock = new object();
-    private static UnityWebRequestAdapter _instance;
-
-    public static UnityWebRequestAdapter Instance
-    {
-        get
-        {
-            lock (Lock)
+            if (www.isNetworkError)
             {
-                if (_instance != null) return _instance;
-
-                var go = GameObject.Find("/[Nakama]");
-                if (go == null)
-                {
-                    go = new GameObject("[Nakama]");
-                }
-
-                if (go.GetComponent<UnityWebRequestAdapter>() == null)
-                {
-                    go.AddComponent<UnityWebRequestAdapter>();
-                }
-
-                DontDestroyOnLoad(go);
-                _instance = go.GetComponent<UnityWebRequestAdapter>();
-                return _instance;
+                errback(new ApiResponseException(www.error));
             }
-        }
-    }
-
-    private UnityWebRequestAdapter()
-    {
-    }
-
-    /// <inheritdoc cref="IHttpAdapter"/>
-    public Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body,
-        int timeout)
-    {
-        var www = BuildRequest(method, uri, headers, body, timeout);
-        var tcs = new TaskCompletionSource<string>();
-        StartCoroutine(SendRequest(www, resp => tcs.SetResult(resp), err => tcs.SetException(err)));
-        return tcs.Task;
-    }
-
-    private static UnityWebRequest BuildRequest(string method, Uri uri, IDictionary<string, string> headers,
-        byte[] body, int timeout)
-    {
-        UnityWebRequest www;
-        if (string.Equals(method, "POST", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(method, "PUT", StringComparison.OrdinalIgnoreCase))
-        {
-            www = new UnityWebRequest(uri, method)
+            else if (www.isHttpError)
             {
-                uploadHandler = new UploadHandlerRaw(body),
-                downloadHandler = new DownloadHandlerBuffer()
-            };
-        }
-        else if (string.Equals(method, "DELETE", StringComparison.OrdinalIgnoreCase))
-        {
-            www = UnityWebRequest.Delete(uri);
-        }
-        else
-        {
-            www = UnityWebRequest.Get(uri);
-        }
+                var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
-        www.SetRequestHeader("Content-Type", "application/json");
-        foreach (var kv in headers)
-        {
-            www.SetRequestHeader(kv.Key, kv.Value);
-        }
+                ApiResponseException e = new ApiResponseException(www.downloadHandler.text);
 
-        www.timeout = timeout;
-        return www;
-    }
-
-    private static IEnumerator SendRequest(UnityWebRequest www, Action<string> callback,
-        Action<ApiResponseException> errback)
-    {
-        yield return www.SendWebRequest();
-        if (www.isNetworkError)
-        {
-            errback(new ApiResponseException(www.error));
-        }
-        else if (www.isHttpError)
-        {
-            var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
-
-            ApiResponseException e = new ApiResponseException(www.downloadHandler.text);
-
-            if (decoded != null)
-            {
-                string msg = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
-                int grpcCode = decoded.ContainsKey("code") ? (int)decoded["code"] : -1;
-
-                e = new ApiResponseException(www.responseCode, msg, grpcCode);
-
-                if (decoded.ContainsKey("error"))
+                if (decoded != null)
                 {
-                    IHttpAdapterUtil.CopyResponseError(Instance, decoded["error"], e);
-                }
-            }
+                    string msg = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
+                    int grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
 
-            errback(e);
-        }
-        else
-        {
-            callback?.Invoke(www.downloadHandler?.text);
+                    e = new ApiResponseException(www.responseCode, msg, grpcCode);
+
+                    if (decoded.ContainsKey("error"))
+                    {
+                        IHttpAdapterUtil.CopyResponseError(Instance, decoded["error"], e);
+                    }
+                }
+
+                errback(e);
+            }
+            else
+            {
+                callback?.Invoke(www.downloadHandler?.text);
+            }
+            #endif
         }
     }
-    #endif
-    
 }
