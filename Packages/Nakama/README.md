@@ -92,6 +92,40 @@ Debug.LogFormat("User username: '{0}'", account.User.Username);
 Debug.LogFormat("Account virtual wallet: '{0}'", account.Wallet);
 ```
 
+Requests can be supplied with a retry configurations in cases of transient network or server errors.
+
+A single configuration can be used to control all request retry behavior:
+
+```csharp
+var retryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
+
+client.GlobalRetryConfiguration = retryConfiguration;
+var account = await client.GetAccountAsync(session);
+```
+
+Or, the configuration can be supplied on a per-request basis:
+
+```csharp
+
+var retryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
+
+var account = await client.GetAccountAsync(session, retryConfiguration);
+
+```
+Per-request retry configurations override the global retry
+configuration.
+
+Requests also can be supplied with a cancellation token if you need to cancel them mid-flight:
+
+```csharp
+var canceller = new CancellationTokenSource();
+var account = await client.GetAccountAsync(session, retryConfiguration: null, canceller);
+
+await Task.Delay(25);
+
+canceller.Cancel(); // will raise a TaskCanceledException
+```
+
 ### Socket
 
 The client can create one or more sockets with the server. Each socket can have it's own event listeners registered for responses received from the server.

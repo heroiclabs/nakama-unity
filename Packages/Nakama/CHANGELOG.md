@@ -4,6 +4,11 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
 (http://semver.org/).
 
+## [3.1.0] - 2021-08-11
+### Added
+- Added ability for user to retry requests if they fail due to a transient network error.
+- Added ability for user to cancel requests that are in-flight.
+
 ## [3.0.0] - 2021-07-14
 ### Added
 - The language tag for the user can be configured with the socket on connect.
