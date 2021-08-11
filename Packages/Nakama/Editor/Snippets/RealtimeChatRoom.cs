@@ -24,11 +24,13 @@ namespace Nakama.Snippets
     {
         private const string RoomName = "heroes";
 
-        private readonly IClient _client = new Client("defaultkey");
+        private IClient _client;
         private ISocket _socket;
 
         private async void Start()
         {
+            _client =  new Client("defaultkey", UnityWebRequestAdapter.Instance);
+
             var deviceId = SystemInfo.deviceUniqueIdentifier;
             var session = await _client.AuthenticateDeviceAsync(deviceId);
             Debug.LogFormat("Session user id: '{0}'", session.UserId);
