@@ -70,10 +70,11 @@ namespace Nakama
 
         /// <inheritdoc cref="IHttpAdapter"/>
         public Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body,
-            int timeout)
+            int timeout, CancellationToken? cancellationToken)
         {
             var www = BuildRequest(method, uri, headers, body, timeout);
             var tcs = new TaskCompletionSource<string>();
+            cancellationToken?.Register(() => tcs.SetCanceled());
             StartCoroutine(SendRequest(www, resp => tcs.SetResult(resp), err => tcs.SetException(err)));
             return tcs.Task;
         }
