@@ -116,11 +116,11 @@ namespace Nakama
             Action<ApiResponseException> errback)
         {
             yield return www.SendWebRequest();
-            if (www.isNetworkError)
+            if (IsNetworkError(www))
             {
                 errback(new ApiResponseException(www.error));
             }
-            else if (www.isHttpError)
+            else if (IsHttpError(www))
             {
                 var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
@@ -145,6 +145,24 @@ namespace Nakama
             {
                 callback?.Invoke(www.downloadHandler?.text);
             }
+        }
+
+        private static bool IsNetworkError(UnityWebRequest www)
+        {
+#if UNITY_2020_2_OR_NEWER
+            return www.result == UnityWebRequest.Result.ConnectionError;
+#else
+            return www.isNetworkError;
+#endif
+        }
+
+        private static bool IsHttpError(UnityWebRequest www)
+        {
+#if UNITY_2020_2_OR_NEWER
+            return www.result == UnityWebRequest.Result.ProtocolError;
+#else
+            return www.isHttpError;
+#endif
         }
     }
 }
