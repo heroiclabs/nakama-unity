@@ -4,6 +4,14 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
 (http://semver.org/).
 
+## [3.1.1] - 2021-08-11
+### Changed
+- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client`
+constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
+
+### Fixed
+- Removed use of deprecated WWW fields in newer versions of Unity.
+
 ## [3.1.0] - 2021-08-11
 ### Added
 - Added ability for user to retry requests if they fail due to a transient network error.
