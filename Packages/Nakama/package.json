@@ -1,6 +1,6 @@
 {
     "name": "com.heroiclabs.nakama-unity",
-    "version": "3.0.0",
+    "version": "3.1.1",
     "unity": "2018.4",
     "displayName": "Nakama Unity",
     "description": "Unity3D client for Nakama server written in C#.",
