@@ -77,6 +77,7 @@ namespace Nakama
             var tcs = new TaskCompletionSource<string>();
             cancellationToken?.Register(() => tcs.SetCanceled());
             StartCoroutine(SendRequest(www, resp => tcs.SetResult(resp), err => tcs.SetException(err)));
+            tcs.Task.ContinueWith(res => www.Dispose());
             return tcs.Task;
         }
 
