@@ -84,7 +84,7 @@ var UnityWebGLSocketBridge = {
     NKSendData: function (socketRef, msg) {
         if(!SOCKET_REF_MAP.has(socketRef)) {
             SendMessage(BRIDGE_NAME, ERROR_METHOD_NAME, socketRef + "_" + "Did not find websocket with given reference.");
-        } else {
+        } else if (SOCKET_REF_MAP.get(socketRef).readyState == WebSocket.OPEN) {
             var data = Pointer_stringify(msg);
             SOCKET_REF_MAP.get(socketRef).send(data);
         }
