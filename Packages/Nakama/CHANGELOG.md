@@ -4,6 +4,14 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
 (http://semver.org/).
 
+## [3.2.0] - 2021-10-11
+### Added
+- Added additional group listing filters.
+- Added ability to overwrite leaderboard/tournament ranking operators from the client.
+
+### Fixed
+- Fixed url-safe encoding of query params that were passed to the client as arrays of strings.
+
 ## [3.1.1] - 2021-08-11
 ### Changed
 - Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client`
