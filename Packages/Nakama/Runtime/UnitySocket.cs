@@ -18,6 +18,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Nakama
@@ -27,19 +28,6 @@ namespace Nakama
     /// </summary>
     public class UnitySocket : MonoBehaviour, ISocketAdapter
     {
-        event Action ISocketAdapter.Connected
-        {
-            add
-            {
-                _connectedHandlers.Add(value);
-            }
-
-            remove
-            {
-                _connectedHandlers.Remove(value);
-            }
-        }
-
         event Action ISocketAdapter.Closed
         {
             add
@@ -79,9 +67,6 @@ namespace Nakama
             }
         }
 
-        bool ISocketAdapter.IsConnected => _socketAdapter.IsConnected;
-        bool ISocketAdapter.IsConnecting => _socketAdapter.IsConnecting;
-
         private readonly ConcurrentQueue<QueuedEvent> _eventQueue = new ConcurrentQueue<QueuedEvent>();
         private readonly List<Action> _connectedHandlers = new List<Action>();
         private readonly List<Action> _closedHandlers = new List<Action>();
@@ -97,30 +82,24 @@ namespace Nakama
             var unityAdapter = adapterGO.AddComponent<UnitySocket>();
             unityAdapter._socketAdapter = adapter;
             unityAdapter._socketAdapter.Closed += unityAdapter.OnClosed;
-            unityAdapter._socketAdapter.Connected += unityAdapter.OnConnected;
             unityAdapter._socketAdapter.Received += unityAdapter.OnReceived;
             unityAdapter._socketAdapter.ReceivedError += unityAdapter.OnReceivedError;
             return unityAdapter;
         }
 
-        void ISocketAdapter.Close()
+        Task ISocketAdapter.Close()
         {
-            _socketAdapter.Close();
+            return _socketAdapter.Close();
         }
 
-        void ISocketAdapter.Connect(Uri uri, int timeout)
+        Task ISocketAdapter.Connect(Uri uri, int timeout)
         {
-            _socketAdapter.Connect(uri, timeout);
+            return _socketAdapter.Connect(uri, timeout);
         }
 
-        void IDisposable.Dispose()
+        Task ISocketAdapter.Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable)
         {
-            _socketAdapter.Dispose();
-        }
-
-        void ISocketAdapter.Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable)
-        {
-            _socketAdapter.Send(buffer, cancellationToken, reliable);
+            return _socketAdapter.Send(buffer, cancellationToken, reliable);
         }
 
         private void OnClosed()
