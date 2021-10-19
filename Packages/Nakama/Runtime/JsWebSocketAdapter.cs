@@ -22,6 +22,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Nakama
@@ -31,9 +32,6 @@ namespace Nakama
     /// </summary>
     public class JsWebSocketAdapter : ISocketAdapter
     {
-        /// <inheritdoc cref="ISocketAdapter.Connected"/>
-        public event Action Connected;
-
         /// <inheritdoc cref="ISocketAdapter.Closed"/>
         public event Action Closed;
 
@@ -42,16 +40,6 @@ namespace Nakama
 
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
-
-        /// <summary>
-        /// If the WebSocket is connected.
-        /// </summary>
-        public bool IsConnected { get; private set; }
-
-        /// <summary>
-        /// If the WebSocket is connecting.
-        /// </summary>
-        public bool IsConnecting { get; private set; }
 
         private int Ref { get; set; } // unique jslib socket ref
         private Uri _uri;
@@ -62,75 +50,78 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Close"/>
-        public void Close()
+        public Task Close()
         {
             UnityWebGLSocketBridge.Instance.Close(Ref);
             Ref = -1;
-            IsConnecting = false;
-            IsConnected = false;
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public void Connect(Uri uri, int timeout)
+        public Task Connect(Uri uri, int timeout)
         {
+            TaskCompletionSource<bool> connectTcs = new TaskCompletionSource<bool>();
+
             // TODO will need to use window.setTimeout to implement timeouts on DOM WebSocket.
             if (Ref > -1)
             {
-                ReceivedError?.Invoke(new SocketException((int) SocketError.IsConnected));
-                return;
+                return Task.CompletedTask;
             }
 
             _uri = uri;
-            IsConnecting = true;
 
-            Action open = () =>
-            {
-                IsConnected = true;
-                IsConnecting = false;
-                Connected?.Invoke();
-            };
             Action<int, string> close = (code, reason) =>
             {
-                IsConnected = false;
-                IsConnecting = false;
                 Ref = -1;
                 Closed?.Invoke();
             };
+
             Action<string> error = reason =>
             {
-                IsConnected = false;
                 Ref = -1;
-                ReceivedError?.Invoke(new Exception(reason));
+                if (!connectTcs.Task.IsCompleted)
+                {
+                    connectTcs.SetException(new Exception(reason));
+                }
+                else
+                {
+                    ReceivedError?.Invoke(new Exception(reason));
+                }
             };
+
             Action<string> handler = message =>
             {
                 Received?.Invoke(new ArraySegment<byte>(Encoding.UTF8.GetBytes(message)));
             };
-            Ref = UnityWebGLSocketBridge.Instance.CreateSocket(uri.AbsoluteUri, open, close, error, handler);
-        }
 
-        public void Dispose()
-        {
+            Action open = () =>
+            {
+                connectTcs.SetResult(true);
+            };
+
+            Ref = UnityWebGLSocketBridge.Instance.CreateSocket(uri.AbsoluteUri, open, close, error, handler);
+
+            return connectTcs.Task;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
+        public Task Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
             bool reliable = true)
         {
             if (Ref == -1)
             {
-                ReceivedError?.Invoke(new SocketException((int) SocketError.NotConnected));
-                return;
+                throw new SocketException((int) SocketError.NotConnected);
             }
 
             var payload = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
             UnityWebGLSocketBridge.Instance.Send(Ref, payload);
+            return Task.CompletedTask;
         }
 
         public override string ToString()
         {
             return
-                $"JsWebSocketAdapter(IsConnected={IsConnected}, IsConnecting={IsConnecting}, Uri='{_uri}')";
+                $"JsWebSocketAdapter(Uri='{_uri}')";
         }
     }
 
