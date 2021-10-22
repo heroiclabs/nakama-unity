@@ -24,11 +24,15 @@ namespace Pong
         private const float _PADDLE_SPEED_Y = .05f;
 
         private SelfVar<float> _paddleY = new SelfVar<float>();
+        private KeyCode _paddleUpKey;
+        private KeyCode _paddleDownKey;
 
-        public void Init(VarRegistry varRegistry)
+        public void Init(VarRegistry varRegistry, KeyCode paddleUpKey, KeyCode paddleDownKey)
         {
             varRegistry.Register("paddleY", _paddleY);
             _paddleY.OnValueChanged += HandlePaddleYChanged;
+            _paddleUpKey = paddleUpKey;
+            _paddleDownKey = paddleDownKey;
         }
 
         private void MovePaddleUp()
@@ -52,11 +56,11 @@ namespace Pong
 
         private void Update()
         {
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(_paddleDownKey))
             {
                 MovePaddleDown();
             }
-            else if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(_paddleUpKey))
             {
                 MovePaddleUp();
             }

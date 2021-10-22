@@ -25,44 +25,44 @@ namespace Pong
     public class Game : MonoBehaviour
     {
         private readonly VarRegistry _registry = new VarRegistry();
-        private IMatch _match;
+        private SyncMatch _match;
         private ISocket _socket;
 
         [SerializeField] private SelfPaddle _leftPaddle;
         [SerializeField] private OpponentPaddle _rightPaddle;
-
         [SerializeField] private Ball _ball;
-
         [SerializeField] Wall _leftWall;
         [SerializeField] Wall _rightWall;
+        [SerializeField] KeyCode paddleUpKey;
+        [SerializeField] KeyCode paddleDownKey;
+
 
         private async Task Start()
         {
+            // so balls don't collide with one another
+            Physics2D.IgnoreLayerCollision(15, 16);
             _leftWall.OnBallCollided += HandleBallCollided;
             _rightWall.OnBallCollided += HandleBallCollided;
-            var client = new Client("http", "127.0.0.1", 7350, "defaultkey");
 
-            _leftPaddle.Init(_registry);
+            _leftPaddle.Init(_registry, paddleUpKey, paddleDownKey);
             _rightPaddle.Init(_registry);
             _ball.Init(_registry);
 
-            //var client = new Client("https", "lukenewproj.us-east1.nakamacloud.io", 443, "we4INqzP5e1E");
+            var client = new Client("https", "lukenewproj.us-east1.nakamacloud.io", 443, "we4INqzP5e1E");
 
             try
             {
+                ISession session = await client.AuthenticateCustomAsync(Guid.NewGuid().ToString());
 
-
-                ISession session = await GetSession(client);
                 ISocket socket = client.NewSocket(useMainThread: true);
                 await socket.ConnectAsync(session);
                 await socket.AddMatchmakerAsync("*", minCount: 2, maxCount: 2);
 
                 socket.ReceivedMatchmakerMatched += async matched =>
                 {
-                    Debug.Log("matchmaker matched.");
                     var opcodes = new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2);
                     _match = await socket.JoinSyncMatch(session, opcodes, matched, _registry, e => new UnityLogger().ErrorFormat(e.Message), new UnityLogger());
-                    Debug.Log("done joining sync match.");
+                    _ball.ReceiveMatch(_match);
                     _ball.SetStartVelocity();
                 };
             }
@@ -75,26 +75,7 @@ namespace Pong
 
         private void HandleBallCollided(Wall wall, Ball ball)
         {
-            ball.transform.position = Vector3.zero;
             ball.SetStartVelocity();
-        }
-
-        private async Task<ISession> GetSession(IClient client)
-        {
-            const string authJwtKey = "pongAuthJwt";
-            const string refreshJwtKey = "pongRefreshJwt";
-
-            if (PlayerPrefs.HasKey(authJwtKey) && PlayerPrefs.HasKey(refreshJwtKey))
-            {
-                string authJwt = PlayerPrefs.GetString(authJwtKey, defaultValue: null);
-                string refreshJwt = PlayerPrefs.GetString(refreshJwtKey, defaultValue: null);
-                return Session.Restore(authJwt, refreshJwt);
-            }
-
-            ISession session = await client.AuthenticateCustomAsync(Guid.NewGuid().ToString());
-            PlayerPrefs.SetString(authJwtKey, session.AuthToken);
-            PlayerPrefs.SetString(refreshJwtKey, session.RefreshToken);
-            return session;
         }
 
         private async Task OnApplicationQuit()

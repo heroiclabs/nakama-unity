@@ -23,20 +23,27 @@ namespace Pong
     public class Ball : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rigidbody2D;
-
+        // these should really be HostVars but we are going to make the SharedVar for now for testing purposes
         private readonly SharedVar<float> _xPosition = new SharedVar<float>();
         private readonly SharedVar<float> _yPosition = new SharedVar<float>();
+        private SyncMatch _syncMatch;
 
         public void Init(VarRegistry registry)
         {
-            //registry.Register("ballX", _xPosition);
-            //registry.Register("ballY", _yPosition);
-            //_xPosition.OnValueChanged += HandleXChanged;
-            //_yPosition.OnValueChanged += HandleYChanged;
+            registry.Register("ballX", _xPosition);
+            registry.Register("ballY", _yPosition);
+            _xPosition.OnValueChanged += HandleXChanged;
+            _yPosition.OnValueChanged += HandleYChanged;
+        }
+
+        public void ReceiveMatch(SyncMatch syncMatch)
+        {
+            _syncMatch = syncMatch;
         }
 
         private void HandleXChanged(ISharedVarEvent<float> obj)
         {
+            Debug.Log("handle x changed " + this.gameObject.name);
             this.transform.position = new Vector3(obj.ValueChange.NewValue, this.transform.position.y, this.transform.position.z);
         }
 
@@ -47,13 +54,26 @@ namespace Pong
 
         private void Update()
         {
-            _xPosition.SetValue(transform.position.x);
-            _yPosition.SetValue(transform.position.y);
+            if (_syncMatch != null && _syncMatch.IsSelfHost())
+            {
+                Debug.Log("Setting value in update");
+                _xPosition.SetValue(transform.position.x);
+                _yPosition.SetValue(transform.position.y);
+            } else if (_syncMatch != null)
+            {
+                transform.position = new Vector3(_xPosition.GetValue(), _yPosition.GetValue(), transform.position.z);
+            }
+
+
         }
 
         public void SetStartVelocity()
         {
-            _rigidbody2D.velocity = new Vector3(3, 0, 0);
+            if (_syncMatch != null && _syncMatch.IsSelfHost())
+            {
+                Debug.Log("Setting start velocity: " + this.gameObject.transform.name);
+                _rigidbody2D.velocity = new Vector3(3, 0, 0);
+            }
         }
     }
 }
