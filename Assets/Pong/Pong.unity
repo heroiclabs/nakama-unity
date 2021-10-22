@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 212331226}
   - component: {fileID: 212331228}
   - component: {fileID: 212331229}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BottomWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 330061178}
   - component: {fileID: 330061177}
   - component: {fileID: 330061176}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Paddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 373675795}
   - component: {fileID: 373675794}
   - component: {fileID: 373675791}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Paddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 490394236}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: PongEnvironment1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 586754292}
   - component: {fileID: 586754291}
   - component: {fileID: 586754290}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -822,7 +822,7 @@ GameObject:
   - component: {fileID: 674832797}
   - component: {fileID: 674832796}
   - component: {fileID: 674832799}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -966,7 +966,7 @@ GameObject:
   - component: {fileID: 691015024}
   - component: {fileID: 691015026}
   - component: {fileID: 691015027}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: TopWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1106,7 +1106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 885400431}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1144,8 +1144,8 @@ GameObject:
   - component: {fileID: 909916942}
   - component: {fileID: 909916944}
   - component: {fileID: 909916943}
-  m_Layer: 0
-  m_Name: Ball
+  m_Layer: 15
+  m_Name: Ball1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1279,7 +1279,7 @@ GameObject:
   - component: {fileID: 1042132739}
   - component: {fileID: 1042132738}
   - component: {fileID: 1042132736}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Paddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1423,7 +1423,7 @@ GameObject:
   - component: {fileID: 1073996119}
   - component: {fileID: 1073996118}
   - component: {fileID: 1073996117}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Paddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1564,7 +1564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1344140175}
   - component: {fileID: 1344140176}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1614,7 +1614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1386499270}
   - component: {fileID: 1386499272}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1691,7 +1691,7 @@ GameObject:
   - component: {fileID: 1509987890}
   - component: {fileID: 1509987889}
   - component: {fileID: 1509987888}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: BottomWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1831,7 +1831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1523997985}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1866,7 +1866,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1540777624}
   - component: {fileID: 1540777623}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1919,7 +1919,7 @@ GameObject:
   - component: {fileID: 1750183098}
   - component: {fileID: 1750183097}
   - component: {fileID: 1750183100}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2059,7 +2059,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1796335184}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: PongEnvironment2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2160,7 +2160,7 @@ GameObject:
   - component: {fileID: 2011973774}
   - component: {fileID: 2011973773}
   - component: {fileID: 2011973772}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2304,7 +2304,7 @@ GameObject:
   - component: {fileID: 2067254787}
   - component: {fileID: 2067254786}
   - component: {fileID: 2067254785}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: TopWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2448,8 +2448,8 @@ GameObject:
   - component: {fileID: 2128568589}
   - component: {fileID: 2128568588}
   - component: {fileID: 2128568587}
-  m_Layer: 0
-  m_Name: Ball
+  m_Layer: 16
+  m_Name: Ball2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
