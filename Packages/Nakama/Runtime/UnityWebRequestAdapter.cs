@@ -39,6 +39,8 @@ namespace Nakama
         private static readonly object Lock = new object();
         private static UnityWebRequestAdapter _instance;
 
+        public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
+
         public static UnityWebRequestAdapter Instance
         {
             get
@@ -164,6 +166,11 @@ namespace Nakama
 #else
             return www.isHttpError;
 #endif
+        }
+
+        private bool IsTransientException(Exception e)
+        {
+            return (e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1));
         }
     }
 }
