@@ -1,18 +1,16 @@
-/**
- * Copyright 2020 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Nakama Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 
@@ -22,6 +20,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Nakama
@@ -61,32 +60,34 @@ namespace Nakama
             Ref = -1;
         }
 
-        /// <inheritdoc cref="ISocketAdapter.Close"/>
-        public void Close()
+        /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
+        public Task CloseAsync()
         {
             UnityWebGLSocketBridge.Instance.Close(Ref);
             Ref = -1;
             IsConnecting = false;
             IsConnected = false;
+            return Task.CompletedTask;
         }
 
-        /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public void Connect(Uri uri, int timeout)
+        /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>
+        public Task ConnectAsync(Uri uri, int timeout)
         {
             // TODO will need to use window.setTimeout to implement timeouts on DOM WebSocket.
             if (Ref > -1)
             {
-                ReceivedError?.Invoke(new SocketException((int) SocketError.IsConnected));
-                return;
+                return Task.CompletedTask;
             }
 
             _uri = uri;
             IsConnecting = true;
+            var tcs = new TaskCompletionSource<bool>();
 
             Action open = () =>
             {
                 IsConnected = true;
                 IsConnecting = false;
+                tcs.TrySetResult(true);
                 Connected?.Invoke();
             };
             Action<int, string> close = (code, reason) =>
@@ -100,38 +101,38 @@ namespace Nakama
             {
                 IsConnected = false;
                 Ref = -1;
-                ReceivedError?.Invoke(new Exception(reason));
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.TrySetException(new Exception(reason));
+                }
+                else
+                {
+                    ReceivedError?.Invoke(new Exception(reason));
+                }
             };
             Action<string> handler = message =>
             {
                 Received?.Invoke(new ArraySegment<byte>(Encoding.UTF8.GetBytes(message)));
             };
             Ref = UnityWebGLSocketBridge.Instance.CreateSocket(uri.AbsoluteUri, open, close, error, handler);
+            return tcs.Task;
         }
 
-        public void Dispose()
-        {
-        }
-
-        /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
-            bool reliable = true)
+        /// <inheritdoc cref="ISocketAdapter.SendAsync"/>
+        public Task SendAsync(ArraySegment<byte> buffer, bool reliable = true, CancellationToken canceller = default)
         {
             if (Ref == -1)
             {
-                ReceivedError?.Invoke(new SocketException((int) SocketError.NotConnected));
-                return;
+                throw new SocketException((int)SocketError.NotConnected);
             }
 
             var payload = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
             UnityWebGLSocketBridge.Instance.Send(Ref, payload);
+            return Task.CompletedTask;
         }
 
-        public override string ToString()
-        {
-            return
-                $"JsWebSocketAdapter(IsConnected={IsConnected}, IsConnecting={IsConnecting}, Uri='{_uri}')";
-        }
+        public override string ToString() =>
+            $"JsWebSocketAdapter(IsConnected={IsConnected}, IsConnecting={IsConnecting}, Uri='{_uri}')";
     }
 
     // ReSharper disable once InconsistentNaming
@@ -139,19 +140,19 @@ namespace Nakama
     {
         private static readonly IDictionary<int, string> CloseErrorMessages = new Dictionary<int, string>
         {
-            {1000, "Normal"},
-            {1001, "Away"},
-            {1002, "ProtocolError"},
-            {1003, "UnsupportedData"},
-            {1004, "Undefined"},
-            {1005, "NoStatus"},
-            {1006, "Abnormal"},
-            {1007, "InvalidData"},
-            {1008, "PolicyViolation"},
-            {1009, "TooBig"},
-            {1010, "MandatoryExtension"},
-            {1011, "ServerError"},
-            {1015, "TlsHandshakeFailure"}
+            { 1000, "Normal" },
+            { 1001, "Away" },
+            { 1002, "ProtocolError" },
+            { 1003, "UnsupportedData" },
+            { 1004, "Undefined" },
+            { 1005, "NoStatus" },
+            { 1006, "Abnormal" },
+            { 1007, "InvalidData" },
+            { 1008, "PolicyViolation" },
+            { 1009, "TooBig" },
+            { 1010, "MandatoryExtension" },
+            { 1011, "ServerError" },
+            { 1015, "TlsHandshakeFailure" }
         };
 
         private static int _globalSocketRef;
@@ -260,6 +261,7 @@ namespace Nakama
             {
                 return;
             }
+
             var socketRef = Convert.ToInt32(bridgeMsg.Substring(0, index));
             var msg = bridgeMsg.Substring(index + 1);
             GetHandler(socketRef)?.OnMessage?.Invoke(msg);

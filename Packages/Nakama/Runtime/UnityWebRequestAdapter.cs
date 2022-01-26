@@ -1,18 +1,16 @@
-﻿/**
- * Copyright 2019 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+﻿// Copyright 2019 The Nakama Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Collections;
@@ -35,6 +33,8 @@ namespace Nakama
     {
         /// <inheritdoc cref="IHttpAdapter.Logger"/>
         public ILogger Logger { get; set; }
+
+        public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
 
         private static readonly object Lock = new object();
         private static UnityWebRequestAdapter _instance;
@@ -125,12 +125,12 @@ namespace Nakama
             {
                 var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
 
-                ApiResponseException e = new ApiResponseException(www.downloadHandler.text);
+                var e = new ApiResponseException(www.downloadHandler.text);
 
                 if (decoded != null)
                 {
-                    string msg = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
-                    int grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
+                    var msg = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
+                    var grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
 
                     e = new ApiResponseException(www.responseCode, msg, grpcCode);
 
@@ -148,6 +148,15 @@ namespace Nakama
             }
         }
 
+        private static bool IsHttpError(UnityWebRequest www)
+        {
+#if UNITY_2020_2_OR_NEWER
+            return www.result == UnityWebRequest.Result.ProtocolError;
+#else
+            return www.isHttpError;
+#endif
+        }
+
         private static bool IsNetworkError(UnityWebRequest www)
         {
 #if UNITY_2020_2_OR_NEWER
@@ -157,13 +166,9 @@ namespace Nakama
 #endif
         }
 
-        private static bool IsHttpError(UnityWebRequest www)
+        private static bool IsTransientException(Exception e)
         {
-#if UNITY_2020_2_OR_NEWER
-            return www.result == UnityWebRequest.Result.ProtocolError;
-#else
-            return www.isHttpError;
-#endif
+            return e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1);
         }
     }
 }
