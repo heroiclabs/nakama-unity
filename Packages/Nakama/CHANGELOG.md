@@ -1,8 +1,12 @@
 # Change Log
 All notable changes to this project are documented below.
 
-The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning]
-(http://semver.org/).
+The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
+
+## [3.3.0] - 2022-01-25
+### Changed
+- Update to use Nakama .NET 3.3.0 release.
+- Use Task objects with the WebGL export.
 
 ## [3.2.0] - 2021-10-11
 ### Added
@@ -14,8 +18,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [3.1.1] - 2021-08-11
 ### Changed
-- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client`
-constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
+- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client` constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
 
 ### Fixed
 - Removed use of deprecated WWW fields in newer versions of Unity.
@@ -70,10 +73,7 @@ from the leader of a closed party.
 ### Changed
 - Use lock object with socket operations instead of ConcurrentDictionary as a workaround for a Unity engine WebGL regression.
 - Avoid use of extension methods as a workaround for a Unity engine WebGL regression.
-- Unity sockets now dispatch events on Unity's main thread by default. If you have been using code to move socket message
-to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code. This new default behavior can overridden
-by passing `useMainThread: false` to `client.NewSocket`. When passed this way, sockets default to their pre-2.9 behavior
-by dispatching messages in a separate thread.
+- Unity sockets now dispatch events on Unity's main thread by default. If you have been using code to move socket message to the main thread (e.g., UnityMainThreadDispatcher) you may now remove that code. This new default behavior can overridden by passing `useMainThread: false` to `client.NewSocket`. When passed this way, sockets default to their pre-2.9 behavior by dispatching messages in a separate thread.
 
 ### Fixed
 - Parse HTTP responses defensively in case of bad load balancer configurations.
