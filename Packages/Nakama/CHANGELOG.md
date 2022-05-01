@@ -3,8 +3,9 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
-
+## [3.4.0] - 2022-05-02
+### Changed
+- Update to use Nakama .NET 3.4.0 release.
 
 ## [3.3.0] - 2022-01-25
 ### Changed
@@ -13,23 +14,23 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [3.2.0] - 2021-10-11
 ### Added
-- Added additional group listing filters.
-- Added ability to overwrite leaderboard/tournament ranking operators from the client.
+- Add additional group listing filters.
+- Add ability to overwrite leaderboard/tournament ranking operators from the client.
 
 ### Fixed
-- Fixed url-safe encoding of query params that were passed to the client as arrays of strings.
+- Fix url-safe encoding of query params that were passed to the client as arrays of strings.
 
 ## [3.1.1] - 2021-08-11
 ### Changed
-- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client` constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
+- Remove `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client` constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
 
 ### Fixed
-- Removed use of deprecated WWW fields in newer versions of Unity.
+- Remove use of deprecated WWW fields in newer versions of Unity.
 
 ## [3.1.0] - 2021-08-11
 ### Added
-- Added ability for user to retry requests if they fail due to a transient network error.
-- Added ability for user to cancel requests that are in-flight.
+- Add ability for user to retry requests if they fail due to a transient network error.
+- Add ability for user to cancel requests that are in-flight.
 
 ## [3.0.0] - 2021-07-14
 ### Added
@@ -41,27 +42,23 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [2.9.5] - 06-18-21
 ### Fixed
-- Fixed issue where UnityLogger did not implement a Debug log method.
+- Fix issue where UnityLogger did not implement a Debug log method.
 
 ## [2.9.4] - 06-17-21
 ### Fixed
-- Fixed issue where refreshing a session with metadata threw an exception due to the key already existing.
+- Fix issue where refreshing a session with metadata threw an exception due to the key already existing.
 
 ## [2.9.3] - 05-21-21
 ### Fixed
-Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part
-of the `IParty` object.
+- Fix issue where `IUserPresence` objects were not being deserialized properly by the client as part of the `IParty` object.
 
 ## [2.9.2] 05-19-21
-
 ### Added
-- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events
-from the leader of a closed party.
+- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.
 
 ## [2.9.1] 05-18-21
-
 ### Fixed
-- Fixed incorrect .DLL version being pulled in from nakama-dotnet.
+- Fix incorrect .DLL version being pulled in from nakama-dotnet.
 
 ## [2.9.0] 05-17-21
 
