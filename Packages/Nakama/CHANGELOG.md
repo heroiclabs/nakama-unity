@@ -5,6 +5,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [3.4.1] - 2022-05-13
+### Fixed
+- Updated to correct Nakama .NET 3.4.0 release binary.
 
 ## [3.4.0] - 2022-05-02
 ### Changed
