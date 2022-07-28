@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// This file is required for Unity WebGL builds on OSX that don't ship Python 2 at /usr/bin (e.g., OSX Monterey).
+// This file is required for Unity WebGL builds on OSX that don't ship Python 2 at /usr/bin/python (e.g., OSX Monterey).
 #if UNITY_WEBGL && UNITY_EDITOR_OSX && (UNITY_2018 || UNITY_2019 || UNITY_2020)
 using UnityEditor;
 using UnityEditor.Build;
