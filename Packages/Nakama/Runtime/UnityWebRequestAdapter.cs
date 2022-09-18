@@ -127,7 +127,7 @@ namespace Nakama
                 {
                     // TODO think of best way to map HTTP code to GRPC code since we can't rely
                     // on server to process it. Manually adding the mapping to SDK seems brittle.
-                    errback(new ApiResponseException((int) www.responseCode, "", -1));
+                    errback(new ApiResponseException((int) www.responseCode, www.downloadHandler.text, -1));
                     yield break;
                 }
 
