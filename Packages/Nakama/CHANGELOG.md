@@ -4,6 +4,11 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+## [3.5.0] - 2022-09-18
+### Changed
+- Update to use Nakama .NET 3.5.0 release.
+### Fixed
+- Don't parse response messages on 500 responses from the server.
 
 ## [3.4.1] - 2022-05-13
 ### Fixed
