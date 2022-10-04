@@ -27,13 +27,13 @@ namespace Nakama
         /// <param name="client">The client object.</param>
         /// <param name="useMainThread">Whether or not socket events should be dispatched on Unity's main thread.</param>
         /// <returns>A new socket.</returns>
-        public static ISocket NewSocket(this IClient client, bool useMainThread = false)
+        public static ISocket NewSocket(this IClient client, bool useMainThread = false, ISocketAdapter defaultAdapter = null)
         {
             ISocketAdapter threadedAdapter;
 #if UNITY_WEBGL && !UNITY_EDITOR
             threadedAdapter = new JsWebSocketAdapter();
 #else
-            threadedAdapter = new WebSocketAdapter();
+            threadedAdapter = defaultAdapter ?? new WebSocketAdapter();
 #endif
 
             var adapter = useMainThread ? UnitySocket.Create(threadedAdapter) : threadedAdapter;
