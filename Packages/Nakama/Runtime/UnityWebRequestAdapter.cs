@@ -77,7 +77,6 @@ namespace Nakama
             var tcs = new TaskCompletionSource<string>();
             cancellationToken?.Register(() => tcs.SetCanceled());
             StartCoroutine(SendRequest(www, resp => tcs.SetResult(resp), err => tcs.SetException(err)));
-            tcs.Task.ContinueWith(res => www.Dispose());
             return tcs.Task;
         }
 
@@ -128,6 +127,7 @@ namespace Nakama
                     // TODO think of best way to map HTTP code to GRPC code since we can't rely
                     // on server to process it. Manually adding the mapping to SDK seems brittle.
                     errback(new ApiResponseException((int) www.responseCode, www.downloadHandler.text, -1));
+                    www.Dispose();
                     yield break;
                 }
 
@@ -154,6 +154,8 @@ namespace Nakama
             {
                 callback?.Invoke(www.downloadHandler?.text);
             }
+
+            www.Dispose();
         }
 
         private static bool IsHttpError(UnityWebRequest www)
