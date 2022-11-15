@@ -75,8 +75,28 @@ namespace Nakama
         {
             var www = BuildRequest(method, uri, headers, body, timeout);
             var tcs = new TaskCompletionSource<string>();
-            cancellationToken?.Register(() => tcs.SetCanceled());
-            StartCoroutine(SendRequest(www, resp => tcs.SetResult(resp), err => tcs.SetException(err)));
+            cancellationToken?.Register(() =>
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.SetCanceled();
+                }
+            });
+            StartCoroutine(SendRequest(www, resp =>
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.SetResult(resp);
+                }
+            },
+            err =>
+            {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.SetException(err);
+                }
+            }));
+
             return tcs.Task;
         }
 
