@@ -4,7 +4,7 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
-- Fixed a race condition that could occur when Unity web requests were cancelled.
+- Fixed multiple race conditions that could occur when Unity web requests were cancelled.
 
 ## [3.5.0] - 2022-09-18
 ### Changed
