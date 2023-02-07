@@ -3,7 +3,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.6.0] - 2023-02-7
+### Changed
+- Update to use the Nakama and Satori .NET 3.6.0 release.
+### Fixed
 - Fixed multiple race conditions that could occur when Unity web requests were cancelled.
 
 ## [3.5.0] - 2022-09-18
