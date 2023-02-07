@@ -1,11 +1,10 @@
-Nakama Unity
-===
+This is Heroic Labs' UnityEngine monorepository that contains libraries for accessing two different backend services, Nakama and Satori.
 
-> Unity client for Nakama server.
+The clients are built on the [.NET client](https://github.com/heroiclabs/nakama-dotnet) with extensions for Unity Engine. They require the .NET 4.6 scripting runtime version to be set in the editor.
+
+# Nakama
 
 [Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
-
-This client is built on the [.NET client](https://github.com/heroiclabs/nakama-dotnet) with extensions for Unity Engine. It requires the .NET4.6 scripting runtime version to be set in the editor.
 
 Full documentation is online - https://heroiclabs.com/docs/unity-client-guide
 
@@ -32,7 +31,7 @@ You'll need to setup the server and database before you can connect with the cli
 3. Use the connection credentials to build a client object.
 
     ```csharp
-    // using Nakama;
+    using Nakama;
     const string scheme = "http";
     const string host = "127.0.0.1";
     const int port = 7350;
@@ -143,23 +142,6 @@ If you'd like socket handlers to execute outside Unity's main thread, pass the `
 var socket = client.NewSocket(useMainThread: false);
 ```
 
-### Unity WebGL
-
-For WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter` and use the `NewSocket()` extension method to create the socket OR manually set the right `ISocketAdapter` per platform.
-
-```csharp
-var client = new Client("defaultkey", UnityWebRequestAdapter.Instance);
-var socket = client.NewSocket();
-
-// or
-#if UNITY_WEBGL && !UNITY_EDITOR
-    ISocketAdapter adapter = new JsWebSocketAdapter();
-#else
-    ISocketAdapter adapter = new WebSocketAdapter();
-#endif
-var socket = Socket.From(client, adapter);
-```
-
 ### Errors
 
 You can capture errors when you use `await` scaffolding with Tasks in C#.
@@ -193,12 +175,83 @@ client.GetAccountAsync(session).ContinueWith(t =>
 });
 ```
 
-## Contribute
+# Satori
+
+Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori Unity Client to coomunicate with Satori from within your Unity game.
+
+Full documentation is online - https://heroiclabs.com/docs/satori/client-libraries/unity
+
+## Getting Started
+
+Create a client object that accepts the API you were given as a Satori customer.
+
+```csharp
+using Satori;
+
+const string scheme = "https";
+const string host = "127.0.0.1"; // add your host here
+const int port = 443;
+const string apiKey = "apiKey"; // add the api key that was given to you as a Satori customer.
+
+var client = new Client(scheme, host, port, apiKey);
+```
+
+Then authenticate with the server to obtain your session.
+
+
+```csharp
+// Authenticate with the Satori server.
+try
+{
+    session = await client.AuthenticateAsync(id);
+    Debug.Log("Authenticated successfully.");
+}
+catch(ApiResponseException ex)
+{
+    Debug.LogFormat("Error authenticating: {0}", ex.Message);
+}
+```
+
+Using the client you can get any experiments or feature flags, the user belongs to.
+
+```csharp
+var experiments = await client.GetExperimentsAsync(session);
+var flag = await client.GetFlagAsync(session, "FlagName");
+```
+
+You can also send arbitrary events to the server:
+
+```csharp
+
+await client.EventAsync(session, new Event("gameLaunched", DateTime.UtcNow));
+
+```
+
+This is only a subset of the Satori client API, so please see the documentation link listed earlier for the full API.
+
+# Unity WebGL
+
+For both Nakama and Satori. for WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter` and use the `NewSocket()` extension method to create the socket OR manually set the right `ISocketAdapter` per platform.
+
+```csharp
+var client = new Client("defaultkey", UnityWebRequestAdapter.Instance);
+var socket = client.NewSocket();
+
+// or
+#if UNITY_WEBGL && !UNITY_EDITOR
+    ISocketAdapter adapter = new JsWebSocketAdapter();
+#else
+    ISocketAdapter adapter = new WebSocketAdapter();
+#endif
+var socket = Socket.From(client, adapter);
+```
+
+# Contribute
 
 The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
 
 This project can be opened in Unity to create a ".unitypackage".
 
-### License
+# License
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-unity/blob/master/LICENSE).
