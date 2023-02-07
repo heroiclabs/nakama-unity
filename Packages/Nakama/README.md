@@ -231,10 +231,15 @@ This is only a subset of the Satori client API, so please see the documentation 
 
 # Unity WebGL
 
-For both Nakama and Satori. for WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter` and use the `NewSocket()` extension method to create the socket OR manually set the right `ISocketAdapter` per platform.
+For both Nakama and Satori WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter`.
 
 ```csharp
 var client = new Client("defaultkey", UnityWebRequestAdapter.Instance);
+```
+
+For Nakama, use the `NewSocket()` extension method to create the socket OR manually set the right `ISocketAdapter` per platform.
+
+```csharp
 var socket = client.NewSocket();
 
 // or
