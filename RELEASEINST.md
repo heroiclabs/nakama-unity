@@ -19,11 +19,11 @@ git tag -a v2.5.0 -m "v2.5.0"
 git push origin v2.5.0 master
 ```
 
-5. Create the .unitypackage distribution by running the following from the repository root (note we temporarily move the package under the Assets folder) because Unity can only export imported assets.
+5. Create the .unitypackage distribution by running the following from the repository root (note we temporarily move the Packages folder under the Assets folder) because Unity can only export imported assets, i.e., files underneath the `Assets` folder.
 `
-mv ./Packages/Nakama ./Assets &&
-${UNITY_2019_4_40f1_EXECUTABLE} -batchmode -nographics -projectPath . -exportPackage ./Nakama ./Nakama.unitypackage &&
-mv ./Assets/Nakama ./Packages/Nakama
+mv ./Packages ./Assets &&
+${UNITY_2019_4_40f1_EXECUTABLE} -batchmode -nographics -projectPath . -exportPackage Assets/Packages/Nakama ./Nakama.unitypackage &&
+mv ./Assets/Packages ./
 `
 
 6. Create a release on GitHub: https://github.com/heroiclabs/nakama-unity/releases/new and attach `Nakama.unitypackage` to the release.
