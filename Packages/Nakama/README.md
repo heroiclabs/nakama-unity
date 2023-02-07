@@ -36,7 +36,7 @@ You'll need to setup the server and database before you can connect with the cli
     const string host = "127.0.0.1";
     const int port = 7350;
     const string serverKey = "defaultkey";
-    var client = new Client(scheme, host, port, serverKey);
+    var client = new Client(scheme, host, port, serverKey, UnityWebRequestAdapter.Instance);
     ```
 
 ## Usage
@@ -231,7 +231,7 @@ This is only a subset of the Satori client API, so please see the documentation 
 
 # Unity WebGL
 
-For both Nakama and Satori WebGL builds you should switch the `IHttpAdapter` to use the `UnityWebRequestAdapter`.
+For both Nakama and Satori WebGL builds you should make sure the `IHttpAdapter` passed into the client is a `UnityWebRequestAdapter`.
 
 ```csharp
 var client = new Client("defaultkey", UnityWebRequestAdapter.Instance);
