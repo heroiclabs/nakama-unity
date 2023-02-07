@@ -27,5 +27,5 @@ rm Packages/Nakama.meta
 rm Packages/manifest.json.meta
 rm Packages/packages-lock.json.meta
 
-# reimport Unity to clean up any stale import data e.g., EditorBuildSettings.asset
+# reimport with Unity to clean up any stale import data e.g., EditorBuildSettings.asset
 $1 -batchmode -quit -nographics -projectPath .
