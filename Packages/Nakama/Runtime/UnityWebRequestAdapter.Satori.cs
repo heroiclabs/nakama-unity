@@ -1,4 +1,4 @@
-﻿// Copyright 2019 The Nakama Authors
+﻿// Copyright 2023 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ using Nakama.TinyJson;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Nakama
+namespace Satori
 {
     /// <summary>
     /// Unity web request adapter which uses the UnityWebRequest to send requests.
@@ -144,7 +144,7 @@ namespace Nakama
 
                     if (decoded.ContainsKey("error"))
                     {
-                        IHttpAdapterUtil.CopyResponseError(Instance, decoded["error"], e);
+                        HttpAdapterUtil.CopyResponseError(Instance, decoded["error"], e);
                     }
                 }
 
