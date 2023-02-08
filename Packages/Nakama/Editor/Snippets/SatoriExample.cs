@@ -29,7 +29,7 @@ namespace Satori.Snippets
 
         private async void Awake()
         {
-            _testClient = new Client("http", "localhost", 7450, ApiKey, UnityWebRequestAdapter.Instance());
+            _testClient = new Client("http", "localhost", 7450, ApiKey, UnityWebRequestAdapter.Instance);
             Debug.Log("authenticating satori");
             try
             {
