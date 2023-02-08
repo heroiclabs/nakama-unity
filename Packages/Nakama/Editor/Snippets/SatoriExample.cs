@@ -23,7 +23,7 @@ namespace Satori.Snippets
 {
     public class SatoriExample : MonoBehaviour
     {
-        private const string ApiKey = "a23d2dbc-9333-48af-90ec-9f0b8574bdf6";
+        private const string ApiKey = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
 
         private IClient _testClient;
 
