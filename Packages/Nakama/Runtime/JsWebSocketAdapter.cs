@@ -213,7 +213,6 @@ namespace Nakama
         public void Close(int socketRef)
         {
             NKCloseSocket(socketRef);
-            _handlers.Remove(socketRef);
         }
 
         public void Send(int socketRef, string payload)
