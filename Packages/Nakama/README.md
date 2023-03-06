@@ -251,6 +251,9 @@ var socket = client.NewSocket();
 var socket = Socket.From(client, adapter);
 ```
 
+When testing our example WebGL scene before 2021.1, be sure to go into the Build Settings and set the C++ Compiler Configuration to Release instead
+of Debug due to an outstanding issue in Unity WebGL builds: https://issuetracker.unity3d.com/issues/webgl-build-throws-threads-are-not-enabled-for-this-platform-error-when-programs-built-using-debug-c-plus-plus-compiler-configuration
+
 # Contribute
 
 The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
