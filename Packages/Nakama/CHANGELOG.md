@@ -3,6 +3,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.7.0] - 2023-03-10
+### Changed
+- Updated to use the Nakama and Satori .NET 3.7.0 release.
+### Fixed
+- Fixed an issue where the OnClose event would not fire in Unity WebGL.
+
 ## [3.6.0] - 2023-02-7
 ### Changed
 - Update to use the Nakama and Satori .NET 3.6.0 release.
