@@ -176,9 +176,20 @@ namespace Nakama
 #endif
         }
 
-        private static bool IsTransientException(Exception e)
+        private bool IsTransientException(Exception e)
         {
-            return e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1);
+            if (e is ApiResponseException apiException)
+            {
+                switch (apiException.StatusCode)
+                {
+                    case 502:
+                    case 503:
+                    case 504:
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
