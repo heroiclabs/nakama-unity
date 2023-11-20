@@ -176,7 +176,7 @@ namespace Nakama
 #endif
         }
 
-        private bool IsTransientException(Exception e)
+        private static bool IsTransientException(Exception e)
         {
             if (e is ApiResponseException apiException)
             {
