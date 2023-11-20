@@ -2,6 +2,10 @@
 All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
+## Unreleased
+
+### Changed
+- Restricted retry attempts to more specific 500-level error codes from the server.
 
 ## [3.9.0] - 2023-08-11
 ### Changed
