@@ -4,7 +4,12 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 ## Unreleased
 
+### [Unreleased]
+
+## [3.10.0] - 2023-11-21
+
 ### Changed
+- Updated to use the Nakama and Satori .NET 3.9.0 release.
 - Restricted retry attempts to more specific 500-level error codes from the server.
 
 ## [3.9.0] - 2023-08-11
