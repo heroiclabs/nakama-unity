@@ -178,7 +178,19 @@ namespace Nakama
 
         private static bool IsTransientException(Exception e)
         {
-            return e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1);
+            if (e is ApiResponseException apiException)
+            {
+                switch (apiException.StatusCode)
+                {
+                    case 500: // Internal Server Error often (but not always) indicates a transient issue in Nakama, e.g., DB connectivity.
+                    case 502: // LB returns this to client if server sends corrupt/invalid data to LB, which may be a transient issue.
+                    case 503: // LB returns this to client if LB determines or is told that server is unable to handle forwarded from LB, which may be a transient issue.
+                    case 504: // LB returns this to client if LB cannot communicate with server, which may be a temporary issue.
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
