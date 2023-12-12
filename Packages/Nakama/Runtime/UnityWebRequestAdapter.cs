@@ -182,6 +182,8 @@ namespace Nakama
             {
                 switch (apiException.StatusCode)
                 {
+                    case -1:  // No HTTP Status Code. Note this will retry on potentially non-transient errors, e.g., wrong URL/scheme/port, wrong SSL certificate, LB misconfiguration. But
+                              // we think it's worth retrying despite these cases because there are real transient errors that occur due to temporary connection issues prior to the establishment of an HTTP connection (e.g., during TCP handshake, SSL negotation).
                     case 500: // Internal Server Error often (but not always) indicates a transient issue in Nakama, e.g., DB connectivity.
                     case 502: // LB returns this to client if server sends corrupt/invalid data to LB, which may be a transient issue.
                     case 503: // LB returns this to client if LB determines or is told that server is unable to handle forwarded from LB, which may be a transient issue.
