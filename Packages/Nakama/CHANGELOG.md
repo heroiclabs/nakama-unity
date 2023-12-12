@@ -5,6 +5,11 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [Unreleased]
 
+## [3.10.1] - 2023-12-12
+
+### Changed
+- Retry functionality restored for `UnityWebRequest.Result.ConnectionError`.
+
 ## [3.10.0] - 2023-11-21
 ### Changed
 - Updated to use the Nakama and Satori .NET 3.10.0 release.
