@@ -33,7 +33,7 @@ namespace Nakama
 #if UNITY_WEBGL && !UNITY_EDITOR
             threadedAdapter = new JsWebSocketAdapter();
 #else
-            threadedAdapter = defaultAdapter ?? new WebSocketAdapter();
+            threadedAdapter = defaultAdapter ?? new WebSocketStdlibAdapter();
 #endif
 
             var adapter = useMainThread ? UnitySocket.Create(threadedAdapter) : threadedAdapter;
