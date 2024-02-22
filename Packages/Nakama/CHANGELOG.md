@@ -5,6 +5,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [Unreleased]
 
+### Changed
+- Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdlibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
+
 ## [3.10.1] - 2023-12-12
 
 ### Changed
