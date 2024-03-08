@@ -5,8 +5,11 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [Unreleased]
 
+## [3.11.0] - 2024-03-08
+
 ### Changed
 - Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdlibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
+- Updated to use the Nakama and Satori .NET 3.11.0 release.
 
 ## [3.10.1] - 2023-12-12
 
