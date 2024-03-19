@@ -5,6 +5,9 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [Unreleased]
 
+### Fixed
+- Removed unnecessary reference to old Nakama Unity version in Demo scene.
+
 ## [3.11.0] - 2024-03-08
 
 ### Changed
