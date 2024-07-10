@@ -5,6 +5,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [Unreleased]
 
+### [3.13.0] - 2024-07-10
+### Changed
+- Updated to use the Nakama and Satori .NET 3.13.0 release.
+
 ### [3.12.1] - 2024-05-30
 ### Changed
 - Updated to use the Nakama and Satori .NET 3.12.1 release.
