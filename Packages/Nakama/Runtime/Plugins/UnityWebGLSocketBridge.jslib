@@ -41,7 +41,7 @@ var UnityWebGLSocketBridge = {
             return;
         }
 
-        var address = Pointer_stringify(addressPtr);
+        var address = UTF8ToString(addressPtr);
         var ws = new WebSocket(address);
         ws.onmessage = function(e) {
             if (typeof e.data == 'string') {
@@ -97,7 +97,7 @@ var UnityWebGLSocketBridge = {
         if(!SOCKET_REF_MAP.has(socketRef)) {
             SendMessage(BRIDGE_NAME, ERROR_METHOD_NAME, socketRef + "_" + "Did not find websocket with given reference.");
         } else {
-            var data = Pointer_stringify(msg);
+            var data = UTF8ToString(msg);
             SOCKET_REF_MAP.get(socketRef).send(data);
         }
     },
