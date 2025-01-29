@@ -3,6 +3,13 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.15.0] - 2025-01-29
+### Changed
+- Update to use Nakama and Satori .NET 3.15.0 release.
+
+### Fixed
+- Fix compatibility with WebGL builds in Unity 6.
+
 ## [3.14.0] - 2024-11-05
 ### Changed
 - Update to use Nakama and Satori .NET 3.14.0 release.
