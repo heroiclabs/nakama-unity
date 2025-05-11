@@ -76,7 +76,30 @@ namespace Nakama
             var www = BuildRequest(method, uri, headers, body, timeout);
             var tcs = new TaskCompletionSource<string>();
             cancellationToken?.Register(() => tcs.TrySetCanceled());
-            StartCoroutine(SendRequest(www, resp => tcs.TrySetResult(resp), err => tcs.TrySetException(err)));
+
+            StartCoroutine(
+                SendRequest(
+                    www,
+                    resp =>
+                    {
+                        Logger?.InfoFormat(
+                            "Received: status=OK, uri='{0}' contents='{1}'",
+                            www.uri,
+                            resp);
+                        tcs.TrySetResult(resp);
+                    },
+                    err =>
+                    {
+                        Logger?.ErrorFormat(
+                            "Received: status={0}, grpc_status={1}, contents='{2}'",
+                            err.StatusCode,
+                            err.GrpcStatusCode,
+                            err.Message);
+                        tcs.TrySetException(err);
+                    }
+                )
+            );
+
             return tcs.Task;
         }
 
@@ -112,7 +135,7 @@ namespace Nakama
             return www;
         }
 
-        private static IEnumerator SendRequest(UnityWebRequest www, Action<string> callback,
+        private IEnumerator SendRequest(UnityWebRequest www, Action<string> callback,
             Action<ApiResponseException> errback)
         {
             yield return www.SendWebRequest();
@@ -131,7 +154,19 @@ namespace Nakama
                     yield break;
                 }
 
-                var decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
+                Dictionary<string, object> decoded;
+                try
+                {
+                    decoded = www.downloadHandler.text.FromJson<Dictionary<string, object>>();
+                }
+                catch (Exception exception)
+                {
+                    Logger?.ErrorFormat(
+                        "Failed to decode error response: {0}. {1}",
+                        www.downloadHandler.text,
+                        exception.Message);
+                    decoded = null;
+                }
 
                 var e = new ApiResponseException(www.downloadHandler.text);
 
