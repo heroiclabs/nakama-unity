@@ -3,6 +3,14 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.17.0] - 2025-07-17
+### Added
+- Add request logging to the "UnityWebRequestAdapter" type. Thanks @epishev-m
+
+### Changed
+- Update to use Nakama and Satori .NET 3.17.0 release.
+- Set the minimum supported version of Unity engine to be on 2022.3 LTS release.
+
 ## [3.16.0] - 2025-02-13
 ### Changed
 - Update to use Nakama and Satori .NET 3.16.0 release.
