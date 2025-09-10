@@ -3,6 +3,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.18.0] - 2025-09-10
+### Changed
+- Update to use Nakama and Satori .NET 3.18.0 release.
+
 ## [3.17.0] - 2025-07-17
 ### Added
 - Add request logging to the "UnityWebRequestAdapter" type. Thanks @epishev-m
