@@ -24,7 +24,7 @@ namespace Nakama.Snippets
         private async void Awake()
         {
             _socket = _client.NewSocket();
-            _socket.Closed += () => Debug.Log("Socket closed.");
+            _socket.Closed += (reason) => Debug.LogFormat("Socket closed: {0}", reason);
             _socket.Connected += () => Debug.Log("Socket connected.");
             _socket.ReceivedError += e => Debug.LogErrorFormat("Socket error: {0}", e.Message);
 

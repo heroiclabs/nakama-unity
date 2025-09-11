@@ -26,7 +26,7 @@ namespace Nakama.Snippets
             var account = await NakamaManager.Instance.Client.GetAccountAsync(session);
             Debug.LogFormat("Account id: {0}", account.User.Id);
 
-            NakamaManager.Instance.Socket.Closed += () => Debug.Log("Socket closed.");
+            NakamaManager.Instance.Socket.Closed += (reason) => Debug.LogFormat("Socket closed: {0}", reason);
             NakamaManager.Instance.Socket.Connected += () => Debug.Log("Socket connected.");
             NakamaManager.Instance.Socket.ReceivedError += Debug.LogError;
             await NakamaManager.Instance.Socket.ConnectAsync(session);

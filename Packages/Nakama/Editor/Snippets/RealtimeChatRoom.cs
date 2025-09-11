@@ -35,7 +35,7 @@ namespace Nakama.Snippets
 
             _socket = _client.NewSocket();
             _socket.Connected += () => Debug.Log("Socket connected.");
-            _socket.Closed += () => Debug.Log("Socket closed.");
+            _socket.Closed += (reason) => Debug.LogFormat("Socket closed: {0}", reason);
             _socket.ReceivedError += Debug.LogError;
 
             var roomUsers = new List<IUserPresence>(10);

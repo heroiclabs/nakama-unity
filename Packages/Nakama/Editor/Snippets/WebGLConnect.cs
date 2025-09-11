@@ -40,7 +40,7 @@ namespace Nakama.Snippets
 
                 _client = new Client(scheme, host, port, serverKey, UnityWebRequestAdapter.Instance);
                 _socket = _client.NewSocket();
-                _socket.Closed += () => Debug.Log("Socket closed.");
+                _socket.Closed += (reason) => Debug.LogFormat("Socket closed: {0}", reason);
                 _socket.Connected += () => Debug.Log("Socket connected.");
                 _socket.ReceivedError += e => Debug.Log("Socket error: " + e.Message);
 

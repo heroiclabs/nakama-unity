@@ -33,7 +33,7 @@ namespace Nakama
             remove => _connectedHandlers.Remove(value);
         }
 
-        event Action ISocketAdapter.Closed
+        event Action<string> ISocketAdapter.Closed
         {
             add => _closedHandlers.Add(value);
 
@@ -59,7 +59,7 @@ namespace Nakama
 
         private readonly ConcurrentQueue<QueuedEvent> _eventQueue = new ConcurrentQueue<QueuedEvent>();
         private readonly List<Action> _connectedHandlers = new List<Action>();
-        private readonly List<Action> _closedHandlers = new List<Action>();
+        private readonly List<Action<string>> _closedHandlers = new List<Action<string>>();
         private readonly List<Action<Exception>> _errorHandlers = new List<Action<Exception>>();
         private readonly List<Action<ArraySegment<byte>>> _receivedHandlers = new List<Action<ArraySegment<byte>>>();
 
@@ -71,7 +71,10 @@ namespace Nakama
             DontDestroyOnLoad(adapterGO);
             var unityAdapter = adapterGO.AddComponent<UnitySocket>();
             unityAdapter._socketAdapter = adapter;
-            unityAdapter._socketAdapter.Closed += unityAdapter.OnClosed;
+            unityAdapter._socketAdapter.Closed += (reason) =>
+            {
+                unityAdapter.OnClosed(reason);
+            };
             unityAdapter._socketAdapter.Connected += unityAdapter.OnConnected;
             unityAdapter._socketAdapter.Received += unityAdapter.OnReceived;
             unityAdapter._socketAdapter.ReceivedError += unityAdapter.OnReceivedError;
@@ -85,7 +88,7 @@ namespace Nakama
         Task ISocketAdapter.SendAsync(ArraySegment<byte> buffer, bool reliable, CancellationToken canceller) =>
             _socketAdapter.SendAsync(buffer, reliable, canceller);
 
-        private void OnClosed() => _eventQueue.Enqueue(new QueuedEvent(_closedHandlers));
+        private void OnClosed(string obj) => _eventQueue.Enqueue(new QueuedEvent(_closedHandlers, obj));
 
         private void OnConnected() => _eventQueue.Enqueue(new QueuedEvent(_connectedHandlers));
 
