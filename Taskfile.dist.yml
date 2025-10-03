@@ -8,6 +8,7 @@ tasks:
         cmds:
             -   defer: rm -rf "{{.TMP_DIR}}"
             - cp -r Assets {{.TMP_DIR}}/Assets/
+            - cp -r ProjectSettings {{.TMP_DIR}}/ProjectSettings/
             - cp -r Packages/Nakama {{.TMP_DIR}}/Assets/
             -   cmd: |
                     /Applications/Unity/Hub/Editor/{{.UNITY_EDITOR_VSN}}/Unity.app/Contents/MacOS/Unity \
@@ -22,6 +23,7 @@ tasks:
     publish-upackage:
         cmds:
             - cp -r Assets {{.TMP_DIR}}/Assets/
+            - cp -r ProjectSettings {{.TMP_DIR}}/ProjectSettings/
             - cp -r Packages/Nakama {{.TMP_DIR}}/Assets/
         desc: 'Prepare a Unity project which can be used to publish to the Unity Asset Store.'
         vars:
