@@ -1,0 +1,31 @@
+version: '3'
+
+vars:
+    UNITY_EDITOR_VSN: '{{.UNITY_EDITOR_VSN | default "2022.3.17f1"}}'
+
+tasks:
+    build-upackage:
+        cmds:
+            -   defer: rm -rf "{{.TMP_DIR}}"
+            - cp -r Assets {{.TMP_DIR}}/Assets/
+            - cp -r ProjectSettings {{.TMP_DIR}}/ProjectSettings/
+            - cp -r Packages/Nakama {{.TMP_DIR}}/Assets/
+            -   cmd: |
+                    /Applications/Unity/Hub/Editor/{{.UNITY_EDITOR_VSN}}/Unity.app/Contents/MacOS/Unity \
+                        -projectPath {{.TMP_DIR}} -exportPackage Assets/Nakama ../Nakama.unitypackage \
+                        -noUpm -batchmode -quit -nographics
+                platforms: [ darwin ]
+        desc: 'Build the Unity package.'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d -p . temp.XXXXXX
+
+    publish-upackage:
+        cmds:
+            - cp -r Assets {{.TMP_DIR}}/Assets/
+            - cp -r ProjectSettings {{.TMP_DIR}}/ProjectSettings/
+            - cp -r Packages/Nakama {{.TMP_DIR}}/Assets/
+        desc: 'Prepare a Unity project which can be used to publish to the Unity Asset Store.'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d -p . temp.XXXXXX
