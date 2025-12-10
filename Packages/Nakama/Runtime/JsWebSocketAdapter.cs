@@ -34,7 +34,7 @@ namespace Nakama
         public event Action Connected;
 
         /// <inheritdoc cref="ISocketAdapter.Closed"/>
-        public event Action Closed;
+        public event Action<string> Closed;
 
         /// <inheritdoc cref="ISocketAdapter.ReceivedError"/>
         public event Action<Exception> ReceivedError;
@@ -95,7 +95,7 @@ namespace Nakama
                 IsConnected = false;
                 IsConnecting = false;
                 Ref = -1;
-                Closed?.Invoke();
+                Closed?.Invoke(reason);
             };
             Action<string> error = reason =>
             {
