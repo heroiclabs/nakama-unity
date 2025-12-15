@@ -77,7 +77,7 @@ var UnityWebGLSocketBridge = {
         return SOCKET_REF_MAP.get(socketRef).readyState;
     },
 
-    NKCloseSocket: function (socketRef, reason) {
+    NKCloseSocket: function (socketRef) {
         if (!(SOCKET_REF_MAP instanceof Map)) {
             INITIALIZE();
         }

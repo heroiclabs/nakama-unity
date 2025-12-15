@@ -231,7 +231,7 @@ namespace Nakama
         private static extern void NKCreateSocket(int socketRef, string address);
 
         [DllImport("__Internal")]
-        private static extern void NKCloseSocket(int socketRef, string reason);
+        private static extern void NKCloseSocket(int socketRef);
 
         [DllImport("__Internal")]
         private static extern void NKSendData(int socketRef, string data);
@@ -277,13 +277,13 @@ namespace Nakama
 
             var socketRef = Convert.ToInt32(tokens[0]);
             var code = Convert.ToInt32(tokens[1]);
-			var reason = tokens[2];
-			if (reason.Length > 0)
-			{
-				reason = CloseErrorMessages[code]+": "+reason;
-			} else {
-				reason = CloseErrorMessages[code];
-			}
+            var reason = tokens[2];
+            if (reason.Length > 0)
+            {
+                 reason = CloseErrorMessages[code]+": "+reason;
+            } else {
+                 reason = CloseErrorMessages[code];
+            }
             GetHandler(socketRef)?.OnClose?.Invoke(code, reason);
             _handlers.Remove(socketRef);
         }
