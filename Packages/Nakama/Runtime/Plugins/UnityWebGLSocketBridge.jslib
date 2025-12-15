@@ -55,7 +55,7 @@ var UnityWebGLSocketBridge = {
         };
         ws.onclose = function(e) {
             SOCKET_REF_MAP.delete(socketRef);
-            SendMessage(BRIDGE_NAME, CLOSE_METHOD_NAME, socketRef + "_" + e.code);
+            SendMessage(BRIDGE_NAME, CLOSE_METHOD_NAME, socketRef + "_" + e.code + "_" + e.reason);
         };
         ws.onerror = function(e) {
             // https://stackoverflow.com/questions/18803971/websocket-onerror-how-to-read-error-description
@@ -77,7 +77,7 @@ var UnityWebGLSocketBridge = {
         return SOCKET_REF_MAP.get(socketRef).readyState;
     },
 
-    NKCloseSocket: function (socketRef) {
+    NKCloseSocket: function (socketRef, reason) {
         if (!(SOCKET_REF_MAP instanceof Map)) {
             INITIALIZE();
         }

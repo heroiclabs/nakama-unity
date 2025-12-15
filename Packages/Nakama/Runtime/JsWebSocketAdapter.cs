@@ -231,7 +231,7 @@ namespace Nakama
         private static extern void NKCreateSocket(int socketRef, string address);
 
         [DllImport("__Internal")]
-        private static extern void NKCloseSocket(int socketRef);
+        private static extern void NKCloseSocket(int socketRef, string reason);
 
         [DllImport("__Internal")]
         private static extern void NKSendData(int socketRef, string data);
@@ -269,15 +269,22 @@ namespace Nakama
         // called by jslib
         private void NKBridgeOnClose(string bridgeMsg)
         {
-            var index = bridgeMsg.IndexOf('_');
-            if (index < 0 || index + 1 >= bridgeMsg.Length)
-            {
-                return;
-            }
+			var tokens = bridgeMsg.Split('_', 3);
+			if (tokens.Length < 3)
+			{
+				return;
+			}
 
-            var socketRef = Convert.ToInt32(bridgeMsg.Substring(0, index));
-            var code = Convert.ToInt32(bridgeMsg.Substring(index + 1));
-            GetHandler(socketRef)?.OnClose?.Invoke(code, CloseErrorMessages[code]);
+            var socketRef = Convert.ToInt32(tokens[0]);
+            var code = Convert.ToInt32(tokens[1]);
+			var reason = tokens[2];
+			if (reason.Length > 0)
+			{
+				reason = CloseErrorMessages[code]+": "+reason;
+			} else {
+				reason = CloseErrorMessages[code];
+			}
+            GetHandler(socketRef)?.OnClose?.Invoke(code, reason);
             _handlers.Remove(socketRef);
         }
 
