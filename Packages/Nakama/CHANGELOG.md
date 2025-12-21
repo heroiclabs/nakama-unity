@@ -3,6 +3,11 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.21.0] - 2025-12-21
+### Changed
+- Update to use Nakama and Satori .NET 3.21.1 release.
+- Pass socket close reason into JavaScript shim.
+
 ## [3.20.0] - 2025-12-07
 ### Changed
 - Update to use Nakama and Satori .NET 3.21.0 release.
