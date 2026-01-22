@@ -77,6 +77,16 @@ namespace Nakama
             var tcs = new TaskCompletionSource<string>();
             cancellationToken?.Register(() => tcs.TrySetCanceled());
 
+            if (body != null)
+            {
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri,
+                    System.Text.Encoding.UTF8.GetString(body));
+            }
+            else
+            {
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}'", method, uri);
+            }
+
             StartCoroutine(
                 SendRequest(
                     www,
