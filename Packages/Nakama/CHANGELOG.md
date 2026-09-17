@@ -3,6 +3,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.22.0] - 2026-09-18
+## Changed
+- Update to use Nakama and Satori .NET 3.22.0 release.
+
 ## [3.21.1] - 2026-02-13
 ### Changed
 - Update to use Nakama and Satori .NET 3.21.2 release.
