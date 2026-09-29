@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -32,6 +33,7 @@ namespace Satori
         private const string SatoriEventNameAppBackground = "appBackground";
         private const string SatoriEventNameGameStart     = "gameStart";
         private const string SatoriEventNameGameEnd       = "gameEnd";
+        private const string SatoriEventNameAppError      = "appError";
 
         private static SatoriLifecycle _instance;
         public static SatoriLifecycle Instance => _instance;
@@ -84,6 +86,7 @@ namespace Satori
                 // - Some way to filter the scenes in this manner exists after all ..?
                 SceneManager.sceneLoaded += OnSceneLoaded;
                 SceneManager.sceneUnloaded += OnSceneUnloaded;
+                Application.logMessageReceived += OnLogMessageReceived;
 
                 await SendEventAsync(new Event(SatoriEventNameAppLaunched, DateTime.UtcNow));
             }
@@ -118,8 +121,16 @@ namespace Satori
         private void OnSceneUnloaded(Scene scene) =>
             _ = SendEventAsync(new Event(SatoriEventNameGameEnd, DateTime.UtcNow));
 
+        private void OnLogMessageReceived(string condition, string stackTrace, LogType type)
+        {
+            if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+
+            _ = SendErrorEventAsync(condition, stackTrace, type);
+        }
+
         private void OnDestroy()
         {
+            Application.logMessageReceived -= OnLogMessageReceived;
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
@@ -130,6 +141,24 @@ namespace Satori
 
             _cts?.Cancel();
             _cts?.Dispose();
+        }
+
+        private async Task SendErrorEventAsync(string condition, string stackTrace, LogType type)
+        {
+            try
+            {
+                var metadata = new Dictionary<string, string>
+                {
+                    { "stackTrace", stackTrace },
+                };
+                
+                var ev = new Event(SatoriEventNameAppError, DateTime.UtcNow, condition, metadata);
+                await Client.EventsAsync(Session, new[] { ev }, _cts.Token);
+            }
+            catch
+            {
+                // Do nothing here to avoid recursion from possible EventsAsync error
+            }
         }
 
         private async Task SendEventAsync(Event e)
