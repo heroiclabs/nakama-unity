@@ -129,6 +129,8 @@ namespace Nakama
             else if (string.Equals(method, "DELETE", StringComparison.OrdinalIgnoreCase))
             {
                 www = UnityWebRequest.Delete(uri);
+                // UnityWebRequest.Delete creates no download handler, and the error branches read one.
+                www.downloadHandler = new DownloadHandlerBuffer();
             }
             else
             {
