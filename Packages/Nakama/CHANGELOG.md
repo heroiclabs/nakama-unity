@@ -3,6 +3,13 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [3.23.0] - 2026-11-08
+### Changed
+- Update to use Nakama and Satori .NET 3.23.0 release.
+
+## Fixed
+- Attach a download handler to DELETE requests in UnityWebRequestAdapter.
+
 ## [3.22.1] - 2026-10-02
 ### Changed
 - Update to use Nakama and Satori .NET 3.22.1 release.
