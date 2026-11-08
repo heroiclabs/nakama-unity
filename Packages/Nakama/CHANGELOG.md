@@ -7,7 +7,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Update to use Nakama and Satori .NET 3.23.0 release.
 
-## Fixed
+### Fixed
 - Attach a download handler to DELETE requests in UnityWebRequestAdapter.
 
 ## [3.22.1] - 2026-10-02
